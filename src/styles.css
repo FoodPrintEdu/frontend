@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+@plugin "tailwindcss-primeui";
+/* You can add global styles to this file, and also import other style files */
+/* Changed to css for better compatibility with Tailwind CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, sans-serif;
+}

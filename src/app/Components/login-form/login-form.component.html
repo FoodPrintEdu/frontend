@@ -1,0 +1,45 @@
+<div class="background-image-wrapper">
+  <div class="login-form-wrapper">
+    <h2>Login</h2>
+    <form class="login-form">
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-user"></i>
+        </p-inputgroup-addon>
+        <input
+          pInputText
+          [(ngModel)]="userName"
+          name="userName"
+          placeholder="Username"
+        />
+      </p-inputgroup>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-lock"></i>
+        </p-inputgroup-addon>
+        <p-password
+          [inputStyle]="{ width: '100%', borderRadius: '0' }"
+          [style]="{ width: '100%' }"
+          class="w-full"
+          [(ngModel)]="password"
+          [toggleMask]="true"
+          name="password"
+          placeholder="Password"
+        />
+      </p-inputgroup>
+      <button type="submit">LOGIN</button>
+    </form>
+
+    <a class="forgot-password" routerLink="/forgot-password">
+      Forgot Password?
+    </a>
+    <img
+      ngSrc="img/logo.png"
+      alt="FoodPrintEdu Logo"
+      height="120"
+      width="100"
+    />
+    <a class="register" routerLink="/register">Sign up now!</a>
+  </div>
+</div>
+<router-outlet />
