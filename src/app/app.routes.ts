@@ -1,14 +1,19 @@
 import { Routes } from '@angular/router';
-import { LoginFormComponent } from './components/login-form/login-form.component';
-import { RegisterFormComponent } from './components/register-form/register-form.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { RegisterPageComponent } from './pages/register-page/register-page.component';
+import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
 
 export const routes: Routes = [
   {
+    path: '',
+    component: DashboardPageComponent,
+  },
+  {
     path: 'login',
-    component: LoginFormComponent,
+    component: LoginPageComponent,
   },
   {
     path: 'register',
-    component: RegisterFormComponent,
+    component: RegisterPageComponent,
   },
 ];

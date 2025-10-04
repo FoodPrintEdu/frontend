@@ -1,54 +1,43 @@
-<div class="background-image-wrapper">
-  <div class="register-form-wrapper">
-    <h2>Register</h2>
-    <form
-      class="register-form"
-      [formGroup]="registerForm"
-      (ngSubmit)="onSubmit()"
-    >
-      <input
-        class="w-full"
-        [invalidField]="registerForm.get('email')"
-        pInputText
-        formControlName="email"
-        placeholder="Email"
-      />
-      <input
-        class="w-full"
-        [invalidField]="registerForm.get('name')"
-        pInputText
-        formControlName="name"
-        placeholder="Username"
-      />
+<form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <input
+    class="w-full"
+    [invalidField]="registerForm.get('email')"
+    pInputText
+    formControlName="email"
+    placeholder="Email"
+  />
+  <input
+    class="w-full"
+    [invalidField]="registerForm.get('name')"
+    pInputText
+    formControlName="name"
+    placeholder="Username"
+  />
 
-      <p-password
-        class="w-full"
-        [invalidField]="registerForm.get('password')"
-        [style]="{ width: '100%' }"
-        [inputStyle]="{ width: '100%' }"
-        formControlName="password"
-        [toggleMask]="true"
-        placeholder="Password"
-      />
+  <p-password
+    class="w-full"
+    [invalidField]="registerForm.get('password')"
+    [style]="{ width: '100%' }"
+    [inputStyle]="{ width: '100%' }"
+    formControlName="password"
+    [toggleMask]="true"
+    placeholder="Password"
+  />
 
-      <p-password
-        class="w-full"
-        [invalidField]="registerForm.get('confirmPassword')"
-        [style]="{ width: '100%' }"
-        [inputStyle]="{ width: '100%' }"
-        formControlName="confirmPassword"
-        [toggleMask]="true"
-        placeholder="Password"
-      />
-      <button type="submit">Sign up</button>
-    </form>
-    <img
-      ngSrc="assets/img/logo.png"
-      alt="FoodPrintEdu Logo"
-      height="120"
-      width="100"
-      priority
-    />
-    <a class="register" routerLink="/register">Already have an account?</a>
-  </div>
-</div>
+  <p-password
+    class="w-full"
+    [invalidField]="registerForm.get('confirmPassword')"
+    [style]="{ width: '100%' }"
+    [inputStyle]="{ width: '100%' }"
+    formControlName="confirmPassword"
+    [toggleMask]="true"
+    placeholder="Confirm Password"
+  />
+  <span
+    class="error-message"
+    [ngClass]="errorMessage().length === 0 ? 'invisible' : ''"
+  >
+    {{ errorMessage() }}
+  </span>
+  <button type="submit">Sign up</button>
+</form>

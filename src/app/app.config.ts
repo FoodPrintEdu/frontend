@@ -5,6 +5,7 @@ import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 import Aura from '@primeng/themes/aura';
 import { definePreset } from '@primeng/themes';
+import { provideHttpClient } from '@angular/common/http';
 
 const MyPreset = definePreset(Aura, {
   semantic: {
@@ -34,5 +35,6 @@ export const appConfig: ApplicationConfig = {
         preset: MyPreset,
       },
     }),
+    provideHttpClient(),
   ],
 };
