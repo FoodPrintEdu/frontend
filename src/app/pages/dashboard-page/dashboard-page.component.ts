@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
+import { SideMenuComponent } from '../../components/side-menu/side-menu.component';
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [],
+  imports: [SideMenuComponent],
   templateUrl: './dashboard-page.component.html',
-  styleUrl: './dashboard-page.component.scss'
+  styleUrl: './dashboard-page.component.scss',
 })
-export class DashboardPageComponent {
-
-}
+export class DashboardPageComponent {}

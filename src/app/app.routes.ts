@@ -7,6 +7,7 @@ export const routes: Routes = [
   {
     path: '',
     component: DashboardPageComponent,
+    children: [],
   },
   {
     path: 'login',

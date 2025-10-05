@@ -1,0 +1,86 @@
+// Header section
+.menu-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-title {
+  font-weight: 500;
+  color: var(--p-green-500);
+  font-size: 1.25rem;
+}
+
+.app-subtitle {
+  font-weight: 300;
+  font-size: 0.75rem;
+}
+
+// Submenu section
+.submenu-header {
+  color: var(--p-green-500);
+  font-weight: bold;
+}
+
+// Menu items
+.menu-item-link {
+  display: flex;
+  align-items: center;
+}
+
+.menu-item-label {
+  margin-left: 0.5rem;
+}
+
+.menu-badge {
+  margin-left: auto;
+}
+
+.menu-shortcut {
+  margin-left: auto;
+  border: 1px solid var(--p-surface-border);
+  border-radius: var(--p-border-radius);
+  background-color: var(--p-surface-100);
+  font-size: 0.75rem;
+  padding: 0.25rem;
+}
+
+// User section
+.user-button {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  color: var(--p-text-color);
+  border-radius: 0;
+
+  &:hover {
+    background-color: var(--p-surface-200);
+  }
+}
+
+.user-avatar {
+  margin-right: 0.5rem;
+}
+
+.user-info {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: bold;
+}
+
+.user-role {
+  font-size: 0.875rem;
+}

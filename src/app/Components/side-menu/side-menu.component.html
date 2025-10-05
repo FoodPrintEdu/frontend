@@ -1,0 +1,34 @@
+<p-menu [model]="items" [style]="{ height: '100%', width: '250px' }">
+  <ng-template pTemplate="start">
+    <span class="menu-header">
+      <img
+        ngSrc="assets/img/logo/logo.svg"
+        alt="FoodPrintEdu Logo"
+        height="60"
+        width="50"
+        priority
+      />
+      <div class="logo-text">
+        <p class="app-title">FoodPrintEdu</p>
+        <p class="app-subtitle">Diet & Recipe App</p>
+      </div>
+    </span>
+  </ng-template>
+  <ng-template pTemplate="submenuheader" let-item>
+    <span class="submenu-header">{{ item.label }}</span>
+  </ng-template>
+
+  <ng-template pTemplate="end">
+    <button pRipple class="user-button">
+      <p-avatar
+        image="assets/img/user.png"
+        class="user-avatar"
+        shape="circle"
+      />
+      <div class="user-info">
+        <p class="user-name">User</p>
+        <p class="user-role">Admin</p>
+      </div>
+    </button>
+  </ng-template>
+</p-menu>
