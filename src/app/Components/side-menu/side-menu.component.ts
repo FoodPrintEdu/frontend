@@ -3,15 +3,35 @@ import { MenuModule } from 'primeng/menu';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { MenuItem } from 'primeng/api';
-import { NgIf, NgOptimizedImage } from '@angular/common';
+import { AsyncPipe, NgIf, NgOptimizedImage } from '@angular/common';
+import { UserService } from '../../service/user.service';
+import { UserResponse } from '../../types/userTypes';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-side-menu',
-  imports: [MenuModule, AvatarModule, BadgeModule, NgIf, NgOptimizedImage],
+  imports: [
+    MenuModule,
+    AvatarModule,
+    BadgeModule,
+    NgOptimizedImage,
+    ProgressSpinnerModule,
+    NgIf,
+    AsyncPipe,
+  ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.scss',
 })
 export class SideMenuComponent {
+  user$!: Observable<UserResponse>;
+
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.user$ = this.userService.getUser();
+  }
+
   items: MenuItem[] = [
     {
       label: 'Home',

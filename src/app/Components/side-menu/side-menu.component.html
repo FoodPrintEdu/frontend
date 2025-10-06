@@ -25,10 +25,17 @@
         class="user-avatar"
         shape="circle"
       />
-      <div class="user-info">
-        <p class="user-name">User</p>
-        <p class="user-role">Admin</p>
+      <div class="user-info" *ngIf="user$ | async as user; else loading">
+        <p class="user-name">{{ user.name }}</p>
+        <p class="user-role">{{ user.role }}</p>
       </div>
+      <!-- Loading template -->
+      <ng-template #loading>
+        <p-progress-spinner
+          ariaLabel="loading"
+          [style]="{ width: '40px', height: '40px' }"
+        />
+      </ng-template>
     </button>
   </ng-template>
 </p-menu>

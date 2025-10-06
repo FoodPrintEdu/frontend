@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import {
   FormBuilder,
@@ -14,8 +14,9 @@ import { PasswordModule } from 'primeng/password';
 import { environment } from '../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { InvalidFieldDirective } from '../../directives/invalid-field.directive';
-import { LoginResponse } from '../../types/auth/authTypes';
+import { LoginResponse } from '../../types/authTypes';
 import { Router } from '@angular/router';
+import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-login-form',
@@ -41,7 +42,8 @@ export class LoginFormComponent {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -58,7 +60,6 @@ export class LoginFormComponent {
   }
 
   checkField(dirty: boolean, invalid: boolean, name: string) {
-    console.log(dirty, invalid, name);
     if (dirty && invalid) {
       this.setErrorMessage(`Please fill out ${name} correctly.`);
     } else {
@@ -82,9 +83,11 @@ export class LoginFormComponent {
       )
       .subscribe({
         next: (response) => {
-          localStorage.setItem('token', response.access_token);
-          localStorage.setItem('refresh_token', response.refresh_token);
-          localStorage.setItem('token_type', response.token_type);
+          this.userService.setTokens(
+            response.access_token,
+            response.refresh_token,
+            response.token_type
+          );
 
           this.clearErrorMessage();
 

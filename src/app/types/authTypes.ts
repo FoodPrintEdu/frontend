@@ -3,3 +3,8 @@ export type LoginResponse = {
   refresh_token: string;
   token_type: string;
 };
+
+export type RefreshResponse = {
+  access_token: string;
+  token_type: string;
+};

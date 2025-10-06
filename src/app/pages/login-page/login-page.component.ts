@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LoginFormComponent } from '../../components/login-form/login-form.component';
+import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-login-page',
@@ -9,4 +10,12 @@ import { LoginFormComponent } from '../../components/login-form/login-form.compo
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
 })
-export class LoginPageComponent {}
+export class LoginPageComponent {
+  constructor(private userService: UserService, private router: Router) {}
+
+  ngOnInit() {
+    if (this.userService.checkLoggedIn()) {
+      this.router.navigate(['/']);
+    }
+  }
+}
