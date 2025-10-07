@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.home-page-section {
+  padding: 20px;
+  width: 100%;
+
+  header {
+    margin-bottom: 20px;
+
+    h1 {
+      font-size: 1.5rem;
+      color: #4caf50; /* Green color for vegetarian theme */
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      color: #777;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+<section class="home-page-section" *ngIf="user$ | async as user; else loading">
+  <header>
+    <h1>Welcome back, {{ user.name }}! 👋</h1>
+    <h2>Keep up the great work on your diet journey!</h2>
+  </header>
+  <app-cards></app-cards>
+</section>
+
+<ng-template #loading>
+  <p>Loading user information...</p>
+</ng-template>
