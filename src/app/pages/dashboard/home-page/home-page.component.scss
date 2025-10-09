@@ -21,3 +21,19 @@
     }
   }
 }
+
+.home-page-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  .cards-container {
+    grid-column: span 2; /* Cards take full width on smaller screens */
+  }
+
+  @media (max-width: 1080px) {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}

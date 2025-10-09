@@ -1,0 +1,58 @@
+.recent-activity {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  height: 400px;
+
+  header {
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-weight: 500;
+  }
+
+  h3 {
+    font-weight: 300;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  li {
+    background-color: #eeeeff;
+    padding: 1rem;
+    color: black;
+    border-radius: 25px;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Remove the margin since we're using flexbox now */
+    h2,
+    h3 {
+      margin: 0;
+    }
+  }
+}
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
+}

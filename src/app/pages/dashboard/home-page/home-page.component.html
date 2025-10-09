@@ -3,7 +3,13 @@
     <h1>Welcome back, {{ user.name }}! 👋</h1>
     <h2>Keep up the great work on your diet journey!</h2>
   </header>
-  <app-cards></app-cards>
+  <div class="home-page-content">
+    <div class="cards-container">
+      <app-cards></app-cards>
+    </div>
+    <app-recent-activity></app-recent-activity>
+    <app-achievements></app-achievements>
+  </div>
 </section>
 
 <ng-template #loading>
