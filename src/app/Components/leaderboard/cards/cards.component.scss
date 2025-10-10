@@ -1,0 +1,67 @@
+// Grid layout for profile stats
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+
+  // Optional: smoother layout transitions
+  transition: all 0.2s ease-in-out;
+
+  // Fine-tune breakpoints if needed
+  @media (min-width: 768px) {
+    gap: 2rem;
+  }
+
+  @media (min-width: 1024px) {
+    gap: 2.5rem;
+  }
+}
+
+.badges {
+  display: flex;
+  gap: 1rem;
+
+  p {
+    background-color: #2d6b3a;
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 500;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+.card {
+  background-color: white;
+  border: 3px solid #2d6b3a;
+  color: #2d6b3a;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-weight: 300;
+  }
+}

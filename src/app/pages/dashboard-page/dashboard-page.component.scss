@@ -1,4 +1,18 @@
 .dashboard-page-container {
   display: flex;
-  height: 100vh; // Full viewport height
+  height: 100vh;
+
+  .side-menu-wrapper {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+
+  .main-content-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    height: 100vh;
+  }
 }

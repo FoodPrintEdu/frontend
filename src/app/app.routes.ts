@@ -4,6 +4,7 @@ import { RegisterPageComponent } from './pages/register-page/register-page.compo
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
 import { AuthGuardComponent } from './pages/auth-guard/auth-guard.component';
 import { HomePageComponent } from './pages/dashboard/home-page/home-page.component';
+import { LeaderboardPageComponent } from './pages/dashboard/leaderboard-page/leaderboard-page.component';
 
 export const routes: Routes = [
   {
@@ -17,6 +18,10 @@ export const routes: Routes = [
           {
             path: '',
             component: HomePageComponent,
+          },
+          {
+            path: 'leaderboard',
+            component: LeaderboardPageComponent,
           },
         ],
       },
