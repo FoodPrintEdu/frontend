@@ -8,6 +8,7 @@ import { UserService } from '../../service/user.service';
 import { UserResponse } from '../../types/userTypes';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-side-menu',
@@ -26,7 +27,7 @@ import { Observable } from 'rxjs';
 export class SideMenuComponent {
   user$!: Observable<UserResponse>;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit() {
     this.user$ = this.userService.getUser();
@@ -94,7 +95,10 @@ export class SideMenuComponent {
         {
           icon: 'pi pi-fw pi-sign-out',
           label: 'Log Out',
-          routerLink: '/login',
+          command: () => {
+            this.userService.clearTokens();
+            this.router.navigate(['/login']);
+          },
         },
       ],
     },

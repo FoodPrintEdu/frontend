@@ -5,6 +5,7 @@ import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.co
 import { AuthGuardComponent } from './pages/auth-guard/auth-guard.component';
 import { HomePageComponent } from './pages/dashboard/home-page/home-page.component';
 import { LeaderboardPageComponent } from './pages/dashboard/leaderboard-page/leaderboard-page.component';
+import { MarketplacePageComponent } from './pages/marketplace-page/marketplace-page.component';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,10 @@ export const routes: Routes = [
           {
             path: 'leaderboard',
             component: LeaderboardPageComponent,
+          },
+          {
+            path: 'marketplace',
+            component: MarketplacePageComponent,
           },
         ],
       },

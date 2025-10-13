@@ -48,6 +48,17 @@ export class UserService {
     );
   }
 
+  clearTokens(): void {
+    this.token = null;
+    this.refreshToken = null;
+    this.tokenType = null;
+    localStorage.removeItem('token');
+    localStorage.removeItem('tokenExpiry');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('refreshTokenExpiry');
+    localStorage.removeItem('tokenType');
+  }
+
   setTokens(token: string, refreshToken: string, tokenType: string): void {
     this.token = token;
     this.refreshToken = refreshToken;
