@@ -1,0 +1,38 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.recipes-page-section {
+  padding: 20px;
+  width: 100%;
+
+  header {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      font-size: 1.5rem;
+      color: #4caf50; /* Green color for vegetarian theme */
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      color: #777;
+    }
+  }
+}
+
+.recipes-page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.searchbar {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}

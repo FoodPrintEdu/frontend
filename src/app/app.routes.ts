@@ -6,6 +6,7 @@ import { AuthGuardComponent } from './pages/auth-guard/auth-guard.component';
 import { HomePageComponent } from './pages/dashboard/home-page/home-page.component';
 import { LeaderboardPageComponent } from './pages/dashboard/leaderboard-page/leaderboard-page.component';
 import { MarketplacePageComponent } from './pages/marketplace-page/marketplace-page.component';
+import { RecipesPageComponent } from './pages/recipes-page/recipes-page.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,10 @@ export const routes: Routes = [
           {
             path: 'marketplace',
             component: MarketplacePageComponent,
+          },
+          {
+            path: 'recipes',
+            component: RecipesPageComponent,
           },
         ],
       },
