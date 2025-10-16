@@ -1,0 +1,29 @@
+<div class="account-settings">
+  <header>
+    <i class="pi pi-bell" style="font-size: 1rem"></i>
+    <h2>Notifications</h2>
+  </header>
+  <ul>
+    <li>
+      <div>
+        <h2>Meal Reminders</h2>
+        <h3>Get notified about meal times</h3>
+      </div>
+      <p-toggleswitch [(ngModel)]="checked1" />
+    </li>
+    <li>
+      <div>
+        <h2>Weekly Progress</h2>
+        <h3>Weekly summary emails</h3>
+      </div>
+      <p-toggleswitch [(ngModel)]="checked2" />
+    </li>
+    <li>
+      <div>
+        <h2>Leaderboard Updates</h2>
+        <h3>Ranking change notifications</h3>
+      </div>
+      <p-toggleswitch [(ngModel)]="checked3" />
+    </li>
+  </ul>
+</div>

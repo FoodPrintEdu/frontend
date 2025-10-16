@@ -5,8 +5,9 @@ import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.co
 import { AuthGuardComponent } from './pages/auth-guard/auth-guard.component';
 import { HomePageComponent } from './pages/dashboard/home-page/home-page.component';
 import { LeaderboardPageComponent } from './pages/dashboard/leaderboard-page/leaderboard-page.component';
-import { MarketplacePageComponent } from './pages/marketplace-page/marketplace-page.component';
-import { RecipesPageComponent } from './pages/recipes-page/recipes-page.component';
+import { MarketplacePageComponent } from './pages/dashboard/marketplace-page/marketplace-page.component';
+import { RecipesPageComponent } from './pages/dashboard/recipes-page/recipes-page.component';
+import { AccountPageComponent } from './pages/dashboard/account-page/account-page.component';
 
 export const routes: Routes = [
   {
@@ -32,6 +33,10 @@ export const routes: Routes = [
           {
             path: 'recipes',
             component: RecipesPageComponent,
+          },
+          {
+            path: 'account',
+            component: AccountPageComponent,
           },
         ],
       },
