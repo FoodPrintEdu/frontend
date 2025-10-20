@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuthGuardComponent } from './auth-guard.component';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('AuthGuardComponent', () => {
   let component: AuthGuardComponent;
@@ -8,9 +10,9 @@ describe('AuthGuardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AuthGuardComponent]
-    })
-    .compileComponents();
+      imports: [AuthGuardComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AuthGuardComponent);
     component = fixture.componentInstance;

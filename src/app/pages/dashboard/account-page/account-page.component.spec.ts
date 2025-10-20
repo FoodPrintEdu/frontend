@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountPageComponent } from './account-page.component';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('AccountPageComponent', () => {
   let component: AccountPageComponent;
@@ -8,9 +10,9 @@ describe('AccountPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AccountPageComponent]
-    })
-    .compileComponents();
+      imports: [AccountPageComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AccountPageComponent);
     component = fixture.componentInstance;

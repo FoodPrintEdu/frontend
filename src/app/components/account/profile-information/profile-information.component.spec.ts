@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProfileInformationComponent } from './profile-information.component';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('ProfileInformationComponent', () => {
   let component: ProfileInformationComponent;
@@ -8,9 +10,9 @@ describe('ProfileInformationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProfileInformationComponent]
-    })
-    .compileComponents();
+      imports: [ProfileInformationComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ProfileInformationComponent);
     component = fixture.componentInstance;
