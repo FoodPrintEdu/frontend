@@ -1,0 +1,107 @@
+.items-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  h2 {
+    font-size: 1.25rem;
+  }
+}
+
+.items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, auto));
+  justify-content: start;
+  gap: 1rem;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+  }
+
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .out {
+      background-color: red;
+      color: white;
+    }
+
+    .left {
+      width: 85%;
+
+      h4 {
+        font-size: 0.75rem;
+        color: #aaa;
+      }
+    }
+  }
+
+  .mid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+
+      .details {
+        display: flex;
+        gap: 1rem;
+
+        .time,
+        .servings {
+          display: flex;
+          align-items: center;
+          font-size: 0.75rem;
+          gap: 0.25rem;
+          color: #999;
+        }
+      }
+
+      .difficulty {
+        color: #4caf50;
+        font-size: 0.75rem;
+        background-color: rgba(76, 175, 80, 0.1);
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        border: 1px solid #4caf50;
+      }
+
+      .categories {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+
+        p {
+          font-size: 0.75rem;
+          border: 1px solid #ccc;
+          padding: 0.25rem 0.5rem;
+          border-radius: 15px;
+        }
+      }
+    }
+
+    .right {
+      font-size: 0.75rem;
+      font-weight: semibold;
+      color: #aaa;
+    }
+  }
+}

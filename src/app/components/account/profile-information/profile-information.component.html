@@ -1,0 +1,45 @@
+<div class="profile-information">
+  <header>
+    <div>
+      <i class="pi pi-user" style="font-size: 1rem"></i>
+      <h2>Profile Information</h2>
+    </div>
+  </header>
+  <div class="content">
+    <div class="info" *ngIf="user$ | async as user; else loading">
+      <div class="profile-picture">
+        <p>{{ user.name.charAt(0).toUpperCase() }}</p>
+      </div>
+      <div class="user-details">
+        <h2>{{ user.name }}</h2>
+        <p>{{ user.email }}</p>
+        <div class="badges">
+          <p>Vegetarian Diet</p>
+          <p>Premium Member</p>
+        </div>
+      </div>
+      <div class="button-wrapper">
+        <p-button label="Edit Profile" />
+      </div>
+    </div>
+
+    <ng-template #loading>
+      <p>Loading user information...</p>
+    </ng-template>
+
+    <div class="achievements">
+      <div>
+        <h2 class="green">28</h2>
+        <p>Day Streak</p>
+      </div>
+      <div>
+        <h2 class="red">2,180</h2>
+        <p>Total Points</p>
+      </div>
+      <div>
+        <h2>3rd</h2>
+        <p>Leaderboard Rank</p>
+      </div>
+    </div>
+  </div>
+</div>

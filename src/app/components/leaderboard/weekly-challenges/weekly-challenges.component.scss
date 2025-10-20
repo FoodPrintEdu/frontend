@@ -1,0 +1,81 @@
+.weekly-challenges {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+
+  header {
+    margin-bottom: 2rem;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  h2 {
+    font-weight: 500;
+  }
+
+  h3 {
+    font-weight: 300;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    @media (max-width: 1080px) {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+
+  .challenge {
+    background-color: white;
+    border: 3px solid #2d6b3a;
+    padding: 1rem;
+    color: black;
+    border-radius: 25px;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+
+    .challenge-left-label {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      h4 {
+        color: #2d6b3a;
+      }
+    }
+
+    .challenge-right-label {
+      display: flex;
+      flex-direction: column;
+      align-self: flex-start;
+
+      .points {
+        background-color: lightgreen;
+        padding: 4px;
+        font-size: 0.75rem;
+        border-radius: 12px;
+        color: #2d6b3a;
+        font-weight: 600;
+      }
+    }
+
+    /* Remove the margin since we're using flexbox now */
+    h2,
+    h3 {
+      margin: 0;
+    }
+  }
+}

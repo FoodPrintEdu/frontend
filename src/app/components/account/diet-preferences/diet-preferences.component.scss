@@ -1,0 +1,61 @@
+.diet-preferences {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+
+  header {
+    margin-bottom: 2rem;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+
+    .wrapper {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .left,
+    .right {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 0.25rem;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      padding: 8px;
+      border-radius: 15px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      h3 {
+        font-weight: 500;
+      }
+
+      p {
+        font-weight: 300;
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  h2 {
+    font-weight: 500;
+  }
+
+  h3 {
+    font-weight: 300;
+  }
+}

@@ -1,0 +1,42 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.account-page-section {
+  padding: 20px;
+  width: 100%;
+
+  header {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      font-size: 1.5rem;
+      color: #4caf50; /* Green color for vegetarian theme */
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      color: #777;
+    }
+  }
+}
+
+.account-page-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  .full-span {
+    grid-column: span 2; /* Cards take full width on smaller screens */
+  }
+
+  @media (max-width: 1080px) {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}

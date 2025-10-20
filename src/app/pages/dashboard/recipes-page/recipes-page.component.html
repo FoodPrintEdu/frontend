@@ -1,0 +1,19 @@
+<section class="recipes-page-section">
+  <header>
+    <div>
+      <h1>Recipe Collection</h1>
+      <h2>Discover delicious Mediterranean recipes tailored to your diet</h2>
+    </div>
+    <p-button label="Add Recipe" />
+  </header>
+  <div class="recipes-page-content">
+    <div class="searchbar">
+      <p-iconfield iconPosition="left">
+        <p-inputicon class="pi pi-search" />
+        <input type="text" pInputText placeholder="Search" />
+      </p-iconfield>
+      <p-button label="Filters" icon="pi pi-filter" outlined="true" />
+    </div>
+    <app-recipes-items></app-recipes-items>
+  </div>
+</section>
