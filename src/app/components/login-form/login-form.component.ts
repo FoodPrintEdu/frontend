@@ -22,7 +22,6 @@ import { UserService } from '../../service/user.service';
   selector: 'app-login-form',
   imports: [
     InputTextModule,
-    FormsModule,
     ReactiveFormsModule,
     InputGroupAddonModule,
     InputGroupModule,
@@ -78,7 +77,7 @@ export class LoginFormComponent {
         userRequest,
         {
           headers: { 'Content-Type': 'application/json' },
-          responseType: 'json', // 👈 change to 'text' if your backend returns plain text
+          responseType: 'json',
         }
       )
       .subscribe({

@@ -4,6 +4,7 @@ import { UserService } from '../../../service/user.service';
 import { UserResponse } from '../../../types/userTypes';
 import { Observable } from 'rxjs';
 import { AsyncPipe, NgIf } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-information',
@@ -14,7 +15,11 @@ import { AsyncPipe, NgIf } from '@angular/common';
 export class ProfileInformationComponent {
   user$!: Observable<UserResponse>;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private router: Router) {}
+
+  navigateToCompleteProfile() {
+    this.router.navigate(['/complete-form']);
+  }
 
   ngOnInit() {
     this.user$ = this.userService.getUser();

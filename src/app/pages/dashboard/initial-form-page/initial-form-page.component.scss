@@ -1,0 +1,38 @@
+.initial-form-section {
+  padding: 20px;
+  width: 400px;
+
+  header {
+    margin-bottom: 20px;
+
+    h1 {
+      font-size: 1.5rem;
+      color: #4caf50; /* Green color for vegetarian theme */
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      color: #777;
+    }
+  }
+}
+
+.initial-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .actions {
+    align-self: flex-end;
+  }
+}
+
+.initial-form-item {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+}

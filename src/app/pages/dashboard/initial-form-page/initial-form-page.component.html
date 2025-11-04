@@ -1,0 +1,85 @@
+<section class="initial-form-section">
+  <header>
+    <h1>Personal data form</h1>
+    <h2>Please fill out the form below</h2>
+  </header>
+  <form [formGroup]="initialForm" class="initial-form">
+    <!-- <input
+    class="w-full"
+    [invalidField]="registerForm.get('email')"
+    pInputText
+    formControlName="email"
+    placeholder="Email"
+  /> -->
+    <div class="initial-form-item">
+      <label for="gender">Gender</label>
+      <p-select
+        [options]="sexes"
+        [style]="{ width: '100%' }"
+        optionLabel="label"
+        formControlName="gender"
+        placeholder="Select Gender"
+      />
+    </div>
+    <div class="initial-form-item">
+      <label for="age">Age</label>
+      <input
+        class="w-full"
+        pInputText
+        formControlName="age"
+        placeholder="Age"
+      />
+    </div>
+    <div class="initial-form-item">
+      <label for="weight">Weight (in kg)</label>
+      <input
+        class="w-full"
+        pInputText
+        formControlName="weight"
+        placeholder="Weight"
+      />
+    </div>
+    <div class="initial-form-item">
+      <label for="height">Height (in cm)</label>
+      <input
+        class="w-full"
+        pInputText
+        formControlName="height"
+        placeholder="Height"
+      />
+    </div>
+    <div class="initial-form-item">
+      <label for="activity">Activity Level</label>
+      <p-select
+        [options]="activityLevels"
+        [style]="{ width: '100%' }"
+        optionLabel="label"
+        formControlName="activity"
+        placeholder="Select Activity Level"
+      />
+    </div>
+    <div class="initial-form-item">
+      <label for="goal">Goal</label>
+      <p-select
+        [options]="goals"
+        [style]="{ width: '100%' }"
+        optionLabel="label"
+        formControlName="goal"
+        placeholder="Select Goal"
+      />
+    </div>
+    <div class="initial-form-item">
+      <label for="diet">Diet</label>
+      <p-select
+        [options]="diets"
+        [style]="{ width: '100%' }"
+        optionLabel="label"
+        formControlName="diet"
+        placeholder="Select Diet"
+      />
+    </div>
+    <div class="actions">
+      <p-button type="submit" label="Submit" />
+    </div>
+  </form>
+</section>
