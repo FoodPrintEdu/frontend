@@ -8,5 +8,6 @@ import { ToastModule } from 'primeng/toast';
   imports: [ProgressBarModule, ToastModule, NgOptimizedImage],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.scss',
+  standalone: true
 })
 export class CardsComponent {}

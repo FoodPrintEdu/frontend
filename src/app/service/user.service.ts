@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment.development';
-import { RefreshResponse } from '../types/authTypes';
-import { Subscription } from 'rxjs';
-import { UserResponse } from '../types/userTypes';
+import {HttpClient} from '@angular/common/http';
+import {Injectable, signal} from '@angular/core';
+import {environment} from '../../environments/environment.development';
+import {RefreshResponse} from '../types/authTypes';
+import {Subscription, tap} from 'rxjs';
+import {UserResponse} from '../types/userTypes';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +15,7 @@ export class UserService {
   private refreshToken: string | null = null;
   private tokenType: string | null = null;
   private apiUrl = environment.apiUrl;
+  private user = signal<UserResponse | null>(null);
 
   constructor(private http: HttpClient) {
     this.token = localStorage.getItem('token');
@@ -102,8 +103,13 @@ export class UserService {
       });
   }
 
-  getUser() {
-    return this.http.get<UserResponse>(
+  setUser(user: UserResponse = null) {
+    if (user) {
+      this.user.set(user);
+      localStorage.setItem("user", JSON.stringify(user));
+      return;
+    }
+    this.http.get<UserResponse>(
       `${this.apiUrl}/user/api/v1/auth/profile`,
       {
         headers: {
@@ -112,6 +118,16 @@ export class UserService {
         },
         responseType: 'json',
       }
-    );
+    ).pipe(
+      tap((user) => {
+        this.user.set(user);
+        console.log("SETTING USER IN TAP");
+        localStorage.setItem("user", JSON.stringify(user));
+      })
+    ).subscribe();
+  }
+
+  getUser() {
+    return this.user();
   }
 }

@@ -6,5 +6,6 @@ import { PrimeIcons } from 'primeng/api';
   imports: [],
   templateUrl: './achievements.component.html',
   styleUrls: ['./achievements.component.scss'],
+  standalone: true
 })
 export class AchievementsComponent {}

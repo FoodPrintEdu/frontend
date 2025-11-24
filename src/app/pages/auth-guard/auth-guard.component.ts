@@ -6,6 +6,7 @@ import { UserService } from '../../service/user.service';
   selector: 'app-auth-guard',
   imports: [RouterOutlet],
   templateUrl: './auth-guard.component.html',
+  standalone: true
 })
 export class AuthGuardComponent {
   constructor(private userService: UserService, private router: Router) {}

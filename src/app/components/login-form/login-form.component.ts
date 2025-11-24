@@ -87,7 +87,7 @@ export class LoginFormComponent {
             response.refresh_token,
             response.token_type
           );
-
+          this.userService.setUser();
           this.clearErrorMessage();
 
           this.router.navigate(['/']);

@@ -25,7 +25,7 @@
         class="user-avatar"
         shape="circle"
       />
-      <div class="user-info" *ngIf="user$ | async as user; else loading">
+      <div class="user-info" *ngIf="user; else loading">
         <p class="user-name">{{ user.name }}</p>
         <p class="user-role">{{ user.role }}</p>
       </div>

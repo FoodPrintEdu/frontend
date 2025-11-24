@@ -11,6 +11,10 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
+import {LoginResponse} from '../../../types/authTypes';
+import {HttpClient} from '@angular/common/http';
+import {UserService} from '../../../service/user.service';
+import {environment} from '../../../../environments/environment.development';
 
 @Component({
   selector: 'app-initial-form-page',
@@ -27,19 +31,21 @@ import { ButtonModule } from 'primeng/button';
   ],
   templateUrl: './initial-form-page.component.html',
   styleUrl: './initial-form-page.component.scss',
+  standalone: true
 })
 export class InitialFormPageComponent {
   initialForm: FormGroup;
 
-  constructor() {
+  constructor(private http: HttpClient,
+              private userService: UserService) {
     this.initialForm = new FormGroup({
-      gender: new FormControl(''),
+      sex: new FormControl(''),
       age: new FormControl(''),
-      weight: new FormControl(''),
-      height: new FormControl(''),
-      activity: new FormControl(''),
+      weightInKg: new FormControl(''),
+      heightInCm: new FormControl(''),
+      activityLevel: new FormControl(''),
       goal: new FormControl(''),
-      diet: new FormControl(''),
+      preferredDietType: new FormControl(''),
     });
   }
 
@@ -68,4 +74,28 @@ export class InitialFormPageComponent {
     { label: 'Vegetarian', value: 'VEGETARIAN' },
     { label: 'Vegan', value: 'VEGAN' },
   ];
+
+  onSubmit() {
+    console.log(this.initialForm.getRawValue());
+    const fitnessRequestBody = this.initialForm.getRawValue();
+
+    this.http
+      .put<LoginResponse>(
+        `${environment.apiUrl}/diet/api/v1/clients/${this.userService.getUser().id}/update-fitness-data`,
+        fitnessRequestBody,
+        {
+          headers: { 'Content-Type': 'application/json' },
+          responseType: 'json',
+        }
+      )
+      .subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+        error: (err) => {
+          console.error('Update-fitness-data failed', err);
+        },
+      });
+  }
+
 }

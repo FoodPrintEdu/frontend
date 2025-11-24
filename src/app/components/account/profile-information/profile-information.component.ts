@@ -11,9 +11,10 @@ import { Router } from '@angular/router';
   imports: [ButtonModule, NgIf, AsyncPipe],
   templateUrl: './profile-information.component.html',
   styleUrl: './profile-information.component.scss',
+  standalone: true
 })
 export class ProfileInformationComponent {
-  user$!: Observable<UserResponse>;
+  user!: UserResponse;
 
   constructor(private userService: UserService, private router: Router) {}
 
@@ -22,6 +23,6 @@ export class ProfileInformationComponent {
   }
 
   ngOnInit() {
-    this.user$ = this.userService.getUser();
+    this.user = this.userService.getUser();
   }
 }

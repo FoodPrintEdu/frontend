@@ -1,9 +1,9 @@
 <section class="initial-form-section">
   <header>
-    <h1>Personal data form</h1>
+    <h1>Personal data form!</h1>
     <h2>Please fill out the form below</h2>
   </header>
-  <form [formGroup]="initialForm" class="initial-form">
+  <form [formGroup]="initialForm" (ngSubmit)="onSubmit()" class="initial-form">
     <!-- <input
     class="w-full"
     [invalidField]="registerForm.get('email')"
@@ -12,12 +12,14 @@
     placeholder="Email"
   /> -->
     <div class="initial-form-item">
-      <label for="gender">Gender</label>
+      <label for="sex">Gender</label>
       <p-select
         [options]="sexes"
+        optionValue="value"
+        optionLabel="label"
         [style]="{ width: '100%' }"
         optionLabel="label"
-        formControlName="gender"
+        formControlName="sex"
         placeholder="Select Gender"
       />
     </div>
@@ -31,30 +33,32 @@
       />
     </div>
     <div class="initial-form-item">
-      <label for="weight">Weight (in kg)</label>
+      <label for="weightInKg">Weight (in kg)</label>
       <input
         class="w-full"
         pInputText
-        formControlName="weight"
+        formControlName="weightInKg"
         placeholder="Weight"
       />
     </div>
     <div class="initial-form-item">
-      <label for="height">Height (in cm)</label>
+      <label for="heightInCm">Height (in cm)</label>
       <input
         class="w-full"
         pInputText
-        formControlName="height"
+        formControlName="heightInCm"
         placeholder="Height"
       />
     </div>
     <div class="initial-form-item">
-      <label for="activity">Activity Level</label>
+      <label for="activityLevel">Activity Level</label>
       <p-select
         [options]="activityLevels"
+        optionValue="value"
+        optionLabel="label"
         [style]="{ width: '100%' }"
         optionLabel="label"
-        formControlName="activity"
+        formControlName="activityLevel"
         placeholder="Select Activity Level"
       />
     </div>
@@ -62,6 +66,8 @@
       <label for="goal">Goal</label>
       <p-select
         [options]="goals"
+        optionValue="value"
+        optionLabel="label"
         [style]="{ width: '100%' }"
         optionLabel="label"
         formControlName="goal"
@@ -69,12 +75,14 @@
       />
     </div>
     <div class="initial-form-item">
-      <label for="diet">Diet</label>
+      <label for="preferredDietType">Diet</label>
       <p-select
         [options]="diets"
+        optionValue="value"
+        optionLabel="label"
         [style]="{ width: '100%' }"
         optionLabel="label"
-        formControlName="diet"
+        formControlName="preferredDietType"
         placeholder="Select Diet"
       />
     </div>
