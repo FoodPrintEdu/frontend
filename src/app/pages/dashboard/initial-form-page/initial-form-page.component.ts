@@ -78,10 +78,14 @@ export class InitialFormPageComponent {
   onSubmit() {
     console.log(this.initialForm.getRawValue());
     const fitnessRequestBody = this.initialForm.getRawValue();
-
+    const user = this.userService.getCurrentUser();
+    if (!user) {
+      console.warn('User not loaded yet!');
+      return;
+    }
     this.http
       .put<LoginResponse>(
-        `${environment.apiUrl}/diet/api/v1/clients/${this.userService.getUser().id}/update-fitness-data`,
+        `${environment.apiUrl}/diet/api/v1/clients/${user.id}/update-fitness-data`,
         fitnessRequestBody,
         {
           headers: { 'Content-Type': 'application/json' },

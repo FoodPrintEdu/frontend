@@ -58,6 +58,7 @@ export class UserService {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('refreshTokenExpiry');
     localStorage.removeItem('tokenType');
+    localStorage.removeItem('user');
   }
 
   setTokens(token: string, refreshToken: string, tokenType: string): void {
@@ -127,7 +128,7 @@ export class UserService {
     ).subscribe();
   }
 
-  getUser() {
+  getCurrentUser() {
     return this.user();
   }
 }

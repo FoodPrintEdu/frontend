@@ -6,7 +6,7 @@
     </div>
   </header>
   <div class="content">
-    <div class="info" *ngIf="user; else loading">
+    <div class="info" *ngIf="userService.getCurrentUser() as user; else loading">
       <div class="profile-picture">
         <p>{{ user.name.charAt(0).toUpperCase() }}</p>
       </div>

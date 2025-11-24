@@ -8,21 +8,17 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-information',
-  imports: [ButtonModule, NgIf, AsyncPipe],
+  imports: [ButtonModule, NgIf],
   templateUrl: './profile-information.component.html',
   styleUrl: './profile-information.component.scss',
   standalone: true
 })
 export class ProfileInformationComponent {
-  user!: UserResponse;
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(protected userService: UserService, private router: Router) {}
 
   navigateToCompleteProfile() {
     this.router.navigate(['/complete-form']);
   }
 
-  ngOnInit() {
-    this.user = this.userService.getUser();
-  }
 }

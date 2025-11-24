@@ -1,4 +1,4 @@
-<section class="home-page-section" *ngIf="user; else loading">
+<section class="home-page-section" *ngIf="userService.getCurrentUser() as user; else loading">
   <header>
     <h1>Welcome back, {{ user.name }}! 👋</h1>
     <h2>Keep up the great work on your diet journey!</h2>

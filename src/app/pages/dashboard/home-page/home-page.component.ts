@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {UserResponse} from '../../../types/userTypes';
 import {UserService} from '../../../service/user.service';
-import {AsyncPipe, NgIf} from '@angular/common';
+import {NgIf} from '@angular/common';
 import {CardsComponent} from '../../../components/home/cards/cards.component';
 import {RecentActivityComponent} from '../../../components/home/recent-activity/recent-activity.component';
 import {AchievementsComponent} from '../../../components/home/achievements/achievements.component';
@@ -9,7 +9,6 @@ import {AchievementsComponent} from '../../../components/home/achievements/achie
 @Component({
   selector: 'app-home-page',
   imports: [
-    AsyncPipe,
     NgIf,
     CardsComponent,
     RecentActivityComponent,
@@ -19,12 +18,9 @@ import {AchievementsComponent} from '../../../components/home/achievements/achie
   styleUrl: './home-page.component.scss',
   standalone: true
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent {
   user!: UserResponse;
 
-  constructor(private userService: UserService) {}
+  constructor(protected userService: UserService) {}
 
-  ngOnInit() {
-    this.user = this.userService.getUser();
-  }
 }

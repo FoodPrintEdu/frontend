@@ -17,21 +17,16 @@ import {Router} from '@angular/router';
     BadgeModule,
     NgOptimizedImage,
     ProgressSpinnerModule,
-    NgIf,
-    AsyncPipe,
+    NgIf
   ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.scss',
   standalone: true
 })
-export class SideMenuComponent implements OnInit {
+export class SideMenuComponent {
   user!: UserResponse;
 
-  constructor(private userService: UserService, private router: Router) {}
-
-  ngOnInit() {
-    this.user = this.userService.getUser();
-  }
+  constructor(protected userService: UserService, private router: Router) {}
 
   items: MenuItem[] = [
     {
