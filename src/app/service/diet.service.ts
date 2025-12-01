@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, effect } from '@angular/core';
 import { DietRequest, DietResponse } from '../types/dietTypes';
 import { UserService } from './user.service';
 import { environment } from '../../environments/environment.development';
@@ -10,7 +10,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class DietService {
   private apiUrl = environment.apiUrl;
-  private userId;
+  private userId: string;
   private clientId: number | null = null;
 
   // Add diet data management
@@ -21,10 +21,11 @@ export class DietService {
   private isLoadingDietData = false;
 
   constructor(private http: HttpClient, private userService: UserService) {
-    this.userId = this.userService.getCurrentUserId();
+    const currentUser = this.userService.getCurrentUser();
+    this.userId = currentUser?.id;
 
-    // Subscribe to user changes to load diet data when user loads
-    this.userService.currentUser$.subscribe((user) => {
+    effect(() => {
+      const user = this.userService.getCurrentUser();
       if (user && user.id) {
         this.userId = user.id;
         this.loadDietData();
@@ -35,15 +36,14 @@ export class DietService {
   }
 
   setClientId() {
-    // Try to get client ID from cached diet data first
     const cachedDietData = this.getCurrentDietData();
     if (cachedDietData?.data?.id) {
       this.clientId = cachedDietData.data.id;
       return;
     }
 
-    // If not in cache, load diet data which will set the client ID
-    if (!this.userId) {
+    const currentUser = this.userService.getCurrentUser();
+    if (!currentUser?.id) {
       throw new Error(
         'User ID not available. Please ensure user is logged in.'
       );
@@ -70,7 +70,6 @@ export class DietService {
   }
 
   loadDietData(): void {
-    // Prevent multiple simultaneous loading attempts
     if (this.isLoadingDietData || !this.userId) {
       return;
     }

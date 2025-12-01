@@ -1,0 +1,200 @@
+.recipe-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.recipe-header {
+  margin-bottom: 30px;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  .cuisine {
+    font-size: 1.1rem;
+
+    margin: 0;
+  }
+}
+
+.recipe-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recipe-overview {
+  margin-bottom: 20px;
+
+  .overview-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+
+      i {
+        color: #007bff;
+      }
+    }
+  }
+
+  .tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    .tag {
+      margin-right: 5px;
+    }
+  }
+}
+
+.recipe-instructions {
+  margin-bottom: 20px;
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+  p {
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+}
+
+.ingredients {
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  .ingredient-list {
+    display: grid;
+    gap: 15px;
+
+    .ingredient-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background: #f9f9f9;
+
+      .ingredient-info {
+        flex: 1;
+
+        h4 {
+          margin: 0 0 5px 0;
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #333;
+        }
+
+        .category {
+          margin: 0 0 5px 0;
+          font-size: 0.9rem;
+          color: #666;
+          font-style: italic;
+        }
+
+        .quantity {
+          margin: 0 0 5px 0;
+          font-weight: 500;
+          color: #007bff;
+        }
+
+        .notes {
+          margin: 0;
+          font-size: 0.9rem;
+          color: #666;
+        }
+      }
+
+      .ingredient-nutrition {
+        text-align: right;
+
+        small {
+          display: block;
+          margin-bottom: 10px;
+          color: #666;
+        }
+
+        .dietary-info {
+          display: flex;
+          gap: 5px;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+}
+
+.recipe-sidebar {
+  .nutrition-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+
+    .nutrition-item {
+      text-align: center;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 6px;
+
+      .label {
+        display: block;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 5px;
+      }
+
+      .value {
+        display: block;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+      }
+    }
+  }
+
+  .actions-card {
+    margin-top: 20px;
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+}
+
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 40px 20px;
+
+  p {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    color: #666;
+  }
+}
+
+.error-state {
+  color: #dc3545;
+}

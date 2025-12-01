@@ -1,94 +1,53 @@
 <div class="items-wrapper">
-  <h2>Featured Products</h2>
-  <div class="items">
-    <div class="item">
+  <h2>Featured Recipes</h2>
+
+  <!-- No recipes state -->
+  <div *ngIf="recipes.length === 0" class="no-recipes-state">
+    <p>{{ noRecipesMessage || "No recipes found for your profile." }}</p>
+  </div>
+
+  <!-- Recipes list -->
+  <div *ngIf="recipes.length > 0" class="items">
+    <div
+      class="item"
+      *ngFor="let recipe of recipes"
+      (click)="onRecipeClick(recipe.id)"
+      style="cursor: pointer"
+    >
       <div class="top">
         <div class="left">
-          <h3>Mediterranean Quinoa Bowl</h3>
-          <h4>Fresh vegetables, quinoa, and olive oil dressing</h4>
+          <h3>{{ recipe.name }}</h3>
+          <h4>{{ truncateInstructions(recipe.instructions) }}</h4>
         </div>
-        <i class="right pi pi-heart" style="color: red"></i>
+        <i
+          class="right pi pi-heart"
+          style="color: red"
+          (click)="$event.stopPropagation()"
+        ></i>
       </div>
       <div class="mid">
         <div class="left">
           <div class="details">
             <div class="time">
               <i class="pi pi-clock" style="font-size: 0.75rem"></i>
-              <p>25min</p>
+              <p>{{ recipe.time }}min</p>
             </div>
             <div class="servings">
               <i class="pi pi-users" style="font-size: 0.75rem"></i>
-              <p>4 servings</p>
+              <p>{{ recipe.servings }} servings</p>
             </div>
           </div>
-          <p class="difficulty">Easy</p>
+          <p class="difficulty">{{ getDifficultyText(recipe.difficulty) }}</p>
           <div class="categories">
-            <p>Mediterranean</p>
-            <p>Vegetarian</p>
-            <p>+1</p>
+            <p *ngFor="let tag of getDisplayTags(recipe.tags).visible">
+              {{ tag }}
+            </p>
+            <p *ngIf="getDisplayTags(recipe.tags).extra > 0">
+              +{{ getDisplayTags(recipe.tags).extra }}
+            </p>
           </div>
         </div>
-        <p class="right">450C</p>
-      </div>
-    </div>
-    <div class="item">
-      <div class="top">
-        <div class="left">
-          <h3>Grilled Salmon with Herbs</h3>
-          <h4>Omega-3 rich salmon with fresh Mediterranean herbs</h4>
-        </div>
-        <i class="right pi pi-heart" style="color: red"></i>
-      </div>
-      <div class="mid">
-        <div class="left">
-          <div class="details">
-            <div class="time">
-              <i class="pi pi-clock" style="font-size: 0.75rem"></i>
-              <p>25min</p>
-            </div>
-            <div class="servings">
-              <i class="pi pi-users" style="font-size: 0.75rem"></i>
-              <p>2 servings</p>
-            </div>
-          </div>
-          <p class="difficulty">Medium</p>
-          <div class="categories">
-            <p>Mediterranean</p>
-            <p>High Protein</p>
-            <p>+1</p>
-          </div>
-        </div>
-        <p class="right">380C</p>
-      </div>
-    </div>
-    <div class="item">
-      <div class="top">
-        <div class="left">
-          <h3>Greek Village Salad</h3>
-          <h4>Traditional Greek salad with feta and olives</h4>
-        </div>
-        <i class="right pi pi-heart" style="color: red"></i>
-      </div>
-      <div class="mid">
-        <div class="left">
-          <div class="details">
-            <div class="time">
-              <i class="pi pi-clock" style="font-size: 0.75rem"></i>
-              <p>10min</p>
-            </div>
-            <div class="servings">
-              <i class="pi pi-users" style="font-size: 0.75rem"></i>
-              <p>3 servings</p>
-            </div>
-          </div>
-          <p class="difficulty">Medium</p>
-          <div class="categories">
-            <p>Mediterranean</p>
-            <p>Vegetarian</p>
-            <p>+1</p>
-          </div>
-        </div>
-        <p class="right">220C</p>
+        <p class="right">{{ recipe.kcalPerServing | number : "1.0-0" }}C</p>
       </div>
     </div>
   </div>

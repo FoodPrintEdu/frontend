@@ -7,6 +7,7 @@ import { HomePageComponent } from './pages/dashboard/home-page/home-page.compone
 import { LeaderboardPageComponent } from './pages/dashboard/leaderboard-page/leaderboard-page.component';
 import { MarketplacePageComponent } from './pages/dashboard/marketplace-page/marketplace-page.component';
 import { RecipesPageComponent } from './pages/dashboard/recipes-page/recipes-page.component';
+import { RecipeDetailPageComponent } from './pages/dashboard/recipe-detail-page/recipe-detail-page.component';
 import { AccountPageComponent } from './pages/dashboard/account-page/account-page.component';
 import { InitialFormPageComponent } from './pages/dashboard/initial-form-page/initial-form-page.component';
 
@@ -34,6 +35,10 @@ export const routes: Routes = [
           {
             path: 'recipes',
             component: RecipesPageComponent,
+          },
+          {
+            path: 'recipe/:id',
+            component: RecipeDetailPageComponent,
           },
           {
             path: 'account',

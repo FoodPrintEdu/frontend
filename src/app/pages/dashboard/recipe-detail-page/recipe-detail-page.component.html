@@ -1,0 +1,181 @@
+<div class="recipe-detail-container" *ngIf="!loading && !error && recipe">
+  <div class="recipe-header">
+    <p-button
+      icon="pi pi-arrow-left"
+      (click)="goBack()"
+      text="true"
+      label="Back to Recipes"
+    >
+    </p-button>
+    <h1>{{ recipe.name }}</h1>
+    <p class="cuisine">{{ recipe.cuisineName }} Cuisine</p>
+  </div>
+
+  <div class="recipe-content">
+    <div class="recipe-main">
+      <div class="recipe-overview">
+        <div class="overview-stats">
+          <div class="stat">
+            <i class="pi pi-clock"></i>
+            <span>{{ recipe.time }} min</span>
+          </div>
+          <div class="stat">
+            <i class="pi pi-users"></i>
+            <span>{{ recipe.servings }} servings</span>
+          </div>
+          <div class="stat">
+            <p-tag
+              [value]="getDifficultyText(recipe.difficulty)"
+              [severity]="getDifficultySeverity(recipe.difficulty)"
+            >
+            </p-tag>
+          </div>
+          <div class="stat">
+            <i class="pi pi-flash"></i>
+            <span
+              >{{ recipe.kcalPerServing | number : "1.0-0" }} kcal/serving</span
+            >
+          </div>
+        </div>
+
+        <div class="tags" *ngIf="recipe.tags.length > 0">
+          <p-tag
+            *ngFor="let tag of recipe.tags"
+            [value]="tag"
+            severity="secondary"
+            class="tag"
+          >
+          </p-tag>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      <div class="recipe-instructions">
+        <h3>Instructions</h3>
+        <p>{{ recipe.instructions }}</p>
+      </div>
+
+      <p-divider></p-divider>
+
+      <div class="ingredients" *ngIf="recipe.recipeIngredients.length > 0">
+        <h3>Ingredients</h3>
+        <div class="ingredient-list">
+          <div
+            class="ingredient-item"
+            *ngFor="let recipeIngredient of recipe.recipeIngredients"
+          >
+            <div class="ingredient-info">
+              <h4>{{ recipeIngredient.ingredient.name }}</h4>
+              <p class="category">{{ recipeIngredient.ingredient.category }}</p>
+              <p class="quantity">Quantity: {{ recipeIngredient.quantity }}</p>
+              <p *ngIf="recipeIngredient.notes" class="notes">
+                Notes: {{ recipeIngredient.notes }}
+              </p>
+            </div>
+            <div class="ingredient-nutrition">
+              <small>
+                {{ recipeIngredient.ingredient.kcal | number : "1.1-1" }} kcal |
+                P: {{ recipeIngredient.ingredient.protein | number : "1.1-1" }}g
+                | F: {{ recipeIngredient.ingredient.fat | number : "1.1-1" }}g |
+                C: {{ recipeIngredient.ingredient.carbs | number : "1.1-1" }}g
+              </small>
+              <div
+                class="dietary-info"
+                *ngIf="
+                  recipeIngredient.ingredient.vegan ||
+                  recipeIngredient.ingredient.vegetarian
+                "
+              >
+                <p-tag
+                  *ngIf="recipeIngredient.ingredient.vegan"
+                  value="Vegan"
+                  severity="success"
+                  icon="pi pi-check"
+                >
+                </p-tag>
+                <p-tag
+                  *ngIf="
+                    recipeIngredient.ingredient.vegetarian &&
+                    !recipeIngredient.ingredient.vegan
+                  "
+                  value="Vegetarian"
+                  severity="warning"
+                  icon="pi pi-check"
+                >
+                </p-tag>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="recipe-sidebar">
+      <p-card header="Nutrition per Serving">
+        <div class="nutrition-grid">
+          <div class="nutrition-item">
+            <span class="label">Calories</span>
+            <span class="value">{{
+              recipe.kcalPerServing | number : "1.0-0"
+            }}</span>
+          </div>
+          <div class="nutrition-item">
+            <span class="label">Protein</span>
+            <span class="value"
+              >{{ recipe.proteinPerServing | number : "1.1-1" }}g</span
+            >
+          </div>
+          <div class="nutrition-item">
+            <span class="label">Fat</span>
+            <span class="value"
+              >{{ recipe.fatPerServing | number : "1.1-1" }}g</span
+            >
+          </div>
+          <div class="nutrition-item">
+            <span class="label">Carbs</span>
+            <span class="value"
+              >{{ recipe.carbsPerServing | number : "1.1-1" }}g</span
+            >
+          </div>
+        </div>
+      </p-card>
+
+      <p-card header="Actions" class="actions-card">
+        <div class="action-buttons">
+          <p-button
+            label="Save Recipe"
+            icon="pi pi-heart"
+            severity="secondary"
+            outlined="true"
+          >
+          </p-button>
+          <p-button
+            label="Share Recipe"
+            icon="pi pi-share-alt"
+            severity="secondary"
+            outlined="true"
+          >
+          </p-button>
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>
+
+<!-- Loading state -->
+<div *ngIf="loading" class="loading-state">
+  <p>Loading recipe details...</p>
+</div>
+
+<!-- Error state -->
+<div *ngIf="error" class="error-state">
+  <p-button
+    icon="pi pi-arrow-left"
+    (click)="goBack()"
+    text="true"
+    label="Back to Recipes"
+  >
+  </p-button>
+  <p>{{ error }}</p>
+</div>

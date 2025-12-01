@@ -10,10 +10,33 @@
     <div class="searchbar">
       <p-iconfield iconPosition="left">
         <p-inputicon class="pi pi-search" />
-        <input type="text" pInputText placeholder="Search" />
+        <input
+          type="text"
+          pInputText
+          placeholder="Search recipes..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+        />
       </p-iconfield>
       <p-button label="Filters" icon="pi pi-filter" outlined="true" />
     </div>
-    <app-recipes-items></app-recipes-items>
+
+    <!-- Loading state -->
+    <div *ngIf="loading" class="loading-state">
+      <p>Loading recipes...</p>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error" class="error-state">
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- Pass filtered recipes to child component -->
+    <app-recipes-items
+      *ngIf="!loading && !error"
+      [recipes]="filteredRecipes"
+      [noRecipesMessage]="noRecipesMessage"
+    >
+    </app-recipes-items>
   </div>
 </section>
