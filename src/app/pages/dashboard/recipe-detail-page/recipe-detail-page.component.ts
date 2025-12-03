@@ -7,6 +7,7 @@ import { TagModule } from 'primeng/tag';
 import { DividerModule } from 'primeng/divider';
 import { Recipe } from '../../../types/recipeTypes';
 import { RecipeService } from '../../../service/recipe.service';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-recipe-detail-page',
@@ -87,5 +88,9 @@ export class RecipeDetailPageComponent implements OnInit {
       default:
         return 'success';
     }
+  }
+
+  getRecipeSrc(recipe: Recipe) {
+    return `${environment.apiUrl}/diet/api/v1/recipes/${recipe.id}/image`;
   }
 }

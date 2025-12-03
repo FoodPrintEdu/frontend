@@ -112,6 +112,10 @@
     </div>
 
     <div class="recipe-sidebar">
+      <p-card header="Serving suggestion">
+        <img [attr.src]="getRecipeSrc(recipe)" width="350" height="350"
+             alt="Recipe serving suggestion">
+      </p-card>
       <p-card header="Nutrition per Serving">
         <div class="nutrition-grid">
           <div class="nutrition-item">

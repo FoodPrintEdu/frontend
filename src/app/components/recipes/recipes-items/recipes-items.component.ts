@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Recipe } from '../../../types/recipeTypes';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-recipes-items',
@@ -44,5 +45,9 @@ export class RecipesItemsComponent {
       return instructions;
     }
     return instructions.substring(0, maxLength).trim() + '...';
+  }
+
+  getRecipeSrc(recipe: Recipe) {
+    return `${environment.apiUrl}/diet/api/v1/recipes/${recipe.id}/image`;
   }
 }

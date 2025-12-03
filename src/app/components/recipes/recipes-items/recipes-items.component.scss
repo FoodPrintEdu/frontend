@@ -24,6 +24,11 @@
   border: 1px solid #ccc;
   border-radius: 15px;
 
+  img {
+    border: 1px solid #2f2b2b;
+    border-radius: 15px;
+  }
+
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);

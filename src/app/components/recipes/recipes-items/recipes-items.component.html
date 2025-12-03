@@ -19,11 +19,9 @@
           <h3>{{ recipe.name }}</h3>
           <h4>{{ truncateInstructions(recipe.instructions) }}</h4>
         </div>
-        <i
-          class="right pi pi-heart"
-          style="color: red"
-          (click)="$event.stopPropagation()"
-        ></i>
+        <img [attr.src]="getRecipeSrc(recipe)" width="128" height="128"
+             class="right"
+         alt="Recipe image">
       </div>
       <div class="mid">
         <div class="left">
