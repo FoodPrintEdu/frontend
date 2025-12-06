@@ -5,6 +5,7 @@ import {NgIf} from '@angular/common';
 import {CardsComponent} from '../../../components/home/cards/cards.component';
 import {RecentActivityComponent} from '../../../components/home/recent-activity/recent-activity.component';
 import {AchievementsComponent} from '../../../components/home/achievements/achievements.component';
+import {WeightChartComponent} from '../../../components/home/weight-chart/weight-chart.component';
 
 @Component({
   selector: 'app-home-page',
@@ -13,6 +14,7 @@ import {AchievementsComponent} from '../../../components/home/achievements/achie
     CardsComponent,
     RecentActivityComponent,
     AchievementsComponent,
+    WeightChartComponent,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
