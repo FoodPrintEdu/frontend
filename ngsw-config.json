@@ -31,12 +31,12 @@
     {
       "name": "api-recipes",
       "urls": [
-        "http://localhost:8080/api/recipes/**",
-        "http://localhost:8080/api/recipe/**"
+        "*/api/recipes/**",
+        "*/api/recipe/**"
       ],
       "cacheConfig": {
         "maxSize": 100,
-        "maxAge": "1d",
+        "maxAge": "30m",
         "timeout": "10s",
         "strategy": "freshness"
       }
@@ -44,26 +44,14 @@
     {
       "name": "api-user",
       "urls": [
-        "http://localhost:8080/api/user/**",
-        "http://localhost:8080/api/diet/**"
+        "*/api/user/**",
+        "*/api/diet/**"
       ],
       "cacheConfig": {
         "maxSize": 50,
-        "maxAge": "6h",
+        "maxAge": "5m",
         "timeout": "5s",
         "strategy": "freshness"
-      }
-    },
-    {
-      "name": "api-fallback",
-      "urls": [
-        "http://localhost:8080/api/**"
-      ],
-      "cacheConfig": {
-        "maxSize": 50,
-        "maxAge": "1h",
-        "timeout": "5s",
-        "strategy": "performance"
       }
     }
   ]
