@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {UserService} from './service/user.service';
+import { PwaUpdateService } from './service/pwa-update.service';
+import { SyncService } from './service/sync.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +12,11 @@ import {UserService} from './service/user.service';
   standalone: true
 })
 export class AppComponent implements OnInit {
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private pwaUpdateService: PwaUpdateService,
+    private syncService: SyncService
+  ) {
   }
 
   ngOnInit() {
@@ -19,6 +25,36 @@ export class AppComponent implements OnInit {
       const user = userString ? JSON.parse(userString) : null;
       this.userService.setUser(user);
     }
+
+    this.initializePWA();
+  }
+
+  private initializePWA(): void {
+    this.pwaUpdateService.initialize();
+    this.pwaUpdateService.recoverDataAfterUpdate();
+
+    this.syncService.isOnline$.subscribe(isOnline => {
+      console.log(isOnline ? 'Online' : 'Offline');
+    });
+
+    this.setupInstallPrompt();
+
+    console.log('PWA initialized');
+  }
+
+  private setupInstallPrompt(): void {
+    let deferredPrompt: any;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      console.log('PWA can be installed');
+    });
+
+    window.addEventListener('appinstalled', () => {
+      console.log('PWA installed');
+      deferredPrompt = null;
+    });
   }
 
   title = 'team_project';
