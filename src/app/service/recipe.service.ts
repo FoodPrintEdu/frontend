@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, from, of } from 'rxjs';
+import { catchError, tap, switchMap } from 'rxjs/operators';
 import { RecipeResponse } from '../types/recipeTypes';
 import { UserService } from './user.service';
+import { SyncService } from './sync.service';
 import { environment } from '../../environments/environment.development';
 
 @Injectable({
@@ -10,8 +12,13 @@ import { environment } from '../../environments/environment.development';
 })
 export class RecipeService {
   private apiUrl = environment.apiUrl;
+  private readonly CACHE_KEY = 'recipes_cache';
 
-  constructor(private http: HttpClient, private userService: UserService) {}
+  constructor(
+    private http: HttpClient,
+    private userService: UserService,
+    private syncService: SyncService
+  ) {}
 
   getRecipesForClient(): Observable<RecipeResponse> {
     const currentUser = this.userService.getCurrentUser();
@@ -26,6 +33,19 @@ export class RecipeService {
     const clientId = currentUser.id;
     console.log('Making recipes API call for clientId:', clientId);
 
+    if (!this.syncService.isOnline()) {
+      console.log('Offline - fetching recipes from cache');
+      return from(this.syncService.getOfflineData(this.CACHE_KEY)).pipe(
+        switchMap(cachedData => {
+          if (cachedData) {
+            return of(cachedData);
+          } else {
+            return throwError(() => new Error('No connection and no data in cache'));
+          }
+        })
+      );
+    }
+
     return this.http.get<RecipeResponse>(
       `${this.apiUrl}/diet/api/v1/recipes/for-client/${clientId}`,
       {
@@ -33,6 +53,23 @@ export class RecipeService {
           Authorization: `${this.userService.TokenType} ${this.userService.Token}`,
         },
       }
+    ).pipe(
+      tap(async (response) => {
+        await this.syncService.saveOfflineData(this.CACHE_KEY, 'recipes', response);
+        console.log('Saved recipes to cache');
+      }),
+      catchError((error) => {
+        console.error('Error fetching recipes from API, trying cache:', error);
+        return from(this.syncService.getOfflineData(this.CACHE_KEY)).pipe(
+          switchMap(cachedData => {
+            if (cachedData) {
+              console.log('Returned recipes from cache');
+              return of(cachedData);
+            }
+            return throwError(() => error);
+          })
+        );
+      })
     );
   }
 }
