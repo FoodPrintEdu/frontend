@@ -113,8 +113,12 @@
 
     <div class="recipe-sidebar">
       <p-card header="Serving suggestion">
-        <img [attr.src]="getRecipeSrc(recipe)" width="350" height="350"
-             alt="Recipe serving suggestion">
+        <img
+          [attr.src]="getRecipeSrc(recipe)"
+          width="350"
+          height="350"
+          alt="Recipe serving suggestion"
+        />
       </p-card>
       <p-card header="Nutrition per Serving">
         <div class="nutrition-grid">
@@ -163,6 +167,73 @@
           </p-button>
         </div>
       </p-card>
+
+      <p-card header="Meal Preparation" class="meal-prep-card">
+        <div class="meal-prep-section">
+          <div class="servings-input">
+            <label for="servings">Number of Servings:</label>
+            <p-inputNumber
+              [(ngModel)]="selectedServings"
+              [min]="1"
+              [max]="20"
+              [showButtons]="true"
+              spinnerMode="horizontal"
+              inputId="servings"
+              placeholder="1"
+            >
+            </p-inputNumber>
+          </div>
+
+          <div class="meal-prep-summary" *ngIf="selectedServings > 0">
+            <h4>This will provide:</h4>
+            <div class="nutrition-preview">
+              <div class="preview-item">
+                <span class="label">Calories:</span>
+                <span class="value">{{
+                  recipe.kcalPerServing * selectedServings | number : "1.0-0"
+                }}</span>
+              </div>
+              <div class="preview-item">
+                <span class="label">Protein:</span>
+                <span class="value"
+                  >{{
+                    recipe.proteinPerServing * selectedServings
+                      | number : "1.1-1"
+                  }}g</span
+                >
+              </div>
+              <div class="preview-item">
+                <span class="label">Fat:</span>
+                <span class="value"
+                  >{{
+                    recipe.fatPerServing * selectedServings | number : "1.1-1"
+                  }}g</span
+                >
+              </div>
+              <div class="preview-item">
+                <span class="label">Carbs:</span>
+                <span class="value"
+                  >{{
+                    recipe.carbsPerServing * selectedServings
+                      | number : "1.1-1"
+                  }}g</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <p-button
+            label="Meal Prepared!"
+            icon="pi pi-check-circle"
+            (click)="onMealPrepared()"
+            [loading]="cookingInProgress"
+            [disabled]="!selectedServings || selectedServings < 1"
+            severity="success"
+            class="meal-prepared-btn"
+          >
+          </p-button>
+        </div>
+      </p-card>
     </div>
   </div>
 </div>
@@ -183,3 +254,6 @@
   </p-button>
   <p>{{ error }}</p>
 </div>
+
+<!-- Toast for notifications -->
+<p-toast></p-toast>

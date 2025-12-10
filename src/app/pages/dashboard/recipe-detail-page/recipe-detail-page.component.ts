@@ -1,19 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { DividerModule } from 'primeng/divider';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { Recipe } from '../../../types/recipeTypes';
 import { RecipeService } from '../../../service/recipe.service';
-import {environment} from '../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-recipe-detail-page',
-  imports: [CommonModule, ButtonModule, CardModule, TagModule, DividerModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    CardModule,
+    TagModule,
+    DividerModule,
+    InputNumberModule,
+    ToastModule,
+  ],
   templateUrl: './recipe-detail-page.component.html',
   styleUrl: './recipe-detail-page.component.scss',
+  providers: [MessageService],
 })
 export class RecipeDetailPageComponent implements OnInit {
   recipe: Recipe | null = null;
@@ -21,10 +35,15 @@ export class RecipeDetailPageComponent implements OnInit {
   error: string | null = null;
   recipeId: number = 0;
 
+  // Meal preparation properties
+  selectedServings: number = 1;
+  cookingInProgress: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -47,6 +66,7 @@ export class RecipeDetailPageComponent implements OnInit {
         );
         if (foundRecipe) {
           this.recipe = foundRecipe;
+          this.selectedServings = foundRecipe.servings; // Initialize with recipe's default servings
         } else {
           this.error = 'Recipe not found';
         }
@@ -92,5 +112,50 @@ export class RecipeDetailPageComponent implements OnInit {
 
   getRecipeSrc(recipe: Recipe) {
     return `${environment.apiUrl}/diet/api/v1/recipes/${recipe.id}/image`;
+  }
+
+  onMealPrepared() {
+    if (!this.recipe) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Recipe not found',
+      });
+      return;
+    }
+
+    if (this.selectedServings < 1) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Invalid Input',
+        detail: 'Please select at least 1 serving',
+      });
+      return;
+    }
+
+    this.cookingInProgress = true;
+
+    this.recipeService
+      .cookRecipe(this.recipe.id, this.selectedServings)
+      .subscribe({
+        next: (response) => {
+          this.cookingInProgress = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Meal Prepared!',
+            detail: `Successfully logged ${this.selectedServings} serving(s) of ${this.recipe?.name}`,
+          });
+          console.log('Meal logged successfully:', response);
+        },
+        error: (error) => {
+          this.cookingInProgress = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.message || 'Failed to log meal',
+          });
+          console.error('Error logging meal:', error);
+        },
+      });
   }
 }
