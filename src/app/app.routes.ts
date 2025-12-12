@@ -10,6 +10,7 @@ import { RecipesPageComponent } from './pages/dashboard/recipes-page/recipes-pag
 import { RecipeDetailPageComponent } from './pages/dashboard/recipe-detail-page/recipe-detail-page.component';
 import { AccountPageComponent } from './pages/dashboard/account-page/account-page.component';
 import { InitialFormPageComponent } from './pages/dashboard/initial-form-page/initial-form-page.component';
+import { NutritionTrackerPageComponent } from './pages/dashboard/nutrition-tracker-page/nutrition-tracker-page.component';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,10 @@ export const routes: Routes = [
           {
             path: 'marketplace',
             component: MarketplacePageComponent,
+          },
+          {
+            path: 'nutrition',
+            component: NutritionTrackerPageComponent,
           },
           {
             path: 'recipes',

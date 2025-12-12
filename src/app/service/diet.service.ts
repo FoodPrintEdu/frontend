@@ -1,6 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, effect } from '@angular/core';
-import { DietRequest, DietResponse } from '../types/dietTypes';
+import {
+  DailyClientDietSummaryResponse,
+  DietRequest,
+  DietResponse,
+} from '../types/dietTypes';
 import { UserService } from './user.service';
 import { environment } from '../../environments/environment.development';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -11,12 +15,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class DietService {
   private apiUrl = environment.apiUrl;
   private userId: string;
-  private clientId: number | null = null;
 
-  // Add diet data management
   private currentDietDataSubject = new BehaviorSubject<DietResponse | null>(
     null
   );
+  private currentDailyDietSummarySubject =
+    new BehaviorSubject<DailyClientDietSummaryResponse | null>(null);
+
+  public currentDailyDietSummary$ =
+    this.currentDailyDietSummarySubject.asObservable();
   public currentDietData$ = this.currentDietDataSubject.asObservable();
   private isLoadingDietData = false;
 
@@ -29,27 +36,11 @@ export class DietService {
       if (user && user.id) {
         this.userId = user.id;
         this.loadDietData();
+        this.loadDailyDietSummary();
       } else {
         this.clearDietData();
       }
     });
-  }
-
-  setClientId() {
-    const cachedDietData = this.getCurrentDietData();
-    if (cachedDietData?.data?.id) {
-      this.clientId = cachedDietData.data.id;
-      return;
-    }
-
-    const currentUser = this.userService.getCurrentUser();
-    if (!currentUser?.id) {
-      throw new Error(
-        'User ID not available. Please ensure user is logged in.'
-      );
-    }
-
-    this.loadDietData();
   }
 
   getDietData(): Observable<DietResponse> {
@@ -78,9 +69,6 @@ export class DietService {
     this.getDietData().subscribe({
       next: (response) => {
         this.currentDietDataSubject.next(response);
-        if (response.data?.id) {
-          this.clientId = response.data.id;
-        }
         this.isLoadingDietData = false;
       },
       error: (err) => {
@@ -97,11 +85,10 @@ export class DietService {
 
   clearDietData(): void {
     this.currentDietDataSubject.next(null);
-    this.clientId = null;
   }
 
   updateDietData(dietData: DietRequest): Observable<DietResponse> {
-    if (!this.clientId) {
+    if (!this.userId) {
       throw new Error(
         'Client ID not available. Please ensure user is logged in.'
       );
@@ -110,7 +97,7 @@ export class DietService {
     return new Observable((observer) => {
       this.http
         .put<DietResponse>(
-          `${this.apiUrl}/diet/api/v1/clients/${this.clientId}/update-fitness-data`,
+          `${this.apiUrl}/diet/api/v1/clients/${this.userId}/update-fitness-data`,
           dietData,
           {
             headers: {
@@ -129,6 +116,39 @@ export class DietService {
             observer.error(err);
           },
         });
+    });
+  }
+
+  getDailyDietSummary(): Observable<DailyClientDietSummaryResponse> {
+    if (!this.userId) {
+      throw new Error(
+        'Client ID not available. Please ensure user is logged in.'
+      );
+    }
+
+    return this.http.get<DailyClientDietSummaryResponse>(
+      `${this.apiUrl}/diet/api/v1/diet-stats/for-client/${this.userId}`,
+      {
+        headers: {
+          Authorization: `${this.userService.TokenType} ${this.userService.Token}`,
+        },
+      }
+    );
+  }
+
+  loadDailyDietSummary(): void {
+    if (!this.userId) {
+      return;
+    }
+
+    this.getDailyDietSummary().subscribe({
+      next: (response) => {
+        this.currentDailyDietSummarySubject.next(response);
+      },
+      error: (err) => {
+        console.error('Failed to load daily diet summary', err);
+        this.currentDailyDietSummarySubject.next(null);
+      },
     });
   }
 }
