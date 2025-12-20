@@ -6,6 +6,7 @@ import { routes } from './app.routes';
 import Aura from '@primeng/themes/aura';
 import { definePreset } from '@primeng/themes';
 import { provideHttpClient } from '@angular/common/http';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 const MyPreset = definePreset(Aura, {
   semantic: {
@@ -35,6 +36,6 @@ export const appConfig: ApplicationConfig = {
         preset: MyPreset,
       },
     }),
-    provideHttpClient(),
+    provideHttpClient(), provideCharts(withDefaultRegisterables()),
   ],
 };

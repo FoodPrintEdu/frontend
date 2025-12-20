@@ -32,9 +32,10 @@ import { Router } from '@angular/router';
   ],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.scss',
+  standalone: true
 })
 export class RegisterFormComponent {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.API_URL;
   registerForm: FormGroup;
   errorMessage = signal('');
 

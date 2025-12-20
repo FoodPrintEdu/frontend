@@ -1,82 +1,70 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, effect } from '@angular/core';
-import {
-  DailyClientDietSummaryResponse,
-  DietRequest,
-  DietResponse,
-} from '../types/dietTypes';
-import { UserService } from './user.service';
-import { environment } from '../../environments/environment.development';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {effect, Injectable} from '@angular/core';
+import {DailyClientDietSummaryObject, DietRequest, DietResponse,} from '../types/dietTypes';
+import {UserService} from './user.service';
+import {BehaviorSubject} from 'rxjs';
+import {ApiService} from './api.service';
+import {ApiResponse} from '../types/ApiResponse';
+import {ClientDiet} from '../types/ClientDiet';
+import {Meal} from '../types/Meal';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DietService {
-  private apiUrl = environment.apiUrl;
   private userId: string;
-
   private currentDietDataSubject = new BehaviorSubject<DietResponse | null>(
     null
   );
   private currentDailyDietSummarySubject =
-    new BehaviorSubject<DailyClientDietSummaryResponse | null>(null);
+    new BehaviorSubject<DailyClientDietSummaryObject[] | null>(null);
 
   public currentDailyDietSummary$ =
     this.currentDailyDietSummarySubject.asObservable();
   public currentDietData$ = this.currentDietDataSubject.asObservable();
   private isLoadingDietData = false;
 
-  constructor(private http: HttpClient, private userService: UserService) {
+  constructor(private apiService: ApiService, private userService: UserService) {
     const currentUser = this.userService.getCurrentUser();
     this.userId = currentUser?.id;
 
-    effect(() => {
+    effect(async () => {
       const user = this.userService.getCurrentUser();
       if (user && user.id) {
         this.userId = user.id;
-        this.loadDietData();
-        this.loadDailyDietSummary();
+        await this.loadDietData();
+        await this.loadDailyDietSummary();
       } else {
         this.clearDietData();
       }
     });
   }
 
-  getDietData(): Observable<DietResponse> {
+  getDietData(): Promise<ApiResponse<DietResponse>> {
     if (!this.userId) {
       throw new Error(
         'User ID not available. Please ensure user is logged in.'
       );
     }
 
-    return this.http.get<DietResponse>(
-      `${this.apiUrl}/diet/api/v1/clients/${this.userId}`,
-      {
-        headers: {
-          Authorization: `${this.userService.TokenType} ${this.userService.Token}`,
-        },
-      }
-    );
+    return this.apiService.get<ApiResponse<DietResponse>>(`/diet/api/v1/clients/${this.userId}`)
   }
 
-  loadDietData(): void {
+  async loadDietData(): Promise<void> {
     if (this.isLoadingDietData || !this.userId) {
       return;
     }
 
     this.isLoadingDietData = true;
-    this.getDietData().subscribe({
-      next: (response) => {
-        this.currentDietDataSubject.next(response);
-        this.isLoadingDietData = false;
-      },
-      error: (err) => {
-        console.error('Failed to load diet data', err);
-        this.currentDietDataSubject.next(null);
-        this.isLoadingDietData = false;
-      },
-    });
+    try {
+      const dietData = await this.getDietData();
+      this.currentDietDataSubject.next(dietData.data);
+      this.isLoadingDietData = false;
+    } catch (error) {
+      console.error('Failed to load diet data', error);
+      this.currentDietDataSubject.next(null);
+      this.isLoadingDietData = false;
+    }
+
   }
 
   getCurrentDietData(): DietResponse | null {
@@ -87,68 +75,68 @@ export class DietService {
     this.currentDietDataSubject.next(null);
   }
 
-  updateDietData(dietData: DietRequest): Observable<DietResponse> {
+  updateDietData(dietData: DietRequest): Promise<ApiResponse<DietResponse>> {
     if (!this.userId) {
       throw new Error(
         'Client ID not available. Please ensure user is logged in.'
       );
     }
 
-    return new Observable((observer) => {
-      this.http
-        .put<DietResponse>(
-          `${this.apiUrl}/diet/api/v1/clients/${this.userId}/update-fitness-data`,
+    return this.apiService
+        .put<ApiResponse<DietResponse>>(
+          `/diet/api/v1/clients/${this.userId}/update-fitness-data`,
           dietData,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              // Authorization: `${this.userService.TokenType} ${this.userService.Token}`,
-            },
-          }
-        )
-        .subscribe({
-          next: (response) => {
-            this.currentDietDataSubject.next(response);
-            observer.next(response);
-            observer.complete();
-          },
-          error: (err) => {
-            observer.error(err);
-          },
-        });
-    });
+        );
+
   }
 
-  getDailyDietSummary(): Observable<DailyClientDietSummaryResponse> {
+  getCurrentClientDiet(): Promise<ApiResponse<ClientDiet>> {
     if (!this.userId) {
       throw new Error(
         'Client ID not available. Please ensure user is logged in.'
       );
     }
 
-    return this.http.get<DailyClientDietSummaryResponse>(
-      `${this.apiUrl}/diet/api/v1/diet-stats/for-client/${this.userId}`,
-      {
-        headers: {
-          Authorization: `${this.userService.TokenType} ${this.userService.Token}`,
-        },
-      }
+    return this.apiService.get<ApiResponse<ClientDiet>>(
+      `/diet/api/v1/client-diets/${this.userId}`)
+
+  }
+
+  getDailyDietSummary(): Promise<ApiResponse<DailyClientDietSummaryObject[]>> {
+    if (!this.userId) {
+      throw new Error(
+        'Client ID not available. Please ensure user is logged in.'
+      );
+    }
+
+    return this.apiService.get<ApiResponse<DailyClientDietSummaryObject[]>>(
+      `/diet/api/v1/diet-stats/for-client/${this.userId}`,
     );
   }
 
-  loadDailyDietSummary(): void {
+  getMeals(): Promise<ApiResponse<Meal[]>> {
+    if (!this.userId) {
+      throw new Error(
+        'Client ID not available. Please ensure user is logged in.'
+      );
+    }
+
+    return this.apiService.get<ApiResponse<Meal[]>>(
+      `/diet/api/v1/meals/for-client/${this.userId}`,
+    );
+  }
+
+
+  async loadDailyDietSummary(): Promise<void> {
     if (!this.userId) {
       return;
     }
-
-    this.getDailyDietSummary().subscribe({
-      next: (response) => {
-        this.currentDailyDietSummarySubject.next(response);
-      },
-      error: (err) => {
-        console.error('Failed to load daily diet summary', err);
-        this.currentDailyDietSummarySubject.next(null);
-      },
-    });
+    try {
+      const dailyDietData = await this.getDailyDietSummary();
+      this.currentDailyDietSummarySubject.next(dailyDietData.data);
+    } catch (err) {
+      console.error('Failed to load daily diet summary', err);
+      this.currentDailyDietSummarySubject.next(null);
+    }
   }
 }

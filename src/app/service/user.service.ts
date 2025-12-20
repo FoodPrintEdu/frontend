@@ -14,7 +14,7 @@ export class UserService {
   private token: string | null = null;
   private refreshToken: string | null = null;
   private tokenType: string | null = null;
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.API_URL;
   private user = signal<UserResponse | null>(null);
 
   constructor(private http: HttpClient) {
