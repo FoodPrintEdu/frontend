@@ -1,0 +1,165 @@
+<div class="nutrition-tracker-container">
+  <div class="header">
+    <h1>Nutrition Tracker</h1>
+    <div class="date-picker-section">
+      <label for="datePicker">Select Date:</label>
+      <p-datePicker
+        id="datePicker"
+        [(ngModel)]="selectedDate"
+        (onSelect)="onDateChange()"
+        [showIcon]="true"
+        [maxDate]="today"
+        dateFormat="dd-mm-yy"
+        placeholder="Select a date"
+      >
+      </p-datePicker>
+    </div>
+    <p class="subtitle" *ngIf="currentDayData">
+      Track your daily nutrition progress -
+      {{ formatDate(currentDayData.date) }}
+    </p>
+  </div>
+
+  <div *ngIf="currentDayData" class="nutrition-content">
+    <!-- Daily Goals Overview -->
+    <div class="goals-overview">
+      <h2>Daily Goals</h2>
+      <div class="goal-cards">
+        <div class="goal-card">
+          <div class="goal-header">
+            <h3>Calories</h3>
+            <div
+              class="goal-status"
+              [class.achieved]="currentDayData.dailyKcalGoalAchieved"
+            >
+              <span
+                >{{ currentDayData.totalKcal | decimalPipe }} /
+                {{ currentDayData.clientDiet.dailyKcalTarget | decimalPipe }}
+                kcal</span
+              >
+            </div>
+          </div>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              [style.width.%]="getKcalProgress()"
+              [class.achieved]="currentDayData.dailyKcalGoalAchieved"
+            ></div>
+          </div>
+          <div class="progress-text">{{ getKcalProgress() }}% complete</div>
+        </div>
+
+        <div class="goal-card">
+          <div class="goal-header">
+            <h3>Protein</h3>
+            <div
+              class="goal-status"
+              [class.achieved]="currentDayData.dailyProteinGoalAchieved"
+            >
+              <span
+                >{{ currentDayData.totalProtein | decimalPipe }}g /
+                {{
+                  currentDayData.clientDiet.dailyProteinTarget | decimalPipe
+                }}g</span
+              >
+            </div>
+          </div>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              [style.width.%]="getProteinProgress()"
+              [class.achieved]="currentDayData.dailyProteinGoalAchieved"
+            ></div>
+          </div>
+          <div class="progress-text">{{ getProteinProgress() }}% complete</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Macronutrients Breakdown -->
+    <div class="macros-breakdown">
+      <h2>Macronutrients</h2>
+      <div class="macro-cards">
+        <div class="macro-card carbs">
+          <div class="macro-icon">🍞</div>
+          <div class="macro-info">
+            <h4>Carbohydrates</h4>
+            <p class="macro-amount">
+              {{ currentDayData.totalCarbs | decimalPipe }}g
+            </p>
+          </div>
+        </div>
+
+        <div class="macro-card fats">
+          <div class="macro-icon">🥑</div>
+          <div class="macro-info">
+            <h4>Fats</h4>
+            <p class="macro-amount">
+              {{ currentDayData.totalFats | decimalPipe }}g
+            </p>
+          </div>
+        </div>
+
+        <div class="macro-card protein">
+          <div class="macro-icon">🥩</div>
+          <div class="macro-info">
+            <h4>Protein</h4>
+            <p class="macro-amount">
+              {{ currentDayData.totalProtein | decimalPipe }}g
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diet Information -->
+    <div class="diet-info">
+      <h2>Diet Plan</h2>
+      <div class="diet-card">
+        <h3>{{ currentDayData.clientDiet.diet.name }}</h3>
+        <p class="diet-description">
+          {{ formatEnum(currentDayData.clientDiet.diet.description) }}
+        </p>
+        <div class="diet-details">
+          <div class="diet-detail">
+            <span class="label">Type:</span>
+            <span class="value">{{
+              formatEnum(currentDayData.clientDiet.diet.type)
+            }}</span>
+          </div>
+          <div class="diet-detail">
+            <span class="label">Calories Criteria:</span>
+            <span class="value">{{
+              formatEnum(currentDayData.clientDiet.diet.kcalCriteria)
+            }}</span>
+          </div>
+          <div class="diet-detail">
+            <span class="label">Protein Criteria:</span>
+            <span class="value">{{
+              formatEnum(currentDayData.clientDiet.diet.proteinCriteria)
+            }}</span>
+          </div>
+          <div class="diet-detail">
+            <span class="label">Goal:</span>
+            <span class="value">{{
+              formatEnum(currentDayData.clientDiet.client.goal)
+            }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!currentDayData" class="no-data">
+    <div class="no-data-icon">📊</div>
+    <h3>No nutrition data available</h3>
+    <p>
+      No nutrition data found for
+      {{ formatDate(selectedDate.toISOString().split("T")[0]) }}.
+    </p>
+    <p>
+      Try selecting a different date or complete your diet preferences to start
+      tracking.
+    </p>
+  </div>
+</div>
