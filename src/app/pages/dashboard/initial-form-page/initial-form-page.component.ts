@@ -1,20 +1,15 @@
-import { Component } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { IftaLabelModule } from 'primeng/iftalabel';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputTextModule } from 'primeng/inputtext';
-import { SelectModule } from 'primeng/select';
-import { ButtonModule } from 'primeng/button';
+import {Component} from '@angular/core';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule,} from '@angular/forms';
+import {IftaLabelModule} from 'primeng/iftalabel';
+import {InputGroupModule} from 'primeng/inputgroup';
+import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
+import {InputTextModule} from 'primeng/inputtext';
+import {SelectModule} from 'primeng/select';
+import {ButtonModule} from 'primeng/button';
 import {LoginResponse} from '../../../types/authTypes';
-import {HttpClient} from '@angular/common/http';
 import {UserService} from '../../../service/user.service';
-import {environment} from '../../../../environments/environment.development';
+import {ApiService} from '../../../service/api.service';
+import {ApiResponse} from '../../../types/ApiResponse';
 
 @Component({
   selector: 'app-initial-form-page',
@@ -36,7 +31,7 @@ import {environment} from '../../../../environments/environment.development';
 export class InitialFormPageComponent {
   initialForm: FormGroup;
 
-  constructor(private http: HttpClient,
+  constructor(private apiService: ApiService,
               private userService: UserService) {
     this.initialForm = new FormGroup({
       sex: new FormControl(''),
@@ -75,7 +70,7 @@ export class InitialFormPageComponent {
     { label: 'Vegan', value: 'VEGAN' },
   ];
 
-  onSubmit() {
+  async onSubmit() {
     console.log(this.initialForm.getRawValue());
     const fitnessRequestBody = this.initialForm.getRawValue();
     const user = this.userService.getCurrentUser();
@@ -83,23 +78,16 @@ export class InitialFormPageComponent {
       console.warn('User not loaded yet!');
       return;
     }
-    this.http
-      .put<LoginResponse>(
-        `${environment.apiUrl}/diet/api/v1/clients/${user.id}/update-fitness-data`,
-        fitnessRequestBody,
-        {
-          headers: { 'Content-Type': 'application/json' },
-          responseType: 'json',
-        }
-      )
-      .subscribe({
-        next: (response) => {
-          console.log(response);
-        },
-        error: (err) => {
-          console.error('Update-fitness-data failed', err);
-        },
-      });
+    try {
+      const updateResponse = await this.apiService
+        .put<ApiResponse<LoginResponse>>(
+          `/diet/api/v1/clients/${user.id}/update-fitness-data`,
+          fitnessRequestBody,
+        );
+      console.log(updateResponse);
+    } catch (e) {
+      console.error('Update-fitness-data failed', e);
+    }
   }
 
 }

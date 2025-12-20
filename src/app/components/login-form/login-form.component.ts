@@ -32,9 +32,10 @@ import { UserService } from '../../service/user.service';
   ],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss',
+  standalone: true
 })
 export class LoginFormComponent {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.API_URL;
   loginForm: FormGroup;
   errorMessage = signal('');
 

@@ -111,7 +111,7 @@ export class RecipeDetailPageComponent implements OnInit {
   }
 
   getRecipeSrc(recipe: Recipe) {
-    return `${environment.apiUrl}/diet/api/v1/recipes/${recipe.id}/image`;
+    return `${environment.API_URL}/diet/api/v1/recipes/${recipe.id}/image`;
   }
 
   onMealPrepared() {

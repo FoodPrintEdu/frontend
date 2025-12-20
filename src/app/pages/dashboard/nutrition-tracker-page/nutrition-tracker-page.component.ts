@@ -3,7 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DietService } from '../../../service/diet.service';
-import { DailyClientDietSummaryResponse } from '../../../types/dietTypes';
+import { DailyClientDietSummaryObject } from '../../../types/dietTypes';
 import { Observable, Subscription } from 'rxjs';
 import { DecimalPipePipe } from '../../../pipes/decimal-pipe.pipe';
 
@@ -13,10 +13,11 @@ import { DecimalPipePipe } from '../../../pipes/decimal-pipe.pipe';
   templateUrl: './nutrition-tracker-page.component.html',
   providers: [DatePipe],
   styleUrl: './nutrition-tracker-page.component.scss',
+  standalone: true
 })
 export class NutritionTrackerPageComponent implements OnInit, OnDestroy {
-  dailyDietSummary$: Observable<DailyClientDietSummaryResponse | null>;
-  dailyDietSummary: DailyClientDietSummaryResponse | null = null;
+  dailyDietSummary$: Observable<DailyClientDietSummaryObject[] | null>;
+  dailyDietSummary: DailyClientDietSummaryObject[] | null = null;
   selectedDate: Date = new Date();
   today: Date = new Date();
   currentDayData: any = null;
@@ -26,11 +27,9 @@ export class NutritionTrackerPageComponent implements OnInit, OnDestroy {
     this.dailyDietSummary$ = this.dietService.currentDailyDietSummary$;
   }
 
-  ngOnInit(): void {
-    this.subscription = this.dailyDietSummary$.subscribe((summary) => {
-      this.dailyDietSummary = summary;
-      this.updateCurrentDayData();
-    });
+  async ngOnInit(): Promise<void> {
+    this.dailyDietSummary = (await this.dietService.getDailyDietSummary()).data;
+    this.updateCurrentDayData();
   }
 
   ngOnDestroy(): void {
@@ -41,8 +40,8 @@ export class NutritionTrackerPageComponent implements OnInit, OnDestroy {
 
   private updateCurrentDayData(): void {
     if (
-      !this.dailyDietSummary?.data ||
-      this.dailyDietSummary.data.length === 0
+      !this.dailyDietSummary ||
+      this.dailyDietSummary.length === 0
     ) {
       this.currentDayData = null;
       return;
@@ -54,7 +53,7 @@ export class NutritionTrackerPageComponent implements OnInit, OnDestroy {
     );
 
     console.log('NutritionTrackerPageComponent initialized');
-    const selectedData = this.dailyDietSummary.data.find(
+    const selectedData = this.dailyDietSummary.find(
       (item) => item.date === selectedDateString
     );
 

@@ -3,7 +3,8 @@ import { AbstractControl } from '@angular/forms';
 
 @Directive({
   selector: '[invalidField]',
-  exportAs: 'invalidField', // 👈 allows use as #invalidField="invalidField"
+  exportAs: 'invalidField',
+  standalone: true,
 })
 export class InvalidFieldDirective {
   @Input('invalidField') control: AbstractControl | null = null;

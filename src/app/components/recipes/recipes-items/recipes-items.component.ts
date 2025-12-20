@@ -9,6 +9,7 @@ import {environment} from '../../../../environments/environment';
   imports: [CommonModule],
   templateUrl: './recipes-items.component.html',
   styleUrl: './recipes-items.component.scss',
+  standalone: true
 })
 export class RecipesItemsComponent {
   @Input() recipes: Recipe[] = [];
@@ -48,6 +49,6 @@ export class RecipesItemsComponent {
   }
 
   getRecipeSrc(recipe: Recipe) {
-    return `${environment.apiUrl}/diet/api/v1/recipes/${recipe.id}/image`;
+    return `${environment.API_URL}/diet/api/v1/recipes/${recipe.id}/image`;
   }
 }

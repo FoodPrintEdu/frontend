@@ -2,11 +2,10 @@ import {Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BaseChartDirective} from 'ng2-charts';
 import {ChartConfiguration, ChartOptions} from 'chart.js';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../../environments/environment.development';
 import {UserResponse} from '../../../types/userTypes';
 import {WeightPrediction} from '../../../types/weightPredictionTypes';
-import {firstValueFrom} from 'rxjs';
+import {ApiService} from '../../../service/api.service';
+import {ApiResponse} from '../../../types/ApiResponse';
 
 @Component({
   selector: 'app-weight-chart',
@@ -23,20 +22,16 @@ export class WeightChartComponent implements OnInit {
   protected lineChartData: ChartConfiguration<'line'>['data'];
   protected lineChartOptions: ChartOptions<'line'>;
 
-  constructor(private http: HttpClient) {
+  constructor(private apiService: ApiService) {
   }
 
   async ngOnInit() {
 
     try {
-      this.weightPrediction = (await firstValueFrom(this.http
-        .get<any>(
-          `${environment.apiUrl}/diet/api/v1/client-diets/weight-prediction/${this.user.id}/${this.numOfWeeks}`,
-          {
-            headers: {'Content-Type': 'application/json'},
-            responseType: 'json',
-          }
-        ))).data;
+      this.weightPrediction = (await this.apiService
+        .get<ApiResponse<any>>(
+          `/diet/api/v1/client-diets/weight-prediction/${this.user.id}/${this.numOfWeeks}`,
+        )).data;
     } catch (e) {
       console.error('Get weight prediction failed', e);
     }

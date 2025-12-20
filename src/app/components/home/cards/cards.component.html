@@ -1,12 +1,12 @@
 <!-- {/* Profile Stats Grid */} -->
 
-<div class="grid">
+<div *ngIf="clientDiet" class="grid">
   <!-- {/* Selected Diet */} -->
   <div class="card">
     <header>
       <img
         ngSrc="assets/img/apple.png"
-        alt="Vegetarian Diet Icon"
+        alt="Diet Icon"
         height="24"
         width="24"
         priority
@@ -14,11 +14,11 @@
       <h2>Current Diet</h2>
     </header>
     <div>
-      <h1>Vegetarian</h1>
-      <p>Rich in healthy fats & vegetables</p>
+      <h1>{{ clientDiet?.diet?.name }}</h1>
+      <p>{{ getDietDescription(clientDiet?.diet) }}</p>
     </div>
   </div>
-  <!-- 
+  <!--
   {/* Diet Streak */} -->
   <div class="card">
     <header>
@@ -32,13 +32,13 @@
       <h2>Diet Streak</h2>
     </header>
     <div>
-      <h1>28 days</h1>
+      <h1>{{ getStreakNumber() }} days</h1>
       <p-progressbar
-        [value]="(28 / 45) * 100"
+        [value]="(getStreakNumber() / 30) * 100"
         [showValue]="false"
         [style]="{ height: '8px', 'border-radius': '5px' }"
       />
-      <p>17 days to goal</p>
+      <p>{{ 30 - getStreakNumber() }} days to your first milestone!</p>
     </div>
   </div>
 
@@ -55,13 +55,15 @@
       <h2>Today's Calories</h2>
     </header>
     <div>
-      <h1>1580</h1>
+      <h1>{{ getTodaysCalories() }}</h1>
       <p-progressbar
-        [value]="(1580 / 1800) * 100"
+        [value]="(getTodaysCalories() / clientDiet.dailyKcalTarget) * 100"
         [showValue]="false"
         [style]="{ height: '8px', 'border-radius': '5px' }"
       />
-      <p>220 left to reach goal</p>
+      <p *ngIf="clientDiet.dailyKcalTarget > getTodaysCalories()">{{ Math.round(clientDiet.dailyKcalTarget - getTodaysCalories())  }} kcal left to reach goal</p>
+      <p *ngIf="clientDiet.dailyKcalTarget < getTodaysCalories()">Goal achieved!</p>
+
     </div>
   </div>
 
@@ -78,13 +80,13 @@
       <h2>Meals Today</h2>
     </header>
     <div>
-      <h1>3/4</h1>
+      <h1>{{ getTodaysMealNumber() }}</h1>
       <p-progressbar
-        [value]="(3 / 4) * 100"
+        [value]="(getTodaysMealNumber() / 5) * 100"
         [showValue]="false"
         [style]="{ height: '8px', 'border-radius': '5px' }"
       />
-      <p>1 meals remaining</p>
+      <p>{{ 5 - getTodaysMealNumber() }} meals remaining</p>
     </div>
   </div>
 </div>

@@ -13,7 +13,7 @@ import { environment } from '../../environments/environment.development';
   providedIn: 'root',
 })
 export class RecipeService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.API_URL;
 
   constructor(private http: HttpClient, private userService: UserService) {}
 
