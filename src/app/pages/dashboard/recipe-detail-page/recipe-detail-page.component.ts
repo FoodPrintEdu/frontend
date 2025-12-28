@@ -12,6 +12,7 @@ import { MessageService } from 'primeng/api';
 import { Recipe } from '../../../types/recipeTypes';
 import { RecipeService } from '../../../service/recipe.service';
 import { environment } from '../../../../environments/environment';
+import {DietService} from '../../../service/diet.service';
 
 @Component({
   selector: 'app-recipe-detail-page',
@@ -28,6 +29,7 @@ import { environment } from '../../../../environments/environment';
   templateUrl: './recipe-detail-page.component.html',
   styleUrl: './recipe-detail-page.component.scss',
   providers: [MessageService],
+  standalone: true
 })
 export class RecipeDetailPageComponent implements OnInit {
   recipe: Recipe | null = null;
@@ -43,7 +45,8 @@ export class RecipeDetailPageComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private recipeService: RecipeService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private dietService: DietService,
   ) {}
 
   ngOnInit() {
@@ -138,7 +141,7 @@ export class RecipeDetailPageComponent implements OnInit {
     this.recipeService
       .cookRecipe(this.recipe.id, this.selectedServings)
       .subscribe({
-        next: (response) => {
+        next: async (response) => {
           this.cookingInProgress = false;
           this.messageService.add({
             severity: 'success',
@@ -146,6 +149,7 @@ export class RecipeDetailPageComponent implements OnInit {
             detail: `Successfully logged ${this.selectedServings} serving(s) of ${this.recipe?.name}`,
           });
           console.log('Meal logged successfully:', response);
+          await this.dietService.loadDailyDietSummary();
         },
         error: (error) => {
           this.cookingInProgress = false;

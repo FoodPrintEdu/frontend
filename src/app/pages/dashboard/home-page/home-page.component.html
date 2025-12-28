@@ -5,11 +5,10 @@
   </header>
   <div class="home-page-content">
     <div class="cards-container">
-      <app-cards></app-cards>
+      <app-cards [clientDiet]="clientDiet" [dailyClientDietSummary]="clientDailySummary" [clientMeals]="clientMeals"></app-cards>
     </div>
-<!--    <app-recent-activity></app-recent-activity>-->
     <app-weight-chart [user]="user"></app-weight-chart>
-    <app-achievements></app-achievements>
+    <app-achievements [dailyClientDietSummary]="clientDailySummary" [clientMeals]="clientMeals"></app-achievements>
   </div>
 </section>
 

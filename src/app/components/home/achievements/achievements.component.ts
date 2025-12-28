@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {DietService} from '../../../service/diet.service';
 import {DailyClientDietSummaryObject} from '../../../types/dietTypes';
 import {CommonService} from '../../../service/common.service';
@@ -12,20 +12,10 @@ import {Meal} from '../../../types/Meal';
   standalone: true
 })
 export class AchievementsComponent {
-  private dailyClientDietSummary: DailyClientDietSummaryObject[];
-  private clientMeals: Meal[];
+  @Input() dailyClientDietSummary: DailyClientDietSummaryObject[];
+  @Input() clientMeals: Meal[];
 
-  constructor(private dietService: DietService,
-              private commonService: CommonService) {}
-
-  async ngOnInit() {
-
-
-    this.dailyClientDietSummary = (await this.dietService.getDailyDietSummary()).data;
-    this.clientMeals = (await this.dietService.getMeals()).data;
-
-
-  }
+  constructor(private commonService: CommonService) {}
 
   getStreakNumber() {
     return this.commonService.calculateDietStreak(this.dailyClientDietSummary);

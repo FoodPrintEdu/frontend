@@ -28,8 +28,10 @@ export class NutritionTrackerPageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    this.dailyDietSummary = (await this.dietService.getDailyDietSummary()).data;
-    this.updateCurrentDayData();
+    this.subscription = this.dietService.currentDailyDietSummary$.subscribe(summary => {
+      this.dailyDietSummary = summary;
+      this.updateCurrentDayData();
+    });
   }
 
   ngOnDestroy(): void {

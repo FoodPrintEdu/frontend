@@ -10,6 +10,7 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {Router} from '@angular/router';
 import {ClientDiet} from '../../types/ClientDiet';
 import {DietService} from '../../service/diet.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-side-menu',
@@ -29,22 +30,26 @@ export class SideMenuComponent implements OnInit {
   user!: UserResponse;
   currentDiet: ClientDiet | null = null;
   items: MenuItem[] = [];
+  dietSub: Subscription;
 
   constructor(
     protected userService: UserService,
     private router: Router,
     private dietService: DietService
-  ) {}
+  ) {
+  }
 
   async ngOnInit() {
-    try {
-      this.currentDiet = (await this.dietService.getCurrentClientDiet()).data;
-    } catch (error) {
-      this.currentDiet = null;
-    } finally {
-      this.updateMenu();
-    }
+    this.dietSub = this.dietService.clientDiet$.subscribe({
+      next: diet => {
+        this.currentDiet = diet;
+        this.updateMenu();
+      }, error: error => {
+        this.updateMenu();
+      }
+    });
   }
+
   updateMenu() {
 
     const dietDisabled = !this.currentDiet;
@@ -68,12 +73,6 @@ export class SideMenuComponent implements OnInit {
             label: 'Recipes',
             icon: 'pi pi-fw pi-book',
             routerLink: '/recipes',
-            disabled: dietDisabled,
-          },
-          {
-            label: 'Meal Planner',
-            icon: 'pi pi-fw pi-calendar',
-            routerLink: '/meal-planner',
             disabled: dietDisabled,
           },
           {

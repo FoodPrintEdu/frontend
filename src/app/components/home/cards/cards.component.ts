@@ -1,10 +1,9 @@
 import {NgIf, NgOptimizedImage} from '@angular/common';
-import {Component, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {ToastModule} from 'primeng/toast';
 import {ClientDiet} from '../../../types/ClientDiet';
 import {Diet} from '../../../types/Diet';
-import {DietService} from '../../../service/diet.service';
 import {DailyClientDietSummaryObject} from '../../../types/dietTypes';
 import {Meal} from '../../../types/Meal';
 import {CommonService} from '../../../service/common.service';
@@ -16,10 +15,11 @@ import {CommonService} from '../../../service/common.service';
   styleUrl: './cards.component.scss',
   standalone: true
 })
-export class CardsComponent implements OnInit {
+export class CardsComponent {
   protected readonly Math = Math;
-  clientDiet: ClientDiet;
-  clientMeals: Meal[];
+  @Input() clientDiet: ClientDiet;
+  @Input() clientMeals: Meal[];
+  @Input() dailyClientDietSummary: DailyClientDietSummaryObject[];
   today = new Date();
   todaysDateString = `${this.today.getFullYear()}-${this.today.getMonth() + 1}-${this.today.getDate()}`;
   proteinCriteriaToStringMap: Map<string, string> = new Map([
@@ -36,21 +36,9 @@ export class CardsComponent implements OnInit {
     ['LOW', 'low'],
 
   ]);
-  private dailyClientDietSummary: DailyClientDietSummaryObject[];
 
-  constructor(private dietService: DietService,
-              private commonService: CommonService) {
-  }
 
-  async ngOnInit() {
-    try {
-      this.clientDiet = (await this.dietService
-        .getCurrentClientDiet()).data;
-      this.dailyClientDietSummary = (await this.dietService.getDailyDietSummary()).data;
-      this.clientMeals = (await this.dietService.getMeals()).data;
-    } catch (e) {
-      console.error('Get weight prediction failed', e);
-    }
+  constructor(private commonService: CommonService) {
   }
 
   getDietDescription(diet?: Diet) {

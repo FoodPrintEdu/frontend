@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
   ProfileInformationComponent
 } from '../../../components/account/profile-information/profile-information.component';
@@ -10,6 +10,8 @@ import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {DietService} from '../../../service/diet.service';
 import {ClientDiet} from '../../../types/ClientDiet';
 import {DietPlan} from '../../../types/DietPlan';
+import {Subscription} from 'rxjs';
+import {Client} from '../../../types/Client';
 
 @Component({
   selector: 'app-account-page',
@@ -24,27 +26,40 @@ import {DietPlan} from '../../../types/DietPlan';
   styleUrl: './account-page.component.scss',
   standalone: true
 })
-export class AccountPageComponent implements OnInit {
+export class AccountPageComponent implements OnInit, OnDestroy {
 
   ref: DynamicDialogRef;
   protected currentDiet: ClientDiet;
+  private currentClient: Client;
   highlightDietPreferences: boolean;
+  private clientSub: Subscription;
+  private dietSub: Subscription;
 
   constructor(private dietService: DietService, private dialogService: DialogService) {
   }
 
   async ngOnInit(): Promise<void> {
 
-    try {
-      console.log("GOT CURRENT DIET", this.currentDiet);
-      this.currentDiet = (await this.dietService.getCurrentClientDiet()).data;
-      console.log("GOT CURRENT DIET", this.currentDiet);
-    } catch (error) {
-      this.currentDiet = null;
-    }
-    if (!this.currentDiet) {
-      this.showWelcome();
-    }
+    this.clientSub = this.dietService.currentClient$.subscribe({
+      next: (currentClient) => {
+        this.currentClient = currentClient;
+        if (!this.currentClient.fitnessDataPresent) {
+          this.showWelcome();
+        }
+      }, error: err => {
+        this.currentClient = null;
+        this.showWelcome();
+      }
+    });
+
+    this.dietSub = this.dietService.clientDiet$.subscribe({
+      next: (clientDiet) => {
+        this.currentDiet = clientDiet;
+      }, error: err => {
+        this.currentDiet = null;
+      }
+    });
+
   }
 
 
@@ -52,7 +67,7 @@ export class AccountPageComponent implements OnInit {
     this.ref = this.dialogService.open(WelcomeModalComponent, {
       header: ' ',
       width: '40%',
-      contentStyle: { overflow: 'auto' },
+      contentStyle: {overflow: 'auto'},
       baseZIndex: 10000,
       maximizable: false,
       closable: true,
@@ -71,10 +86,17 @@ export class AccountPageComponent implements OnInit {
 
     try {
       await this.dietService.setDietPreferences(dietPlan);
-      this.currentDiet = (await this.dietService.getCurrentClientDiet()).data;
     } catch (e) {
       console.error('Update-fitness-data failed', e);
     }
+  }
 
+  ngOnDestroy(): void {
+    if (this.dietSub) {
+      this.dietSub.unsubscribe();
+    }
+    if (this.clientSub) {
+      this.clientSub.unsubscribe();
+    }
   }
 }

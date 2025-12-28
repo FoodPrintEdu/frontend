@@ -87,7 +87,7 @@ export class LoginFormComponent {
           );
           this.clearErrorMessage();
           this.userService.setUser().subscribe(user => {
-            this.router.navigate(['/account']);
+            this.router.navigate(['/']);
           });
 
 

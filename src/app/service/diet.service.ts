@@ -1,7 +1,7 @@
 import {effect, Injectable} from '@angular/core';
-import {DailyClientDietSummaryObject, DietRequest, DietResponse,} from '../types/dietTypes';
+import {DailyClientDietSummaryObject,} from '../types/dietTypes';
 import {UserService} from './user.service';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, filter} from 'rxjs';
 import {ApiService} from './api.service';
 import {ApiResponse} from '../types/ApiResponse';
 import {ClientDiet} from '../types/ClientDiet';
@@ -14,16 +14,14 @@ import {Client} from '../types/Client';
 })
 export class DietService {
   private userId: string;
-  private currentDietDataSubject = new BehaviorSubject<DietResponse | null>(
-    null
-  );
-  private currentDailyDietSummarySubject =
-    new BehaviorSubject<DailyClientDietSummaryObject[] | null>(null);
+  private currentClientSubject = new BehaviorSubject<Client | null>(null);
+  public currentClient$ = this.currentClientSubject.asObservable().pipe(filter(Boolean));
+  private currentDailyDietSummarySubject = new BehaviorSubject<DailyClientDietSummaryObject[] | null>(null);
+  public currentDailyDietSummary$ = this.currentDailyDietSummarySubject.asObservable();
+  private clientDietSubject = new BehaviorSubject<ClientDiet | null>(null);
+  public clientDiet$ = this.clientDietSubject.asObservable();
 
-  public currentDailyDietSummary$ =
-    this.currentDailyDietSummarySubject.asObservable();
-  public currentDietData$ = this.currentDietDataSubject.asObservable();
-  private isLoadingDietData = false;
+  private isLoadingClientData = false;
 
   constructor(private apiService: ApiService, private userService: UserService) {
     const currentUser = this.userService.getCurrentUser();
@@ -33,22 +31,23 @@ export class DietService {
       const user = this.userService.getCurrentUser();
       if (user && user.id) {
         this.userId = user.id;
-        await this.loadDietData();
+        await this.loadClientData();
+        await this.loadClientDietData();
         await this.loadDailyDietSummary();
       } else {
-        this.clearDietData();
+        this.clearClientData();
       }
     });
   }
 
-  getDietData(): Promise<ApiResponse<DietResponse>> {
+  getClientData(): Promise<ApiResponse<Client>> {
     if (!this.userId) {
       throw new Error(
         'User ID not available. Please ensure user is logged in.'
       );
     }
 
-    return this.apiService.get<ApiResponse<DietResponse>>(`/diet/api/v1/clients/${this.userId}`)
+    return this.apiService.get<ApiResponse<Client>>(`/diet/api/v1/clients/${this.userId}`)
   }
 
   setDietPreferences(dietPlan: DietPlan): Promise<ApiResponse<Client>> {
@@ -57,52 +56,38 @@ export class DietService {
         `/diet/api/v1/clients/${this.userId}/update-fitness-data`,
         dietPlan,
       ).then(async r => {
-        await this.loadDietData();
-        await this.loadDailyDietSummary();
+        this.currentClientSubject.next(r.data);
+        await this.loadClientDietData()
         return r;
       });
   }
 
-  async loadDietData(): Promise<void> {
-    if (this.isLoadingDietData || !this.userId) {
+  async loadClientData(): Promise<void> {
+    if (this.isLoadingClientData || !this.userId) {
       return;
     }
 
-    this.isLoadingDietData = true;
+    this.isLoadingClientData = true;
     try {
-      const dietData = await this.getDietData();
-      this.currentDietDataSubject.next(dietData.data);
-      this.isLoadingDietData = false;
+      const dietData = await this.getClientData();
+      this.currentClientSubject.next(dietData.data);
+      this.isLoadingClientData = false;
     } catch (error) {
       console.error('Failed to load diet data', error);
-      this.currentDietDataSubject.next(null);
-      this.isLoadingDietData = false;
+      this.currentClientSubject.next(null);
+      this.isLoadingClientData = false;
     }
 
   }
 
-  getCurrentDietData(): DietResponse | null {
-    return this.currentDietDataSubject.value;
+  getCurrentClientData(): Client | null {
+    return this.currentClientSubject.value;
   }
 
-  clearDietData(): void {
-    this.currentDietDataSubject.next(null);
+  clearClientData(): void {
+    this.currentClientSubject.next(null);
   }
 
-  updateDietData(dietData: DietRequest): Promise<ApiResponse<DietResponse>> {
-    if (!this.userId) {
-      throw new Error(
-        'Client ID not available. Please ensure user is logged in.'
-      );
-    }
-
-    return this.apiService
-        .put<ApiResponse<DietResponse>>(
-          `/diet/api/v1/clients/${this.userId}/update-fitness-data`,
-          dietData,
-        );
-
-  }
 
   getCurrentClientDiet(): Promise<ApiResponse<ClientDiet>> {
     if (!this.userId) {
@@ -151,6 +136,19 @@ export class DietService {
     } catch (err) {
       console.error('Failed to load daily diet summary', err);
       this.currentDailyDietSummarySubject.next(null);
+    }
+  }
+
+  private async loadClientDietData(): Promise<void> {
+    if (!this.userId) {
+      return;
+    }
+    try {
+      const clientDiet = await this.getCurrentClientDiet();
+      this.clientDietSubject.next(clientDiet.data);
+    } catch (err) {
+      console.error('Failed to load client diet', err);
+      this.clientDietSubject.next(null);
     }
   }
 }
