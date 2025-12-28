@@ -1,27 +1,149 @@
-<div class="diet-preferences">
+<div class="diet-preferences" [class.highlight-active]="highlight">
   <header>
     <div>
-      <h2>Diet Preferences</h2>
+      <h2>{{getTitleText()}}</h2>
     </div>
-    <h3>Customize your dietary requirements and goals</h3>
+    <h3>{{getHeaderText()}}</h3>
   </header>
+
   <div class="content">
-    <div class="wrapper">
-      <div class="left">
-        <h4>Current Diet Plan</h4>
-        <div class="card">
-          <h3>Vegetarian Diet</h3>
-          <p>Rich in healthy fats, vegetables, and whole grains</p>
+
+    <div class="summary-view" *ngIf="!isEditing && currentDiet">
+      <div class="wrapper">
+        <div class="left">
+          <h4>Current Diet Plan</h4>
+          <div class="card info-card">
+            <h3>{{ currentDiet.client.preferredDietType }}</h3>
+            <p>Goal: {{ getGoalLabel(currentDiet) }}</p>
+          </div>
+        </div>
+        <div class="right">
+          <h4>Your Params</h4>
+          <div class="card info-card">
+            <h3>{{ currentDiet.client.weightInKg }} kg / {{ currentDiet.client.heightInCm }} cm</h3>
+            <p>Activity: {{ getActivityLabel(currentDiet) }}</p>
+          </div>
         </div>
       </div>
-      <div class="right">
-        <h4>Daily Calorie Goal</h4>
-        <div class="card">
-          <h3>1,800 calories</h3>
-          <p>Based on your activity level</p>
-        </div>
+
+      <div class="actions">
+        <p-button
+          label="Edit Preferences"
+          icon="pi pi-pencil"
+          styleClass="p-button-outlined"
+          [style]="{ width: '100%' }"
+          (onClick)="toggleEdit()">
+        </p-button>
       </div>
     </div>
-    <p-button label="Change Diet Plan" [style]="{ width: '100%' }" />
+
+    <form [formGroup]="initialForm" (ngSubmit)="onSubmit()" *ngIf="isEditing || !currentDiet">
+      <div class="form-grid">
+
+        <div class="field">
+          <label for="sex">Sex</label>
+          <p-dropdown
+            id="sex"
+            [options]="sexes"
+            formControlName="sex"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select Sex"
+            [style]="{'width':'100%'}">
+          </p-dropdown>
+        </div>
+
+        <div class="field">
+          <label for="age">Age</label>
+          <p-inputNumber
+            id="age"
+            formControlName="age"
+            placeholder="Years"
+            [style]="{'width':'100%'}"
+            [showButtons]="true"
+            [min]="0"
+            [max]="120">
+          </p-inputNumber>
+        </div>
+
+        <div class="field">
+          <label for="weight">Weight (kg)</label>
+          <p-inputNumber
+            id="weight"
+            formControlName="weightInKg"
+            placeholder="kg"
+            [style]="{'width':'100%'}"
+            [minFractionDigits]="1"
+            [maxFractionDigits]="1">
+          </p-inputNumber>
+        </div>
+
+        <div class="field">
+          <label for="height">Height (cm)</label>
+          <p-inputNumber
+            id="height"
+            formControlName="heightInCm"
+            placeholder="cm"
+            [style]="{'width':'100%'}">
+          </p-inputNumber>
+        </div>
+
+        <div class="field full-width">
+          <label for="activity">Activity Level</label>
+          <p-dropdown
+            id="activity"
+            [options]="activityLevels"
+            formControlName="activityLevel"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select Activity Level"
+            [style]="{'width':'100%'}">
+          </p-dropdown>
+        </div>
+
+        <div class="field full-width">
+          <label for="goal">Goal</label>
+          <p-dropdown
+            id="goal"
+            [options]="goals"
+            formControlName="goal"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select Goal"
+            [style]="{'width':'100%'}">
+          </p-dropdown>
+        </div>
+
+        <div class="field full-width">
+          <label for="diet">Preferred Diet Type</label>
+          <p-dropdown
+            id="diet"
+            [options]="diets"
+            formControlName="preferredDietType"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select Diet Type"
+            [style]="{'width':'100%'}">
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="actions form-actions">
+        <p-button
+          *ngIf="currentDiet"
+          label="Cancel"
+          styleClass="p-button-text"
+          (onClick)="toggleEdit()">
+        </p-button>
+
+        <p-button
+          [label]="buttonLabel"
+          type="submit"
+          [style]="{ width: '100%' }"
+          [disabled]="initialForm.invalid">
+        </p-button>
+      </div>
+    </form>
+
   </div>
 </div>

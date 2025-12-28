@@ -1,0 +1,43 @@
+.welcome-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 0;
+
+  .logo-wrapper {
+    margin-bottom: 1.5rem;
+
+    .app-logo {
+      width: 250px;
+      height: auto;
+      object-fit: contain;
+    }
+  }
+
+  .text-wrapper {
+    margin-bottom: 2rem;
+
+    h2 {
+      margin: 0 0 0.5rem 0;
+      color: var(--text-color-secondary, #666);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      color: var(--text-color-secondary, #666);
+      line-height: 1.5;
+    }
+  }
+
+  .cta-wrapper {
+    width: 100%;
+
+    ::ng-deep .p-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

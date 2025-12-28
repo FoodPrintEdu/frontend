@@ -22,6 +22,7 @@ import { Recipe, RecipeResponse } from '../../../types/recipeTypes';
   ],
   templateUrl: './recipes-page.component.html',
   styleUrls: ['./recipes-page.component.scss'],
+  standalone: true
 })
 export class RecipesPageComponent implements OnInit {
   recipes: Recipe[] = [];

@@ -1,22 +1,17 @@
-import { Component, signal } from '@angular/core';
-import { InputTextModule } from 'primeng/inputtext';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { IftaLabelModule } from 'primeng/iftalabel';
-import { PasswordModule } from 'primeng/password';
-import { environment } from '../../../environments/environment.development';
-import { HttpClient } from '@angular/common/http';
-import { InvalidFieldDirective } from '../../directives/invalid-field.directive';
-import { LoginResponse } from '../../types/authTypes';
-import { Router } from '@angular/router';
-import { UserService } from '../../service/user.service';
+import {Component, signal} from '@angular/core';
+import {InputTextModule} from 'primeng/inputtext';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {InputGroupModule} from 'primeng/inputgroup';
+import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
+import {IftaLabelModule} from 'primeng/iftalabel';
+import {PasswordModule} from 'primeng/password';
+import {environment} from '../../../environments/environment.development';
+import {HttpClient} from '@angular/common/http';
+import {InvalidFieldDirective} from '../../directives/invalid-field.directive';
+import {LoginResponse} from '../../types/authTypes';
+import {Router} from '@angular/router';
+import {UserService} from '../../service/user.service';
+import {DialogService} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-login-form',
@@ -30,6 +25,7 @@ import { UserService } from '../../service/user.service';
     FormsModule,
     InvalidFieldDirective,
   ],
+  providers: [DialogService],
   templateUrl: './login-form.component.html',
   styleUrl: './login-form.component.scss',
   standalone: true
@@ -38,6 +34,7 @@ export class LoginFormComponent {
   private apiUrl = environment.API_URL;
   loginForm: FormGroup;
   errorMessage = signal('');
+
 
   constructor(
     private fb: FormBuilder,
@@ -88,10 +85,13 @@ export class LoginFormComponent {
             response.refresh_token,
             response.token_type
           );
-          this.userService.setUser();
           this.clearErrorMessage();
+          this.userService.setUser().subscribe(user => {
+            this.router.navigate(['/account']);
+          });
 
-          this.router.navigate(['/']);
+
+
         },
         error: (err) => {
           console.error('Login failed', err);
@@ -99,4 +99,5 @@ export class LoginFormComponent {
         },
       });
   }
+
 }

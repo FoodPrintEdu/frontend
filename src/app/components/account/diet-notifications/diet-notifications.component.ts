@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
   imports: [ToggleSwitchModule, FormsModule],
   templateUrl: './diet-notifications.component.html',
   styleUrl: './diet-notifications.component.scss',
+  standalone: true
 })
 export class DietNotificationsComponent {
   checked1: boolean = false;

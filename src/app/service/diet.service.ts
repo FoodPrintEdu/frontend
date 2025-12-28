@@ -6,6 +6,8 @@ import {ApiService} from './api.service';
 import {ApiResponse} from '../types/ApiResponse';
 import {ClientDiet} from '../types/ClientDiet';
 import {Meal} from '../types/Meal';
+import {DietPlan} from '../types/DietPlan';
+import {Client} from '../types/Client';
 
 @Injectable({
   providedIn: 'root',
@@ -47,6 +49,18 @@ export class DietService {
     }
 
     return this.apiService.get<ApiResponse<DietResponse>>(`/diet/api/v1/clients/${this.userId}`)
+  }
+
+  setDietPreferences(dietPlan: DietPlan): Promise<ApiResponse<Client>> {
+    return this.apiService
+      .put<ApiResponse<Client>>(
+        `/diet/api/v1/clients/${this.userId}/update-fitness-data`,
+        dietPlan,
+      ).then(async r => {
+        await this.loadDietData();
+        await this.loadDailyDietSummary();
+        return r;
+      });
   }
 
   async loadDietData(): Promise<void> {

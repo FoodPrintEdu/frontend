@@ -11,6 +11,7 @@ import { RecipeDetailPageComponent } from './pages/dashboard/recipe-detail-page/
 import { AccountPageComponent } from './pages/dashboard/account-page/account-page.component';
 import { InitialFormPageComponent } from './pages/dashboard/initial-form-page/initial-form-page.component';
 import { NutritionTrackerPageComponent } from './pages/dashboard/nutrition-tracker-page/nutrition-tracker-page.component';
+import {currentDietGuard} from './guards/current-diet.guard';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,7 @@ export const routes: Routes = [
           {
             path: '',
             component: HomePageComponent,
+            canActivate: [currentDietGuard]
           },
           {
             path: 'leaderboard',
@@ -36,10 +38,12 @@ export const routes: Routes = [
           {
             path: 'nutrition',
             component: NutritionTrackerPageComponent,
+            canActivate: [currentDietGuard]
           },
           {
             path: 'recipes',
             component: RecipesPageComponent,
+            canActivate: [currentDietGuard]
           },
           {
             path: 'recipe/:id',

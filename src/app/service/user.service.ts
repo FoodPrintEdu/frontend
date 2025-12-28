@@ -2,7 +2,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable, signal} from '@angular/core';
 import {environment} from '../../environments/environment.development';
 import {RefreshResponse} from '../types/authTypes';
-import {Subscription, tap} from 'rxjs';
+import {of, Subscription, tap} from 'rxjs';
 import {UserResponse} from '../types/userTypes';
 
 @Injectable({
@@ -108,9 +108,9 @@ export class UserService {
     if (user) {
       this.user.set(user);
       localStorage.setItem("user", JSON.stringify(user));
-      return;
+      return of(user);
     }
-    this.http.get<UserResponse>(
+    return this.http.get<UserResponse>(
       `${this.apiUrl}/user/api/v1/auth/profile`,
       {
         headers: {
@@ -125,7 +125,7 @@ export class UserService {
         console.log("SETTING USER IN TAP");
         localStorage.setItem("user", JSON.stringify(user));
       })
-    ).subscribe();
+    );
   }
 
   getCurrentUser() {
