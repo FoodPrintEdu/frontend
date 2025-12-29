@@ -1,0 +1,52 @@
+<div class="content loading-phase" *ngIf="!isFinished; else resultPhase">
+
+  <div class="animation-wrapper">
+    <i class="pi pi-cog pi-spin" style="font-size: 3rem; color: #666"></i>
+  </div>
+
+  <h3 class="step-text">{{ steps[currentStepIndex] }}</h3>
+
+  <p-progressBar
+    [value]="progress"
+    [showValue]="false"
+    [style]="{ height: '10px' }"
+    mode="determinate">
+  </p-progressBar>
+
+  <p class="progress-percentage">{{ progress }}% completed</p>
+</div>
+
+<ng-template #resultPhase>
+  <div class="content result-phase" *ngIf="generatedDiet">
+
+    <div class="success-header">
+      <div class="icon-circle" [ngClass]="getDietColorClass(generatedDiet.diet.type)">
+        <i class="pi pi-check-circle" style="font-size: 2.5rem"></i>
+      </div>
+      <h2 style="color: #22c55e">We found your match!</h2>
+    </div>
+
+    <div class="diet-card">
+      <h3 [ngClass]="getDietColorClass(generatedDiet.diet.type)">{{ generatedDiet.diet.name }}</h3>
+      <p class="description">{{ generatedDiet.diet.description }}</p>
+
+      <div class="tags-container">
+        <p-tag [value]="generatedDiet.diet.type" severity="info"></p-tag>
+        <p-tag [value]="'Daily protein target: ' + Math.round(generatedDiet.dailyProteinTarget)" severity="warn"></p-tag>
+        <p-tag [value]="'Daily kcal target: ' + Math.round(generatedDiet.dailyKcalTarget)" severity="danger"></p-tag>
+      </div>
+    </div>
+
+    <div class="actions">
+      <p-button
+        label="Visit Diet Dashboard"
+        icon="pi pi-arrow-right"
+        iconPos="right"
+        styleClass="p-button-rounded p-button-success w-full"
+        [style]="{ width: '100%' }"
+        (onClick)="closeModal()">
+      </p-button>
+    </div>
+
+  </div>
+</ng-template>
