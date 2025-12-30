@@ -1,21 +1,15 @@
-import { NgClass } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
-import { environment } from '../../../environments/environment.development';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { IftaLabelModule } from 'primeng/iftalabel';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { InvalidFieldDirective } from '../../directives/invalid-field.directive';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import {NgClass} from '@angular/common';
+import {Component, signal} from '@angular/core';
+import {environment} from '../../../environments/environment.development';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {IftaLabelModule} from 'primeng/iftalabel';
+import {InputGroupModule} from 'primeng/inputgroup';
+import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
+import {InputTextModule} from 'primeng/inputtext';
+import {PasswordModule} from 'primeng/password';
+import {InvalidFieldDirective} from '../../directives/invalid-field.directive';
+import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-register-form',

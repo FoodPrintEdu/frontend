@@ -96,11 +96,11 @@ export class SideMenuComponent implements OnInit {
             icon: 'pi pi-fw pi-star',
             routerLink: '/leaderboard',
           },
-          {
-            label: 'Forums',
-            icon: 'pi pi-fw pi-comments',
-            routerLink: '/forums',
-          },
+          // {
+          //   label: 'Forums',
+          //   icon: 'pi pi-fw pi-comments',
+          //   routerLink: '/forums',
+          // },
         ],
       },
       {
