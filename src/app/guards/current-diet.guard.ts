@@ -7,16 +7,19 @@ export const currentDietGuard: CanActivateFn = async (route, state) => {
   const dietService = inject(DietService);
   const router = inject(Router);
 
-  const currentClient = await firstValueFrom(
-    dietService.currentClient$.pipe(
-      take(1)
-    )
-  );
-  const canActivate = currentClient.fitnessDataPresent;
+  try {
+    const currentClient = await firstValueFrom(
+      dietService.currentClient$.pipe(
+        take(1)
+      )
+    );
 
-  if (!canActivate) {
-    return router.createUrlTree(['/account']);
+    if (!currentClient.fitnessDataPresent) {
+      return router.createUrlTree(['/account']);
+    }
+    return true;
+  } catch (e) {
+    console.error("Diet Guard Error", e);
+    return router.createUrlTree(['/login']);
   }
-
-  return true;
 };

@@ -27,5 +27,11 @@
       placeholder="Password"
     />
   </p-inputgroup>
+  <span
+    class="error-message"
+    [ngClass]="errorMessage().length === 0 ? 'invisible' : ''"
+  >
+    {{ errorMessage() }}
+  </span>
   <button type="submit">LOGIN</button>
 </form>

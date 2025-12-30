@@ -12,6 +12,7 @@ import {LoginResponse} from '../../types/authTypes';
 import {Router} from '@angular/router';
 import {UserService} from '../../service/user.service';
 import {DialogService} from 'primeng/dynamicdialog';
+import {NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-login-form',
@@ -24,6 +25,7 @@ import {DialogService} from 'primeng/dynamicdialog';
     PasswordModule,
     FormsModule,
     InvalidFieldDirective,
+    NgClass,
   ],
   providers: [DialogService],
   templateUrl: './login-form.component.html',

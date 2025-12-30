@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
-import { AuthGuardComponent } from './pages/auth-guard/auth-guard.component';
+import { RootComponent } from './pages/root/root.component';
 import { HomePageComponent } from './pages/dashboard/home-page/home-page.component';
 import { LeaderboardPageComponent } from './pages/dashboard/leaderboard-page/leaderboard-page.component';
 import { MarketplacePageComponent } from './pages/dashboard/marketplace-page/marketplace-page.component';
@@ -12,11 +12,13 @@ import { AccountPageComponent } from './pages/dashboard/account-page/account-pag
 import { InitialFormPageComponent } from './pages/dashboard/initial-form-page/initial-form-page.component';
 import { NutritionTrackerPageComponent } from './pages/dashboard/nutrition-tracker-page/nutrition-tracker-page.component';
 import {currentDietGuard} from './guards/current-diet.guard';
+import {authGuard} from './guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    component: AuthGuardComponent,
+    component: RootComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: '',

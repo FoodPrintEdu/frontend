@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AuthGuardComponent } from './auth-guard.component';
+import { RootComponent } from './root.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-describe('AuthGuardComponent', () => {
-  let component: AuthGuardComponent;
-  let fixture: ComponentFixture<AuthGuardComponent>;
+describe('RootComponent', () => {
+  let component: RootComponent;
+  let fixture: ComponentFixture<RootComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AuthGuardComponent],
+      imports: [RootComponent],
       providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AuthGuardComponent);
+    fixture = TestBed.createComponent(RootComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

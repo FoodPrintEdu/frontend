@@ -2,7 +2,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable, signal} from '@angular/core';
 import {environment} from '../../environments/environment.development';
 import {RefreshResponse} from '../types/authTypes';
-import {of, Subscription, tap} from 'rxjs';
+import {firstValueFrom, of, tap} from 'rxjs';
 import {UserResponse} from '../types/userTypes';
 
 @Injectable({
@@ -80,28 +80,26 @@ export class UserService {
     localStorage.setItem('tokenType', tokenType);
   }
 
-  refreshTokens(): Subscription {
-    return this.http
-      .post<RefreshResponse>(`${this.apiUrl}/user/api/v1/auth/refresh`, null, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${this.tokenType} ${this.refreshToken}`,
-        },
-        responseType: 'json',
-      })
-      .subscribe({
-        next: (response) => {
-          this.token = response.access_token;
-          localStorage.setItem('token', response.access_token);
-          localStorage.setItem(
-            'tokenExpiry',
-            (Date.now() + this.ACCESS_EXPIRY).toString()
-          );
-        },
-        error: (err) => {
-          console.error('Failed to refresh tokens', err);
-        },
-      });
+  async refreshTokens() {
+    try {
+      const refreshResponse = await firstValueFrom(this.http
+        .post<RefreshResponse>(`${this.apiUrl}/user/api/v1/auth/refresh`, null, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${this.tokenType} ${this.refreshToken}`,
+          },
+          responseType: 'json',
+        }));
+      this.token = refreshResponse.access_token;
+      localStorage.setItem('token', refreshResponse.access_token);
+      localStorage.setItem(
+        'tokenExpiry',
+        (Date.now() + this.ACCESS_EXPIRY).toString()
+      );
+    } catch (e) {
+      console.error('Failed to refresh tokens', e);
+      this.clearTokens();
+    }
   }
 
   setUser(user: UserResponse = null) {
