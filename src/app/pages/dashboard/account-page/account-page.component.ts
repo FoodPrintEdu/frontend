@@ -10,10 +10,12 @@ import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {DietService} from '../../../service/diet.service';
 import {ClientDiet} from '../../../types/ClientDiet';
 import {DietPlan} from '../../../types/DietPlan';
-import {Subscription} from 'rxjs';
+import {combineLatest, filter, Subscription} from 'rxjs';
 import {Client} from '../../../types/Client';
 import {DietGenerationModalComponent} from '../../../components/diet-generation-modal/diet-generation-modal.component';
 import {Router} from '@angular/router';
+import {DailyClientDietSummaryObject} from '../../../types/dietTypes';
+import {Meal} from '../../../types/Meal';
 
 @Component({
   selector: 'app-account-page',
@@ -33,9 +35,10 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   ref: DynamicDialogRef;
   protected currentDiet: ClientDiet;
   private currentClient: Client;
+  clientDailySummary: DailyClientDietSummaryObject[];
   highlightDietPreferences: boolean;
-  private clientSub: Subscription;
-  private dietSub: Subscription;
+  subscription: Subscription;
+  clientMeals: Meal[];
 
 
   constructor(private dietService: DietService, private dialogService: DialogService,
@@ -43,27 +46,26 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-
-    this.clientSub = this.dietService.currentClient$.subscribe({
-      next: (currentClient) => {
-        this.currentClient = currentClient;
-        if (!this.currentClient.fitnessDataPresent) {
+    this.subscription = combineLatest({
+      diet: this.dietService.clientDiet$.pipe(filter(d => !!d)),
+      summary: this.dietService.currentDailyDietSummary$,
+      client: this.dietService.currentClient$,
+      meals: this.dietService.getMeals()
+    })
+      .subscribe({
+        next: ({diet, summary, client, meals}) => {
+          this.currentClient = client;
+          if (!this.currentClient.fitnessDataPresent) {
+            this.showWelcome();
+          }
+          this.currentDiet = diet;
+          this.clientDailySummary = summary;
+          this.clientMeals = meals.data;
+        }, error: error => {
+          this.currentClient = null;
           this.showWelcome();
         }
-      }, error: err => {
-        this.currentClient = null;
-        this.showWelcome();
-      }
-    });
-
-    this.dietSub = this.dietService.clientDiet$.subscribe({
-      next: (clientDiet) => {
-        this.currentDiet = clientDiet;
-      }, error: err => {
-        this.currentDiet = null;
-      }
-    });
-
+      });
   }
 
 
@@ -100,7 +102,7 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     this.ref = this.dialogService.open(DietGenerationModalComponent, {
       header: 'Diet generation',
       width: '40%',
-      contentStyle: { overflow: 'auto' },
+      contentStyle: {overflow: 'auto'},
       baseZIndex: 10000,
       maximizable: false,
       closable: true,
@@ -118,11 +120,8 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.dietSub) {
-      this.dietSub.unsubscribe();
-    }
-    if (this.clientSub) {
-      this.clientSub.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe()
     }
   }
 }

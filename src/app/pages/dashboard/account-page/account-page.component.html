@@ -6,7 +6,7 @@
     </div>
   </header>
   <div class="account-page-content">
-    <app-profile-information class="full-span"></app-profile-information>
+    <app-profile-information [currentDiet]="currentDiet" [meals]="clientMeals" [dailyClientDietSummary]="clientDailySummary" class="full-span"></app-profile-information>
     <app-diet-preferences [currentDiet]="currentDiet" [highlight]="highlightDietPreferences" (saveDiet)="onSaveDiet($event)" class="full-span"></app-diet-preferences>
     <app-diet-notifications></app-diet-notifications>
     <app-account-settings></app-account-settings>

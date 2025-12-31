@@ -10,7 +10,8 @@ import { FormsModule } from '@angular/forms';
   standalone: true
 })
 export class DietNotificationsComponent {
+  // todo remove mock data
   checked1: boolean = false;
   checked2: boolean = true;
-  checked3: boolean = false;
+
 }

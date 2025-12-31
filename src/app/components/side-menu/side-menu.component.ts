@@ -115,10 +115,7 @@ export class SideMenuComponent implements OnInit {
             icon: 'pi pi-fw pi-sign-out',
             label: 'Log Out',
             command: () => {
-              this.userService.clearTokens();
-              this.router.navigate(['/login']).then(() => {
-                window.location.reload();
-              });
+              this.userService.logout();
             },
           },
         ],

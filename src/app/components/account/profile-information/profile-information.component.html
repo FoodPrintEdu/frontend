@@ -13,14 +13,14 @@
       <div class="user-details">
         <h2>{{ user.name }}</h2>
         <p>{{ user.email }}</p>
-        <div class="badges">
-          <p>Vegetarian Diet</p>
+        <div *ngIf="currentDiet" class="badges">
+          <p>{{ getDietLabel() }} Diet</p>
           <p>Premium Member</p>
         </div>
       </div>
-      <div class="button-wrapper">
-        <p-button label="Edit Profile" />
-      </div>
+<!--      <div class="button-wrapper">-->
+<!--        <p-button label="Edit Profile" />-->
+<!--      </div>-->
     </div>
 
     <ng-template #loading>
@@ -29,17 +29,21 @@
 
     <div class="achievements">
       <div>
-        <h2 class="green">28</h2>
+        <h2 class="green">{{ getCurrentDayStreak() }}</h2>
         <p>Day Streak</p>
       </div>
       <div>
-        <h2 class="red">2,180</h2>
+        <h2 class="red">{{ getTotalPoints() }}</h2>
         <p>Total Points</p>
       </div>
       <div>
-        <h2>3rd</h2>
-        <p>Leaderboard Rank</p>
+        <h2>{{ getPreparedRecipesCount() }}</h2>
+        <p>Prepared Recipes</p>
       </div>
+<!--      <div>-->
+<!--        <h2>3rd</h2>-->
+<!--        <p>Leaderboard Rank</p>-->
+<!--      </div>-->
     </div>
   </div>
 </div>

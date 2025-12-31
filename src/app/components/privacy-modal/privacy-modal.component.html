@@ -1,0 +1,36 @@
+<div class="privacy-container">
+
+  <p class="description">
+    Manage how your diet data is shared and secure your account.
+  </p>
+
+  <div class="section">
+    <h3><i class="pi pi-users"></i> Community & Social</h3>
+
+    <div class="setting-item">
+      <div class="label">
+        <span class="title">Public Profile</span>
+        <span class="sub">Allow others to see your recipes and achievements on the leaderboard.</span>
+      </div>
+      <p-inputSwitch [(ngModel)]="settings.publicProfile"></p-inputSwitch>
+    </div>
+  </div>
+
+  <p-divider></p-divider>
+
+  <div class="section">
+    <h3><i class="pi pi-lock"></i> Security</h3>
+
+    <div class="action-row">
+      <div class="label">
+        <span class="title">Password</span>
+        <span class="sub">Last changed: 3 months ago</span>
+      </div>
+      <p-button label="Change Password" styleClass="p-button-outlined p-button-sm"></p-button>
+    </div>
+  </div>
+
+  <div class="actions">
+    <p-button label="Save Preferences" (onClick)="save()" styleClass="w-full"></p-button>
+  </div>
+</div>

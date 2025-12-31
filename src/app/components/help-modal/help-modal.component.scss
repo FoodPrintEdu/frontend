@@ -1,0 +1,122 @@
+.help-container {
+  font-family: var(--font-family, sans-serif);
+  padding-bottom: 1rem;
+
+  ::ng-deep .p-tabview {
+    .p-tabview-nav {
+      border-bottom: 1px solid #eee;
+      background: transparent;
+
+      li {
+        .p-tabview-nav-link {
+          background: transparent;
+          border: none;
+          color: #666;
+          font-weight: 600;
+          transition: color 0.2s;
+          padding: 1rem;
+
+          &:focus { box-shadow: none; }
+        }
+
+        &.p-highlight .p-tabview-nav-link {
+          color: var(--primary-color, #3B82F6);
+          border-bottom: 2px solid var(--primary-color, #3B82F6);
+        }
+      }
+    }
+
+    .p-tabview-panels {
+      padding: 1.5rem 0 0 0;
+      background: transparent;
+    }
+  }
+  .faq-content {
+    ::ng-deep p-accordion {
+
+      p-accordion-panel {
+        display: block;
+        margin-bottom: 0.75rem;
+      }
+
+      .p-accordion-header-action {
+        background-color: #f8f9fa;
+        color: #666;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 1rem;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &:focus {
+          box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
+        }
+      }
+
+      .p-accordion-header-active .p-accordion-header-action {
+        background-color: #eff6ff;
+        border-color: rgba(var(--primary-color-rgb), 0.2);
+        color: var(--primary-color, #3B82F6);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .p-accordion-content-content {
+        border: 1px solid #eee;
+        border-top: none;
+        background-color: #fff;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        color: #666;
+        line-height: 1.6;
+        padding: 1rem;
+      }
+    }
+  }
+
+  .contact-form {
+    .field {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 120px;
+        padding: 0.75rem;
+        border-radius: 6px;
+        border: 1px solid #ced4da;
+        font-family: inherit;
+        resize: vertical;
+
+        &:focus {
+          border-color: var(--primary-color, #3B82F6);
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
+        }
+      }
+    }
+
+    ::ng-deep .p-button {
+      width: 100%;
+      justify-content: center;
+      font-weight: 600;
+    }
+  }
+  ::ng-deep p-accordion-panel:not(.p-accordion-panel-active) {
+    .p-accordion-content {
+      display: none !important;
+    }
+  }
+}

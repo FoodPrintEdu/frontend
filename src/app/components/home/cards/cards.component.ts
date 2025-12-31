@@ -45,6 +45,11 @@ export class CardsComponent {
     return `Healthy, ${this.kcalCriteriaToStringMap.get(diet.kcalCriteria)} in calories & ${this.proteinCriteriaToStringMap.get(diet.proteinCriteria)} in protein`
   }
 
+  getStreakNumberString() {
+    const streak = this.getStreakNumber();
+    return streak === 1 ? `${streak} day` : `${streak} days`;
+  }
+
   getStreakNumber() {
     return this.commonService.calculateDietStreak(this.dailyClientDietSummary);
   }

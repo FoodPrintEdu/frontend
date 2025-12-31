@@ -1,0 +1,53 @@
+<div class="help-container">
+  <p-tabView *ngIf="modalReady">
+    <p-tabPanel header="FAQ">
+      <div class="faq-content">
+        <p class="mb-3 text-600">Common questions about your diet plan.</p>
+
+        <p-accordion [multiple]="true">
+
+          <p-accordion-panel value="0">
+            <p-accordion-header>How is my calorie goal calculated?</p-accordion-header>
+            <p-accordion-content>
+              <p class="m-0 text-sm text-700">
+                Your calorie goal is based on your BMR (Basal Metabolic Rate) calculated from the weight, height, and
+                age you provided, adjusted by your activity level modifier.
+              </p>
+            </p-accordion-content>
+          </p-accordion-panel>
+
+          <p-accordion-panel value="1">
+            <p-accordion-header>Why can't I see the recipes?</p-accordion-header>
+            <p-accordion-content>
+              <p class="m-0 text-sm text-700">
+                Recipes are generated only after you complete your initial profile setup. Make sure your "Diet
+                Preferences" are fully saved.
+              </p>
+            </p-accordion-content>
+          </p-accordion-panel>
+
+        </p-accordion>
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel header="Contact Us">
+      <div class="contact-form pt-2">
+        <p class="text-sm text-600 mb-3">
+          Describe your issue with the diet plan or app functionality. Our nutrition team typically replies within 24h.
+        </p>
+        <br>
+        <div class="field mb-3">
+          <label style="color: #666" class="block mb-2 font-bold text-sm">Message</label>
+          <textarea
+            pInputTextarea
+            rows="5"
+            style="width: 100%"
+            placeholder="e.g., My generated shopping list is missing items...">
+          </textarea>
+        </div>
+
+        <p-button label="Send Message" icon="pi pi-send" (onClick)="sendTicket()" styleClass="w-full"></p-button>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+</div>

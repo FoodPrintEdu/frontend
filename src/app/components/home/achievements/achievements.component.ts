@@ -22,20 +22,7 @@ export class AchievementsComponent {
   }
 
   getNumberOfUniqueRecipes() {
-
-    if (!this.clientMeals || this.clientMeals.length === 0) {
-      return 0;
-    }
-
-    let usedIds = [];
-    let uniqueNumber = 0;
-    for (const meal of this.clientMeals) {
-      if (!usedIds.includes(meal.recipe.id)) {
-        usedIds.push(meal.recipe.id);
-        uniqueNumber++;
-      }
-    }
-    return uniqueNumber;
+    return this.commonService.getNumberOfUniqueRecipes(this.clientMeals);
   }
 
 

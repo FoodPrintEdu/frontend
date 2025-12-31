@@ -4,6 +4,7 @@ import {environment} from '../../environments/environment.development';
 import {RefreshResponse} from '../types/authTypes';
 import {firstValueFrom, of, tap} from 'rxjs';
 import {UserResponse} from '../types/userTypes';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class UserService {
   private apiUrl = environment.API_URL;
   private user = signal<UserResponse | null>(null);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.token = localStorage.getItem('token');
     this.refreshToken = localStorage.getItem('refreshToken');
     this.tokenType = localStorage.getItem('tokenType');
@@ -128,5 +129,12 @@ export class UserService {
 
   getCurrentUser() {
     return this.user();
+  }
+
+  logout() {
+    this.clearTokens();
+    this.router.navigate(['/login']).then(() => {
+      window.location.reload();
+    });
   }
 }
