@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { TagModule } from 'primeng/tag';
-import { DividerModule } from 'primeng/divider';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
-import { Recipe } from '../../../types/recipeTypes';
-import { RecipeService } from '../../../service/recipe.service';
-import { environment } from '../../../../environments/environment';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ButtonModule} from 'primeng/button';
+import {CardModule} from 'primeng/card';
+import {TagModule} from 'primeng/tag';
+import {DividerModule} from 'primeng/divider';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {ToastModule} from 'primeng/toast';
+import {MessageService} from 'primeng/api';
+import {Recipe} from '../../../types/recipeTypes';
+import {RecipeService} from '../../../service/recipe.service';
+import {environment} from '../../../../environments/environment';
 import {DietService} from '../../../service/diet.service';
+import {Popover} from 'primeng/popover';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-recipe-detail-page',
@@ -25,6 +27,8 @@ import {DietService} from '../../../service/diet.service';
     DividerModule,
     InputNumberModule,
     ToastModule,
+    Popover,
+    Tooltip,
   ],
   templateUrl: './recipe-detail-page.component.html',
   styleUrl: './recipe-detail-page.component.scss',
@@ -36,7 +40,7 @@ export class RecipeDetailPageComponent implements OnInit {
   loading: boolean = true;
   error: string | null = null;
   recipeId: number = 0;
-
+  currentNutritionInfo: string[] = [];
   // Meal preparation properties
   selectedServings: number = 1;
   cookingInProgress: boolean = false;
@@ -115,6 +119,11 @@ export class RecipeDetailPageComponent implements OnInit {
 
   getRecipeSrc(recipe: Recipe) {
     return `${environment.API_URL}/diet/api/v1/recipes/${recipe.id}/image`;
+  }
+
+  showNutritionInfo(event: Event, info: string[], popover: Popover) {
+    this.currentNutritionInfo = info;
+    popover.toggle(event);
   }
 
   onMealPrepared() {

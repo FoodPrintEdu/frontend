@@ -1,4 +1,4 @@
-import {NgIf, NgOptimizedImage} from '@angular/common';
+import {formatDate, NgIf, NgOptimizedImage} from '@angular/common';
 import {Component, Input} from '@angular/core';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {ToastModule} from 'primeng/toast';
@@ -21,7 +21,7 @@ export class CardsComponent {
   @Input() clientMeals: Meal[];
   @Input() dailyClientDietSummary: DailyClientDietSummaryObject[];
   today = new Date();
-  todaysDateString = `${this.today.getFullYear()}-${this.today.getMonth() + 1}-${this.today.getDate()}`;
+  todaysDateString = formatDate(this.today, 'yyyy-MM-dd', 'en-US');
   proteinCriteriaToStringMap: Map<string, string> = new Map([
     ['NORMAL', 'balanced'],
     ['HIGH', 'high'],

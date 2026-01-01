@@ -36,8 +36,7 @@
       <p-progressbar
         [value]="(getStreakNumber() / 30) * 100"
         [showValue]="false"
-        [style]="{ height: '8px', 'border-radius': '5px' }"
-      />
+        [style]="{ height: '8px', 'border-radius': '5px' }"></p-progressbar>
       <p>{{ 30 - getStreakNumber() }} days to your first milestone!</p>
     </div>
   </div>
@@ -59,8 +58,7 @@
       <p-progressbar
         [value]="(getTodaysCalories() / clientDiet.dailyKcalTarget) * 100"
         [showValue]="false"
-        [style]="{ height: '8px', 'border-radius': '5px' }"
-      />
+        [style]="{ height: '8px', 'border-radius': '5px' }"></p-progressbar>
       <p *ngIf="clientDiet.dailyKcalTarget > getTodaysCalories()">{{ Math.round(clientDiet.dailyKcalTarget - getTodaysCalories())  }} kcal left to reach goal</p>
       <p *ngIf="clientDiet.dailyKcalTarget < getTodaysCalories()">Goal achieved!</p>
 
@@ -84,9 +82,8 @@
       <p-progressbar
         [value]="(getTodaysMealNumber() / 5) * 100"
         [showValue]="false"
-        [style]="{ height: '8px', 'border-radius': '5px' }"
-      />
-      <p>{{ 5 - getTodaysMealNumber() }} meals remaining</p>
+        [style]="{ height: '8px', 'border-radius': '5px' }"></p-progressbar>
+      <p>{{ Math.max(0,5 - getTodaysMealNumber()) }} meals remaining</p>
     </div>
   </div>
 </div>

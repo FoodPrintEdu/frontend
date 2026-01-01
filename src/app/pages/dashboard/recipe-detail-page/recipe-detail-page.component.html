@@ -33,7 +33,7 @@
           <div class="stat">
             <i class="pi pi-flash"></i>
             <span
-              >{{ recipe.kcalPerServing | number : "1.0-0" }} kcal/serving</span
+            >{{ recipe.kcalPerServing | number : "1.0-0" }} kcal/serving</span
             >
           </div>
         </div>
@@ -66,13 +66,27 @@
             *ngFor="let recipeIngredient of recipe.recipeIngredients"
           >
             <div class="ingredient-info">
-              <h4>{{ recipeIngredient.ingredient.name }}</h4>
+
+              <div class="flex align-items-center gap-2 mb-1">
+                <h4 class="m-0">{{ recipeIngredient.ingredient.name }}</h4>
+
+                <i
+                  *ngIf="recipeIngredient.ingredient.nutritionInfo?.length > 0"
+                  class="pi pi-info-circle text-primary cursor-pointer hover:text-primary-600"
+                  style="font-size: 1rem; margin-top: 4px;"
+                  pTooltip="Show nutrition facts"
+                  tooltipPosition="top"
+                  (click)="showNutritionInfo($event, recipeIngredient.ingredient.nutritionInfo, op)"
+                ></i>
+              </div>
+
               <p class="category">{{ recipeIngredient.ingredient.category }}</p>
               <p class="quantity">Quantity: {{ recipeIngredient.quantity }}</p>
               <p *ngIf="recipeIngredient.notes" class="notes">
                 Notes: {{ recipeIngredient.notes }}
               </p>
             </div>
+
             <div class="ingredient-nutrition">
               <small>
                 {{ recipeIngredient.ingredient.kcal | number : "1.1-1" }} kcal |
@@ -80,35 +94,28 @@
                 | F: {{ recipeIngredient.ingredient.fat | number : "1.1-1" }}g |
                 C: {{ recipeIngredient.ingredient.carbs | number : "1.1-1" }}g
               </small>
-              <div
-                class="dietary-info"
-                *ngIf="
-                  recipeIngredient.ingredient.vegan ||
-                  recipeIngredient.ingredient.vegetarian
-                "
-              >
-                <p-tag
-                  *ngIf="recipeIngredient.ingredient.vegan"
-                  value="Vegan"
-                  severity="success"
-                  icon="pi pi-check"
-                >
-                </p-tag>
-                <p-tag
-                  *ngIf="
-                    recipeIngredient.ingredient.vegetarian &&
-                    !recipeIngredient.ingredient.vegan
-                  "
-                  value="Vegetarian"
-                  severity="warning"
-                  icon="pi pi-check"
-                >
-                </p-tag>
-              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <p-popover #op [style]="{ 'max-width': '300px' }">
+        <div class="p-3">
+          <h5 class="m-0 mb-2 font-bold text-color">Nutrition Facts</h5>
+
+          <ul class="m-0 p-0 list-none">
+            <li *ngFor="let info of currentNutritionInfo" class="flex align-items-center mb-2 last:mb-0">
+              <i style="margin-top: 4px;" class="pi pi-check-circle text-green-500 mr-2 text-sm"></i>
+              <span style="margin-left: 8px;" class="text-sm text-color-secondary">{{ info }}</span>
+            </li>
+          </ul>
+
+          <p *ngIf="currentNutritionInfo.length === 0" class="text-sm text-color-secondary m-0">
+            No specific nutrition info available.
+          </p>
+        </div>
+      </p-popover>
+
     </div>
 
     <div class="recipe-sidebar">
@@ -125,25 +132,25 @@
           <div class="nutrition-item">
             <span class="label">Calories</span>
             <span class="value">{{
-              recipe.kcalPerServing | number : "1.0-0"
-            }}</span>
+                recipe.kcalPerServing | number : "1.0-0"
+              }}</span>
           </div>
           <div class="nutrition-item">
             <span class="label">Protein</span>
             <span class="value"
-              >{{ recipe.proteinPerServing | number : "1.1-1" }}g</span
+            >{{ recipe.proteinPerServing | number : "1.1-1" }}g</span
             >
           </div>
           <div class="nutrition-item">
             <span class="label">Fat</span>
             <span class="value"
-              >{{ recipe.fatPerServing | number : "1.1-1" }}g</span
+            >{{ recipe.fatPerServing | number : "1.1-1" }}g</span
             >
           </div>
           <div class="nutrition-item">
             <span class="label">Carbs</span>
             <span class="value"
-              >{{ recipe.carbsPerServing | number : "1.1-1" }}g</span
+            >{{ recipe.carbsPerServing | number : "1.1-1" }}g</span
             >
           </div>
         </div>
@@ -190,13 +197,13 @@
               <div class="preview-item">
                 <span class="label">Calories:</span>
                 <span class="value">{{
-                  recipe.kcalPerServing * selectedServings | number : "1.0-0"
-                }}</span>
+                    recipe.kcalPerServing * selectedServings | number : "1.0-0"
+                  }}</span>
               </div>
               <div class="preview-item">
                 <span class="label">Protein:</span>
                 <span class="value"
-                  >{{
+                >{{
                     recipe.proteinPerServing * selectedServings
                       | number : "1.1-1"
                   }}g</span
@@ -205,7 +212,7 @@
               <div class="preview-item">
                 <span class="label">Fat:</span>
                 <span class="value"
-                  >{{
+                >{{
                     recipe.fatPerServing * selectedServings | number : "1.1-1"
                   }}g</span
                 >
@@ -213,7 +220,7 @@
               <div class="preview-item">
                 <span class="label">Carbs:</span>
                 <span class="value"
-                  >{{
+                >{{
                     recipe.carbsPerServing * selectedServings
                       | number : "1.1-1"
                   }}g</span
@@ -238,12 +245,10 @@
   </div>
 </div>
 
-<!-- Loading state -->
 <div *ngIf="loading" class="loading-state">
   <p>Loading recipe details...</p>
 </div>
 
-<!-- Error state -->
 <div *ngIf="error" class="error-state">
   <p-button
     icon="pi pi-arrow-left"
@@ -255,5 +260,4 @@
   <p>{{ error }}</p>
 </div>
 
-<!-- Toast for notifications -->
 <p-toast></p-toast>
