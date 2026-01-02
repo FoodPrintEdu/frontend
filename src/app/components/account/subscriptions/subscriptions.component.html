@@ -1,0 +1,79 @@
+<div class="subscriptions">
+  <header>
+    <i class="pi pi-credit-card" style="font-size: 1rem"></i>
+    <h2>Subscriptions</h2>
+  </header>
+
+  <div class="content" *ngIf="!isLoading; else loading">
+    <ng-container *ngIf="activeSubscription; else choosePlan">
+      <div class="summary">
+        <div>
+          <h3>{{ getPlanName(activeSubscription.plan_id) }}</h3>
+          <p class="muted">Current subscription</p>
+        </div>
+        <span class="status" [class.active]="activeSubscription.active">
+          {{ activeSubscription.active ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+      <div class="details">
+        <div>
+          <p class="label">Start date</p>
+          <p>{{ activeSubscription.start_date | date: 'mediumDate' }}</p>
+        </div>
+        <div>
+          <p class="label">End date</p>
+          <p>{{ activeSubscription.end_date | date: 'mediumDate' }}</p>
+        </div>
+        <div>
+          <p class="label">Auto-renew</p>
+          <p>{{ activeSubscription.auto_renew ? 'Yes' : 'No' }}</p>
+        </div>
+      </div>
+      <button
+        class="cancel-button"
+        [disabled]="isCancelLoading"
+        (click)="cancelSubscription()"
+      >
+        {{ isCancelLoading ? 'Cancelling...' : 'Cancel subscription' }}
+      </button>
+    </ng-container>
+
+    <ng-template #choosePlan>
+      <p class="muted">No active subscription. Choose a plan to continue.</p>
+      <div class="plan-list" *ngIf="plans.length > 0; else noPlans">
+        <div class="plan-card" *ngFor="let plan of plans">
+          <div class="plan-info">
+            <h3>{{ plan.name }}</h3>
+            <p class="muted">{{ plan.description }}</p>
+            <p class="price">{{ formatPrice(plan.price, plan.interval) }}</p>
+          </div>
+          <button
+            class="select-button"
+            [disabled]="!plan.active || isCheckoutLoading"
+            (click)="startCheckout(plan)"
+          >
+            {{ plan.active ? 'Choose plan' : 'Unavailable' }}
+          </button>
+        </div>
+      </div>
+      <ng-template #noPlans>
+        <p class="muted">No subscription plans are available right now.</p>
+      </ng-template>
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </ng-template>
+  </div>
+
+  <ng-template #loading>
+    <p>Loading subscription details...</p>
+  </ng-template>
+</div>
+
+<p-dialog
+  header="Subscription"
+  [(visible)]="showResultDialog"
+  [modal]="true"
+  [dismissableMask]="true"
+  [style]="{ width: '320px' }"
+>
+  <p>{{ resultMessage }}</p>
+</p-dialog>

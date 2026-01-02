@@ -5,6 +5,7 @@ import {
 import {DietPreferencesComponent} from '../../../components/account/diet-preferences/diet-preferences.component';
 import {DietNotificationsComponent} from '../../../components/account/diet-notifications/diet-notifications.component';
 import {AccountSettingsComponent} from '../../../components/account/account-settings/account-settings.component';
+import {SubscriptionsComponent} from '../../../components/account/subscriptions/subscriptions.component';
 import {WelcomeModalComponent} from '../../../components/welcome-modal/welcome-modal.component';
 import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {DietService} from '../../../service/diet.service';
@@ -23,6 +24,7 @@ import {Meal} from '../../../types/Meal';
     ProfileInformationComponent,
     DietPreferencesComponent,
     DietNotificationsComponent,
+    SubscriptionsComponent,
     AccountSettingsComponent,
   ],
   providers: [DialogService],
