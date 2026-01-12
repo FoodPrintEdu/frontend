@@ -91,8 +91,8 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   async onSaveDiet(dietPlan: DietPlan) {
     try {
 
-      await this.dietService.setDietPreferences(dietPlan);
-      this.showDietGenerationModal(this.currentDiet);
+      const newDiet = await this.dietService.setDietPreferences(dietPlan);
+      this.showDietGenerationModal(newDiet);
     } catch (e) {
       console.error('Update-fitness-data failed', e);
     }

@@ -50,16 +50,14 @@ export class DietService {
     return this.apiService.get<ApiResponse<Client>>(`/diet/api/v1/clients/${this.userId}`)
   }
 
-  setDietPreferences(dietPlan: DietPlan): Promise<ApiResponse<Client>> {
-    return this.apiService
+  async setDietPreferences(dietPlan: DietPlan): Promise<ClientDiet> {
+    const r = await this.apiService
       .put<ApiResponse<Client>>(
         `/diet/api/v1/clients/${this.userId}/update-fitness-data`,
-        dietPlan,
-      ).then(async r => {
-        this.currentClientSubject.next(r.data);
-        await this.loadClientDietData()
-        return r;
-      });
+        dietPlan);
+    this.currentClientSubject.next(r.data);
+    await this.loadClientDietData();
+    return this.clientDietSubject.value;
   }
 
   async loadClientData(): Promise<void> {
