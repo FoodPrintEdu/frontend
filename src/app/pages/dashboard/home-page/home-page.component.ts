@@ -3,7 +3,6 @@ import {UserResponse} from '../../../types/userTypes';
 import {UserService} from '../../../service/user.service';
 import {NgIf} from '@angular/common';
 import {CardsComponent} from '../../../components/home/cards/cards.component';
-import {RecentActivityComponent} from '../../../components/home/recent-activity/recent-activity.component';
 import {AchievementsComponent} from '../../../components/home/achievements/achievements.component';
 import {WeightChartComponent} from '../../../components/home/weight-chart/weight-chart.component';
 import {DietService} from '../../../service/diet.service';
@@ -17,7 +16,6 @@ import {DailyClientDietSummaryObject} from '../../../types/dietTypes';
   imports: [
     NgIf,
     CardsComponent,
-    RecentActivityComponent,
     AchievementsComponent,
     WeightChartComponent,
   ],
