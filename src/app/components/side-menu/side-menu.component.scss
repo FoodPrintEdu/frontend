@@ -1,3 +1,41 @@
+// Responsive behavior
+:host {
+  position: relative;
+  transition: transform 0.3s ease;
+  z-index: 999;
+
+  &.mobile-hidden {
+    transform: translateX(-100%);
+  }
+
+  &.mobile-open {
+    transform: translateX(0);
+  }
+}
+
+// Mobile overlay
+@media (max-width: 1079px) {
+  :host {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+
+    &.mobile-open::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 250px;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+  }
+}
+
 // Header section
 .menu-header {
   display: flex;

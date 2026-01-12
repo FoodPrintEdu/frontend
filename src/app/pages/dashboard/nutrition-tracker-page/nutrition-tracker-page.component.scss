@@ -1,8 +1,8 @@
 .nutrition-tracker-container {
   padding: 2rem;
   margin: 0 auto;
-  background-color: #f8f9fa;
   min-height: 100vh;
+  color: #e2e8f0;
 }
 
 .header {
@@ -12,7 +12,7 @@
   h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #2d3748;
+    color: #f7fafc;
     margin-bottom: 1rem;
   }
 
@@ -25,35 +25,41 @@
 
     label {
       font-weight: 600;
-      color: #4a5568;
+      color: #a0aec0;
       font-size: 1rem;
     }
 
     ::ng-deep .custom-calendar {
       .p-inputtext {
-        border: 2px solid #e2e8f0;
+        border: 2px solid #4a5568;
         border-radius: 8px;
         padding: 0.75rem 1rem;
         font-size: 1rem;
         transition: border-color 0.2s ease;
+        background-color: #2d3748;
+        color: #e2e8f0;
 
         &:focus {
-          border-color: #4299e1;
+          border-color: #63b3ed;
           outline: none;
-          box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+          box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.2);
+        }
+
+        &::placeholder {
+          color: #a0aec0;
         }
       }
 
       .p-button {
-        border: 2px solid #e2e8f0;
+        border: 2px solid #4a5568;
         border-left: none;
         border-radius: 0 8px 8px 0;
-        background: #f7fafc;
-        color: #4a5568;
+        background: #2d3748;
+        color: #a0aec0;
 
         &:hover {
-          background: #edf2f7;
-          border-color: #cbd5e0;
+          background: #4a5568;
+          border-color: #718096;
         }
       }
     }
@@ -61,7 +67,7 @@
 
   .subtitle {
     font-size: 1.1rem;
-    color: #718096;
+    color: #a0aec0;
     margin: 0;
   }
 }
@@ -76,7 +82,7 @@
 .goals-overview {
   h2 {
     font-size: 1.8rem;
-    color: #2d3748;
+    color: #f7fafc;
     margin-bottom: 1.5rem;
     text-align: center;
   }
@@ -89,15 +95,17 @@
 }
 
 .goal-card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  background-color: white;
+  border: 3px solid #2d6b3a;
+  color: #2d6b3a;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -110,7 +118,7 @@
   h3 {
     font-size: 1.3rem;
     font-weight: 600;
-    color: #2d3748;
+    color: #2d6b3a;
     margin: 0;
   }
 }
@@ -160,7 +168,7 @@
 .macros-breakdown {
   h2 {
     font-size: 1.8rem;
-    color: #2d3748;
+    color: #f7fafc;
     margin-bottom: 1.5rem;
     text-align: center;
   }
@@ -173,16 +181,18 @@
 }
 
 .macro-card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
+  background-color: white;
+  border: 3px solid #2d6b3a;
+  color: #2d6b3a;
+  border-radius: 20px;
+  padding: 1.5rem;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
   }
 
   &.carbs {
@@ -206,7 +216,7 @@
 .macro-info {
   h4 {
     font-size: 1.1rem;
-    color: #2d3748;
+    color: #2d6b3a;
     margin-bottom: 0.5rem;
     font-weight: 600;
   }
@@ -234,27 +244,29 @@
 .diet-info {
   h2 {
     font-size: 1.8rem;
-    color: #2d3748;
+    color: #f7fafc;
     margin-bottom: 1.5rem;
     text-align: center;
   }
 }
 
 .diet-card {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  background-color: white;
+  border: 3px solid #2d6b3a;
+  color: #2d6b3a;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 
   h3 {
     font-size: 1.5rem;
-    color: #2d3748;
+    color: #2d6b3a;
     margin-bottom: 1rem;
     font-weight: 600;
   }
 
   .diet-description {
-    color: #718096;
+    color: #666;
     font-size: 1rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
@@ -274,6 +286,7 @@
   padding: 0.75rem;
   background-color: #f7fafc;
   border-radius: 8px;
+  border: 1px solid #e2e8f0;
 
   .label {
     font-weight: 600;
@@ -291,9 +304,11 @@
 .no-data {
   text-align: center;
   padding: 4rem 2rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  background-color: white;
+  border: 3px solid #2d6b3a;
+  color: #2d6b3a;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 
   .no-data-icon {
     font-size: 4rem;
@@ -302,12 +317,12 @@
 
   h3 {
     font-size: 1.5rem;
-    color: #2d3748;
+    color: #2d6b3a;
     margin-bottom: 0.5rem;
   }
 
   p {
-    color: #718096;
+    color: #666;
     font-size: 1rem;
   }
 }

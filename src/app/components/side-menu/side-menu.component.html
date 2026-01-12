@@ -1,4 +1,8 @@
-<p-menu [model]="items" [style]="{ height: '100%', width: '250px' }">
+<p-menu
+  [model]="items"
+  [style]="{ height: '100%', width: '250px' }"
+  (click)="onMenuItemClick()"
+>
   <ng-template pTemplate="start">
     <span class="menu-header">
       <img
@@ -25,7 +29,10 @@
         class="user-avatar"
         shape="circle"
       />
-      <div class="user-info" *ngIf="userService.getCurrentUser() as user; else loading">
+      <div
+        class="user-info"
+        *ngIf="userService.getCurrentUser() as user; else loading"
+      >
         <p class="user-name">{{ user.name }}</p>
         <p class="user-role">{{ user.role }}</p>
       </div>

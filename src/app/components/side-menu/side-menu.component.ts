@@ -1,16 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {MenuModule} from 'primeng/menu';
-import {AvatarModule} from 'primeng/avatar';
-import {BadgeModule} from 'primeng/badge';
-import {MenuItem} from 'primeng/api';
-import {NgIf, NgOptimizedImage} from '@angular/common';
-import {UserService} from '../../service/user.service';
-import {UserResponse} from '../../types/userTypes';
-import {ProgressSpinnerModule} from 'primeng/progressspinner';
-import {Router} from '@angular/router';
-import {ClientDiet} from '../../types/ClientDiet';
-import {DietService} from '../../service/diet.service';
-import {Subscription} from 'rxjs';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { MenuModule } from 'primeng/menu';
+import { AvatarModule } from 'primeng/avatar';
+import { BadgeModule } from 'primeng/badge';
+import { MenuItem } from 'primeng/api';
+import { NgIf, NgOptimizedImage, CommonModule } from '@angular/common';
+import { UserService } from '../../service/user.service';
+import { UserResponse } from '../../types/userTypes';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { Router } from '@angular/router';
+import { ClientDiet } from '../../types/ClientDiet';
+import { DietService } from '../../service/diet.service';
+import { MenuService } from '../../service/menu.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-side-menu',
@@ -20,38 +21,56 @@ import {Subscription} from 'rxjs';
     BadgeModule,
     NgOptimizedImage,
     ProgressSpinnerModule,
-    NgIf
+    NgIf,
+    CommonModule,
   ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.scss',
-  standalone: true
+  standalone: true,
+  host: {
+    '[class.mobile-hidden]': 'isMobile && !isMenuOpen',
+    '[class.mobile-open]': 'isMobile && isMenuOpen',
+  },
 })
-export class SideMenuComponent implements OnInit {
+export class SideMenuComponent implements OnInit, OnDestroy {
   user!: UserResponse;
   currentDiet: ClientDiet | null = null;
   items: MenuItem[] = [];
   dietSub: Subscription;
+  isMenuOpen = false;
+  isMobile = false;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     protected userService: UserService,
     private router: Router,
-    private dietService: DietService
-  ) {
-  }
+    private dietService: DietService,
+    private menuService: MenuService
+  ) {}
 
   async ngOnInit() {
     this.dietSub = this.dietService.clientDiet$.subscribe({
-      next: diet => {
+      next: (diet) => {
         this.currentDiet = diet;
         this.updateMenu();
-      }, error: error => {
+      },
+      error: (error) => {
         this.updateMenu();
-      }
+      },
     });
+
+    // Subscribe to menu service observables
+    this.subscriptions.push(
+      this.menuService.isMenuOpen$.subscribe((isOpen) => {
+        this.isMenuOpen = isOpen;
+      }),
+      this.menuService.isMobile$.subscribe((isMobile) => {
+        this.isMobile = isMobile;
+      })
+    );
   }
 
   updateMenu() {
-
     const dietDisabled = !this.currentDiet;
 
     this.items = [
@@ -121,5 +140,38 @@ export class SideMenuComponent implements OnInit {
         ],
       },
     ];
+  }
+
+  ngOnDestroy(): void {
+    if (this.dietSub) {
+      this.dietSub.unsubscribe();
+    }
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const sideMenu = document.querySelector('.side-menu-wrapper');
+    const hamburgerButton = document.querySelector('.hamburger-button');
+
+    // Close menu if clicking outside on mobile
+    if (
+      this.isMobile &&
+      this.isMenuOpen &&
+      sideMenu &&
+      !sideMenu.contains(target) &&
+      hamburgerButton &&
+      !hamburgerButton.contains(target)
+    ) {
+      this.menuService.closeMenu();
+    }
+  }
+
+  onMenuItemClick(): void {
+    // Close menu on mobile when menu item is clicked
+    if (this.isMobile) {
+      this.menuService.closeMenu();
+    }
   }
 }
