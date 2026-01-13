@@ -2,16 +2,6 @@
   display: flex;
   height: 100vh;
 
-  .side-menu-wrapper {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    flex-shrink: 0;
-    overflow-y: auto;
-    width: 250px;
-    transition: all 0.3s ease;
-  }
-
   .main-content-wrapper {
     flex: 1;
     overflow-y: auto;
@@ -24,13 +14,6 @@
 // Mobile responsive behavior
 @media (max-width: 1079px) {
   .dashboard-page-container {
-    .side-menu-wrapper {
-      position: fixed;
-      left: 0;
-      z-index: 1000;
-      width: 250px;
-    }
-
     .main-content-wrapper {
       margin-left: 0;
       width: 100%;
