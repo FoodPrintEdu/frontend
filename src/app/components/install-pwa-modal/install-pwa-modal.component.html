@@ -1,0 +1,30 @@
+<div class="install-pwa-content">
+
+  <div class="icon-wrapper">
+    <i class="pi pi-download" style="font-size: 3rem; color: var(--primary-color);"></i>
+  </div>
+
+  <div class="text-wrapper">
+    <h2>Install Application</h2>
+    <p>
+      Install our application on your device for faster access 
+      and better user experience. You can use it offline!
+    </p>
+  </div>
+
+  <div class="buttons-wrapper">
+    <p-button
+      label="Install"
+      icon="pi pi-download"
+      styleClass="p-button-rounded p-button-primary w-full mb-2"
+      (onClick)="install()">
+    </p-button>
+    
+    <p-button
+      label="Maybe Later"
+      styleClass="p-button-rounded p-button-text w-full"
+      (onClick)="dismiss()">
+    </p-button>
+  </div>
+
+</div>
