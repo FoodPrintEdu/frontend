@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-marketplace-categories',
   imports: [],
   templateUrl: './marketplace-categories.component.html',
+  standalone: true,
   styleUrl: './marketplace-categories.component.scss'
 })
 export class MarketplaceCategoriesComponent {

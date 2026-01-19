@@ -33,6 +33,18 @@
     [toggleMask]="true"
     placeholder="Confirm Password"
   />
+  <div class="flex align-items-center gap-2">
+    <label style="margin-top: 4px;" for="marketplaceAccess" class="text-sm cursor-pointer">
+      I would like to sell my goods on the marketplace
+    </label>
+    <p-checkbox
+      inputId="marketplaceAccess"
+      formControlName="marketplaceAccess"
+      [binary]="true">
+    </p-checkbox>
+
+
+  </div>
   <span
     class="error-message"
     [ngClass]="errorMessage().length === 0 ? 'invisible' : ''"

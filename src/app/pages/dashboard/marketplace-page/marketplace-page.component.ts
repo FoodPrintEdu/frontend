@@ -12,5 +12,6 @@ import { MarketplaceItemsComponent } from '../../../components/marketplace/marke
   ],
   templateUrl: './marketplace-page.component.html',
   styleUrl: './marketplace-page.component.scss',
+  standalone: true
 })
 export class MarketplacePageComponent {}

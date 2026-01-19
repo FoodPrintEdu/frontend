@@ -10,6 +10,7 @@ import {PasswordModule} from 'primeng/password';
 import {InvalidFieldDirective} from '../../directives/invalid-field.directive';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
+import {Checkbox} from 'primeng/checkbox';
 
 @Component({
   selector: 'app-register-form',
@@ -23,6 +24,7 @@ import {Router} from '@angular/router';
     ReactiveFormsModule,
     InvalidFieldDirective,
     NgClass,
+    Checkbox,
   ],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.scss',
@@ -43,6 +45,7 @@ export class RegisterFormComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
+      marketplaceAccess: [false, Validators.required],
     });
   }
 
@@ -67,13 +70,13 @@ export class RegisterFormComponent {
       name: this.registerForm.value.name,
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
-      role: 'user',
+      role: this.registerForm.value.marketplaceAccess ? 'entrepreneur' : 'user',
     };
 
     this.http
       .post(`${this.apiUrl}/user/api/v1/auth/register`, userRequest, {
         headers: { 'Content-Type': 'application/json' },
-        responseType: 'json', // 👈 change to 'text' if your backend returns plain text
+        responseType: 'json',
       })
       .subscribe({
         next: (response) => {

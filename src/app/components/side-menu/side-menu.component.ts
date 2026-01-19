@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import {Component, OnInit, OnDestroy, HostListener, effect} from '@angular/core';
 import { MenuModule } from 'primeng/menu';
 import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
@@ -49,6 +49,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
+    this.user = this.userService.getCurrentUser();
     this.dietSub = this.dietService.clientDiet$.subscribe({
       next: (diet) => {
         this.currentDiet = diet;
@@ -59,7 +60,6 @@ export class SideMenuComponent implements OnInit, OnDestroy {
       },
     });
 
-    // Subscribe to menu service observables
     this.subscriptions.push(
       this.menuService.isMenuOpen$.subscribe((isOpen) => {
         this.isMenuOpen = isOpen;
@@ -111,15 +111,17 @@ export class SideMenuComponent implements OnInit, OnDestroy {
             routerLink: '/marketplace',
           },
           {
+            label: 'Your Offers',
+            icon: 'pi pi-fw pi-dollar',
+            routerLink: '/your-offers',
+            visible: this.user.role === 'entrepreneur'
+          },
+          {
             label: 'Leaderboard',
             icon: 'pi pi-fw pi-star',
             routerLink: '/leaderboard',
           },
-          // {
-          //   label: 'Forums',
-          //   icon: 'pi pi-fw pi-comments',
-          //   routerLink: '/forums',
-          // },
+
         ],
       },
       {

@@ -1,0 +1,215 @@
+<div class="offers-page-container">
+
+  <div class="header-section">
+    <div>
+      <h1 class="page-title">Your Offers</h1>
+      <p class="page-subtitle">Manage your products</p>
+    </div>
+    <p-button
+      label="New Offer"
+      icon="pi pi-plus"
+      (onClick)="openNew()"
+      styleClass="p-button-primary">
+    </p-button>
+  </div>
+
+  <div class="filters-card">
+    <div class="filter-grid">
+      <div class="filter-item search-item">
+        <label for="search" class="block mb-2 font-bold">Product Name</label>
+        <span class="p-input-icon-left w-full">
+          <input
+            pInputText
+            id="search"
+            [(ngModel)]="filterName"
+            (ngModelChange)="applyFilters()"
+            placeholder="Search..."
+            class="w-full" />
+        </span>
+      </div>
+
+      <div class="filter-item">
+        <label for="minPrice" class="block mb-2 font-bold">Min Price (PLN)</label>
+        <p-inputNumber
+          id="minPrice"
+          [(ngModel)]="filterMinPrice"
+          (ngModelChange)="applyFilters()"
+          mode="currency"
+          currency="PLN"
+          placeholder="0.00"
+          [min]="0"
+          styleClass="w-full">
+        </p-inputNumber>
+      </div>
+
+      <div class="filter-item">
+        <label for="maxPrice" class="block mb-2 font-bold">Max Price (PLN)</label>
+        <p-inputNumber
+          id="maxPrice"
+          [(ngModel)]="filterMaxPrice"
+          (ngModelChange)="applyFilters()"
+          mode="currency"
+          currency="PLN"
+          placeholder="Max"
+          [min]="0"
+          styleClass="w-full">
+        </p-inputNumber>
+      </div>
+
+      <div class="filter-item">
+        <label for="minStock" class="block mb-2 font-bold">Min. Stock Quantity</label>
+        <p-inputNumber
+          id="minStock"
+          [(ngModel)]="filterMinStock"
+          (ngModelChange)="applyFilters()"
+          placeholder="Quantity"
+          [min]="0"
+          styleClass="w-full">
+        </p-inputNumber>
+      </div>
+    </div>
+  </div>
+
+  <div class="offers-grid" *ngIf="filteredOffers.length > 0; else emptyState">
+    <div class="offer-card-wrapper" *ngFor="let offer of filteredOffers">
+      <p-card styleClass="h-full">
+        <ng-template pTemplate="header">
+          <div class="card-img-placeholder">
+            <i class="pi pi-box"></i>
+          </div>
+        </ng-template>
+
+        <div class="offer-details">
+          <div class="offer-header">
+            <h3>{{ offer.dietIngredientName }}</h3>
+            <p-tag
+              [value]="offer.packCountRemaining > 0 ? 'In Stock' : 'Sold Out'"
+              [severity]="offer.packCountRemaining > 0 ? 'success' : 'danger'">
+            </p-tag>
+          </div>
+
+          <div class="offer-stats">
+            <div class="stat-row">
+              <span class="label">Price:</span>
+              <span class="value price">{{ offer.priceCents / 100 | currency:'PLN':'symbol':'1.2-2' }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="label">Pack Size:</span>
+              <span class="value">{{ offer.packSizeG }}g</span>
+            </div>
+            <div class="stat-row">
+              <span class="label">Stock:</span>
+              <span class="value" [class.low-stock]="offer.packCountRemaining < 5">
+                {{ offer.packCountRemaining }} / {{ offer.packCountTotal }} pcs.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <ng-template pTemplate="footer">
+          <div class="card-actions">
+            <p-button
+              icon="pi pi-pencil"
+              styleClass="p-button-text p-button-secondary"
+              (onClick)="openEdit(offer)"
+              pTooltip="Edit offer">
+            </p-button>
+            <p-button
+              icon="pi pi-trash"
+              styleClass="p-button-text p-button-danger"
+              (onClick)="deleteOffer(offer)"
+              pTooltip="Delete offer">
+            </p-button>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <i class="pi pi-search" style="font-size: 3rem"></i>
+      <h3>No offers found</h3>
+      <p>Try changing filters or add a new offer.</p>
+    </div>
+  </ng-template>
+
+</div>
+
+<p-dialog
+  [(visible)]="offerDialog"
+  [style]="{width: '450px'}"
+  [header]="isEditMode ? 'Edit Offer' : 'New Offer'"
+  [modal]="true"
+  styleClass="p-fluid">
+
+  <ng-template pTemplate="content">
+    <form [formGroup]="offerForm">
+
+      <div class="field">
+        <label for="ingredient" class="block mb-2">Product</label>
+        <p-dropdown
+          id="ingredient"
+          [options]="availableIngredients"
+          formControlName="DietIngredient"
+          optionLabel="name"
+          placeholder="Select product"
+          [filter]="true"
+          filterBy="name"
+          appendTo="body">
+        </p-dropdown>
+        <small class="p-error" *ngIf="offerForm.get('dietIngredient')?.invalid && offerForm.get('dietIngredient')?.dirty">
+          Product is required.
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="price" class="block mb-2">Price (PLN)</label>
+        <p-inputNumber
+          id="price"
+          formControlName="price"
+          mode="currency"
+          currency="PLN"
+          locale="pl-PL"
+          [minFractionDigits]="2">
+        </p-inputNumber>
+      </div>
+
+      <div class="formgrid grid">
+        <div class="field col">
+          <label for="pack_size" class="block mb-2">Weight (g)</label>
+          <p-inputNumber
+            id="pack_size"
+            formControlName="packSizeG"
+            suffix=" g"
+            [min]="1">
+          </p-inputNumber>
+        </div>
+
+        <div class="field col">
+          <label for="pack_count" class="block mb-2">Total Units</label>
+          <p-inputNumber
+            id="pack_count"
+            formControlName="packCountTotal"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+            inputId="horizontal"
+            spinnerMode="horizontal"
+            [step]="1"
+            [min]="1"
+            incrementButtonIcon="pi pi-plus"
+            decrementButtonIcon="pi pi-minus">
+          </p-inputNumber>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-text" (onClick)="offerDialog = false"></p-button>
+    <p-button label="Save" icon="pi pi-check" styleClass="p-button-text" (onClick)="saveOffer()"></p-button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+<p-toast></p-toast>

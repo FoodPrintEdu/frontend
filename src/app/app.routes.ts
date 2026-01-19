@@ -13,6 +13,8 @@ import { InitialFormPageComponent } from './pages/dashboard/initial-form-page/in
 import { NutritionTrackerPageComponent } from './pages/dashboard/nutrition-tracker-page/nutrition-tracker-page.component';
 import {currentDietGuard} from './guards/current-diet.guard';
 import {authGuard} from './guards/auth.guard';
+import {YourOffersPageComponent} from './pages/dashboard/your-offers-page/your-offers-page.component';
+import {entrepreneurGuard} from './guards/entrepreneur.guard';
 
 export const routes: Routes = [
   {
@@ -36,6 +38,11 @@ export const routes: Routes = [
           {
             path: 'marketplace',
             component: MarketplacePageComponent,
+          },
+          {
+            path: 'your-offers',
+            component: YourOffersPageComponent,
+            canActivate: [entrepreneurGuard]
           },
           {
             path: 'nutrition',

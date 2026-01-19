@@ -6,5 +6,6 @@ import { ButtonModule } from 'primeng/button';
   imports: [ButtonModule],
   templateUrl: './marketplace-items.component.html',
   styleUrl: './marketplace-items.component.scss',
+  standalone: true
 })
 export class MarketplaceItemsComponent {}
