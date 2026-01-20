@@ -7,7 +7,7 @@ self.addEventListener('sync', (event) => {
 });
 
 self.addEventListener('push', (event) => {
-  console.log('📬 Push notification received:', event);
+  console.log('Push notification received:', event);
 
   const data = event.data ? event.data.json() : {};
   const title = data.title || 'FoodPrintEdu';
@@ -38,10 +38,21 @@ self.addEventListener('notificationclick', (event) => {
   console.log('Notification clicked:', event);
   event.notification.close();
 
-  if (event.action === 'open' || !event.action) {
-    const urlToOpen = event.notification.data || '/';
+  if (event.action === 'view' || event.action === 'open' || !event.action) {
+    const urlToOpen = new URL(event.notification.data.url || '/', self.location.origin).href;
     event.waitUntil(
-      clients.openWindow(urlToOpen)
+      clients.matchAll({ type: 'window', includeUntracked: true })
+        .then((clientList) => {
+          for (const client of clientList) {
+            if (client.url === urlToOpen && 'focus' in client) {
+              return client.focus();
+            }
+          }
+
+          if (clients.openWindow) {
+            return clients.openWindow(urlToOpen);
+          }
+        })
     );
   }
 });

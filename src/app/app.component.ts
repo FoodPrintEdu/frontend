@@ -5,6 +5,7 @@ import { PwaUpdateService } from './service/pwa-update.service';
 import { SyncService } from './service/sync.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InstallPwaModalComponent } from './components/install-pwa-modal/install-pwa-modal.component';
+import { NotificationService } from './service/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ export class AppComponent implements OnInit {
     private userService: UserService,
     private pwaUpdateService: PwaUpdateService,
     private syncService: SyncService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private notificationService: NotificationService
   ) {
   }
 
@@ -44,8 +46,19 @@ export class AppComponent implements OnInit {
     });
 
     this.setupInstallPrompt();
+    this.initializeNotifications();
 
     console.log('PWA initialized');
+  }
+
+  private initializeNotifications(): void {
+    if (this.userService.checkLoggedIn() && !this.notificationService.hasRequestedPermission()) {
+      setTimeout(() => {
+        if (this.notificationService.getCurrentPermissionState() === 'default') {
+          console.log('Notification permission can be requested from settings');
+        }
+      }, 5000);
+    }
   }
 
   private setupInstallPrompt(): void {
