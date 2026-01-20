@@ -1,84 +1,51 @@
-<div class="items-wrapper">
-  <h2>Featured Products</h2>
-  <div class="items">
-    <div class="item">
-      <div class="top">
-        <div class="left">
-          <h3>Organic Extra Virgin Olive Oil</h3>
-          <h4>Premium cold-pressed olive oil from Mediterranean groves</h4>
+<div class="items-grid">
+  <div *ngFor="let offer of offers" class="item-card-wrapper">
+
+    <p-card styleClass="marketplace-card surface-card h-full">
+
+      <ng-template pTemplate="header">
+        <div class="img-placeholder">
+          <i class="pi pi-box"></i>
         </div>
-        <p class="right">In Stock</p>
-      </div>
-      <div class="mid">
-        <div class="left">
-          <div class="rating">
-            <i
-              class="pi pi-star-fill"
-              style="font-size: 1rem; color: yellow"
-            ></i>
-            <p>4.8 (124 reviews)</p>
-          </div>
-          <p class="price">$24.99</p>
+      </ng-template>
+
+      <div class="card-content">
+
+        <div class="product-header">
+          <h3 class="product-title" [title]="offer.dietIngredientName">
+            {{ offer.dietIngredientName }}
+          </h3>
+          <span class="product-price">
+            {{ offer.priceCents / 100 | currency:offer.currency }}
+          </span>
         </div>
-        <p class="right">Oils & Vinegars</p>
-      </div>
-      <div class="bottom">
-        <p-button label="Add to Cart" [style]="{ width: '100%' }" />
-      </div>
-    </div>
-    <div class="item">
-      <div class="top">
-        <div class="left">
-          <h3>Greek Feta Cheese</h3>
-          <h4>Authentic Greek feta made from sheep and goat milk</h4>
+
+        <div class="product-details">
+          <p class="pack-info">
+            <i class="pi pi-inbox mr-1" style="margin-right: 8px;"></i>
+            Pack size: {{ offer.packSizeG }}g
+          </p>
         </div>
-        <p class="right">In Stock</p>
-      </div>
-      <div class="mid">
-        <div class="left">
-          <div class="rating">
-            <i
-              class="pi pi-star-fill"
-              style="font-size: 1rem; color: yellow"
-            ></i>
-            <p>4.9 (89 reviews)</p>
-          </div>
-          <p class="price">$12.99</p>
+
+        <div class="product-actions">
+          <p-tag
+            [value]="offer.packCountRemaining > 0 ? 'In Stock (' + offer.packCountRemaining + ')' : 'Sold Out'"
+            [severity]="offer.packCountRemaining > 0 ? 'success' : 'danger'"
+            styleClass="text-sm">
+          </p-tag>
+
+          <p-button
+            icon="pi pi-cart-plus"
+            label="Add"
+            [disabled]="offer.packCountRemaining === 0"
+            (onClick)="addItem(offer)"
+            styleClass="p-button-sm p-button-rounded"
+            [outlined]="true">
+          </p-button>
         </div>
-        <p class="right">Dairy</p>
+
       </div>
-      <div class="bottom">
-        <p-button label="Add to Cart" [style]="{ width: '100%' }" />
-      </div>
-    </div>
-    <div class="item">
-      <div class="top">
-        <div class="left">
-          <h3>Mixed Mediterranean Herbs</h3>
-          <h4>Blend of oregano, thyme, and rosemary</h4>
-        </div>
-        <p class="right out">Out of stock</p>
-      </div>
-      <div class="mid">
-        <div class="left">
-          <div class="rating">
-            <i
-              class="pi pi-star-fill"
-              style="font-size: 1rem; color: yellow"
-            ></i>
-            <p>4.7 (156 reviews)</p>
-          </div>
-          <p class="price">$8.99</p>
-        </div>
-        <p class="right">Spices & Herbs</p>
-      </div>
-      <div class="bottom">
-        <p-button
-          label="Notify when available"
-          [style]="{ width: '100%' }"
-          disabled
-        />
-      </div>
-    </div>
+    </p-card>
   </div>
 </div>
+<p-toast position="bottom-right"></p-toast>

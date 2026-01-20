@@ -2,19 +2,145 @@
   <header>
     <div>
       <h1>Marketplace</h1>
-      <h2>Shop for Mediterranean diet essentials and specialty ingredients</h2>
+      <h2>Shop for your diet essentials and specialty ingredients</h2>
     </div>
-    <p-button label="Cart (3)" icon="pi pi-shopping-cart" />
+
+    <p-button
+      label="Cart"
+      icon="pi pi-shopping-cart"
+      (onClick)="cartVisible = true"
+      [badge]="cartService.totalItems().toString()"
+      badgeClass="p-badge-danger">
+    </p-button>
   </header>
+
   <div class="marketplace-page-content">
     <div class="shipping">
       <div>
-        <h3>Free Shipping on Orders Over $50</h3>
-        <h4>Get your Mediterranean essentials delivered to your door</h4>
+        <h3>Free Shipping on Orders Over 50 PLN</h3>
+        <h4>Get your essentials delivered to your door</h4>
       </div>
       <i class="pi pi-truck" style="font-size: 3rem; color: #4caf50"></i>
     </div>
-    <app-marketplace-categories></app-marketplace-categories>
+
     <app-marketplace-items></app-marketplace-items>
   </div>
 </section>
+
+<p-sidebar
+  [(visible)]="cartVisible"
+  position="right"
+  [style]="{width: '100%', maxWidth: '450px'}"
+  [modal]="true"
+  [dismissible]="false"
+  [closeOnEscape]="true"
+  appendTo="body"
+  styleClass="cart-sidebar">
+
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center gap-2">
+      <i style="margin-top: 4px;" class="pi pi-shopping-cart text-2xl text-green-600"></i>
+      <span class="font-bold text-xl text-900">Your Cart</span>
+      <span style="margin-top: 4px;" class="ml-2 text-sm text-500 font-normal">({{ cartService.totalItems() }}
+        items)</span>
+    </div>
+  </ng-template>
+
+  <div class="sidebar-layout">
+
+    <div *ngIf="cartService.cartItems().length === 0" class="empty-cart-container">
+      <h3 class="m-0 text-xl font-medium text-900 mb-2">Your cart is empty</h3>
+      <p class="m-0 text-600 mb-4 text-center px-4">Looks like you haven't added anything yet.</p>
+      <p-button label="Start Shopping" [outlined]="true" (onClick)="cartVisible = false"></p-button>
+    </div>
+
+    <div class="cart-items-container" *ngIf="cartService.cartItems().length > 0">
+
+      <div *ngFor="let item of cartService.cartItems()"
+           class="cart-item surface-card border-1 surface-border border-round-xl shadow-1 p-3 mb-3">
+
+        <div class="flex justify-content-between align-items-start mb-2 gap-3 w-full">
+          <span class="font-bold text-900 line-height-3 block flex-1">
+            {{ item.offer.dietIngredientName }}
+          </span>
+          <span class="font-bold text-green-600 white-space-nowrap text-lg">
+            {{ (item.offer.priceCents * item.quantity) / 100 | currency:item.offer.currency }}
+          </span>
+        </div>
+
+        <div class="text-xs text-500 mb-3">
+          {{ item.offer.priceCents / 100 | currency:item.offer.currency }} each
+        </div>
+
+        <div class="flex align-items-center justify-content-between w-full">
+          <div class="quantity-control border-round surface-ground border-1 surface-border">
+            <button class="qty-btn"
+                    (click)="cartService.updateQuantity(item.offer.id, item.quantity - 1)"
+                    [disabled]="item.quantity <= 1">
+              <i class="pi pi-minus text-xs"></i>
+            </button>
+
+            <span class="qty-val font-medium">{{ item.quantity }}</span>
+
+            <button class="qty-btn"
+                    (click)="cartService.updateQuantity(item.offer.id, item.quantity + 1)"
+                    [disabled]="item.quantity >= item.offer.packCountRemaining">
+              <i class="pi pi-plus text-xs"></i>
+            </button>
+          </div>
+
+          <p-button
+            icon="pi pi-trash"
+            styleClass="p-button-text p-button-danger hover:surface-ground border-round p-button-sm"
+            (onClick)="cartService.removeFromCart(item.offer.id)"
+            pTooltip="Remove">
+          </p-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-footer" *ngIf="cartService.cartItems().length > 0">
+
+      <div class="shipping-promo">
+        <div class="flex justify-content-between align-items-center mb-2">
+     <span class="text-sm font-medium"
+           [class.text-green-600]="shippingProgress() >= 100"
+           [class.text-600]="shippingProgress() < 100">
+       {{ shippingMessage() }}
+     </span>
+          <i *ngIf="shippingProgress() >= 100" class="pi pi-check-circle text-green-600"></i>
+          <i *ngIf="shippingProgress() < 100" class="pi pi-truck text-600"></i>
+        </div>
+
+        <p-progressBar
+          [value]="shippingProgress()"
+          [showValue]="false"
+          [style]="{ height: '8px' }"
+          [color]="shippingProgress() >= 100 ? '#22c55e' : '#3b82f6'">
+        </p-progressBar>
+      </div>
+
+      <div class="flex justify-content-between align-items-center mb-2">
+        <span style="margin-right: 8px;" class="text-600 text-lg">Subtotal:</span>
+        <span class="text-xl font-bold text-900">
+          {{ cartService.totalPriceCents() / 100 | currency:'PLN' }}
+        </span>
+      </div>
+
+      <div class="flex justify-content-between align-items-center mb-4">
+        <span style="margin-right: 8px;" class="text-600">Shipping:</span>
+        <span class="font-medium" [class.text-green-600]="shippingProgress() >= 100">
+          {{ shippingProgress() >= 100 ? 'Free' : 'At checkout' }}
+        </span>
+      </div>
+
+      <p-button
+        label="Checkout"
+        icon="pi pi-check"
+        styleClass="w-full p-button-primary p-button-lg shadow-2"
+        (onClick)="placeOrder()">
+      </p-button>
+    </div>
+
+  </div>
+</p-sidebar>

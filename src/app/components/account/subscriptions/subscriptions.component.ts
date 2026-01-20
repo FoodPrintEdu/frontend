@@ -46,9 +46,9 @@ export class SubscriptionsComponent implements OnInit {
   }
 
   formatPrice(price: number, interval: string) {
-    const currency = new Intl.NumberFormat('en-US', {
+    const currency = new Intl.NumberFormat('pl-PL', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'PLN'
     }).format(price);
     return `${currency} / ${interval}`;
   }
