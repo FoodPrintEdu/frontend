@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -35,7 +35,7 @@ import {Tooltip} from 'primeng/tooltip';
   providers: [MessageService],
   standalone: true
 })
-export class RecipeDetailPageComponent implements OnInit {
+export class RecipeDetailPageComponent implements OnInit, OnDestroy {
   recipe: Recipe | null = null;
   loading: boolean = true;
   error: string | null = null;
@@ -44,6 +44,10 @@ export class RecipeDetailPageComponent implements OnInit {
   // Meal preparation properties
   selectedServings: number = 1;
   cookingInProgress: boolean = false;
+  
+  wakeLock: any = null;
+  wakeLockEnabled: boolean = false;
+  wakeLockSupported: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -58,7 +62,89 @@ export class RecipeDetailPageComponent implements OnInit {
       this.recipeId = +params['id'];
       this.loadRecipeDetails();
     });
+    
+    this.checkWakeLockSupport();
+    
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
   }
+
+  ngOnDestroy() {
+    this.releaseWakeLock();
+    
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+  }
+
+  private checkWakeLockSupport() {
+    this.wakeLockSupported = 'wakeLock' in navigator;
+    if (!this.wakeLockSupported) {
+      console.warn('Screen Wake Lock API is not supported in this browser');
+    }
+  }
+
+  async toggleWakeLock() {
+    if (!this.wakeLockSupported) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Not Supported',
+        detail: 'Screen Wake Lock is not supported in your browser',
+      });
+      return;
+    }
+
+    if (this.wakeLockEnabled) {
+      await this.releaseWakeLock();
+    } else {
+      await this.requestWakeLock();
+    }
+  }
+
+  private async requestWakeLock() {
+    try {
+      this.wakeLock = await navigator.wakeLock.request('screen');
+      this.wakeLockEnabled = true;
+
+      this.wakeLock.addEventListener('release', () => {
+        console.log('Screen Wake Lock was released');
+        this.wakeLockEnabled = false;
+      });
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Screen Active',
+        detail: 'Your screen will stay on while viewing this recipe',
+      });
+
+      console.log('Screen Wake Lock is active');
+    } catch (err: any) {
+      console.error('Failed to activate Screen Wake Lock:', err);
+      this.wakeLockEnabled = false;
+      
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Wake Lock Failed',
+        detail: err.message || 'Failed to keep screen active',
+      });
+    }
+  }
+
+  private async releaseWakeLock() {
+    if (this.wakeLock !== null) {
+      try {
+        await this.wakeLock.release();
+        this.wakeLock = null;
+        this.wakeLockEnabled = false;
+        console.log('Screen Wake Lock released');
+      } catch (err) {
+        console.error('Failed to release Wake Lock:', err);
+      }
+    }
+  }
+
+  private handleVisibilityChange = async () => {
+    if (this.wakeLock !== null && document.visibilityState === 'visible') {
+      await this.requestWakeLock();
+    }
+  };
 
   loadRecipeDetails() {
     this.loading = true;
