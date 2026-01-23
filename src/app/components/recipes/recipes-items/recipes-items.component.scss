@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 20px;
 
-  h3 {
+  h2 {
     font-size: 1.25rem;
   }
 }
@@ -49,15 +49,49 @@
       width: 85%;
 
       h4 {
-          font-weight: 600;
-          font-size: 1rem;
-          margin: 0;
-        }
+        font-size: 0.75rem;
+        color: #aaa;
+      }
+    }
+  }
 
-        .recipe-instructions {
+  .mid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+
+      .details {
+        display: flex;
+        gap: 1rem;
+
+        .time,
+        .servings {
+          display: flex;
+          align-items: center;
           font-size: 0.75rem;
-          color: #aaa;
-          margin: 0.25rem 0 0 0;
+          gap: 0.25rem;
+          color: #999;
+        }
+      }
+
+      .difficulty {
+        color: #4caf50;
+        font-size: 0.75rem;
+        background-color: rgba(76, 175, 80, 0.1);
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        border: 1px solid #4caf50;
+      }
+
+      .categories {
+        display: flex;
+        gap: 0.5rem;
         flex-wrap: wrap;
 
         p {
@@ -94,12 +128,12 @@
       .left {
         width: 75%;
 
-        h4 {
+        h3 {
           font-size: 0.9rem;
           line-height: 1.2;
         }
 
-        .recipe-instructions {
+        h4 {
           font-size: 0.7rem;
         }
       }
