@@ -1,5 +1,5 @@
 <div class="items-wrapper">
-  <h2>Featured Recipes</h2>
+  <h3>Featured Recipes</h3>
 
   <!-- No recipes state -->
   <div *ngIf="recipes.length === 0" class="no-recipes-state">
@@ -16,8 +16,8 @@
     >
       <div class="top">
         <div class="left">
-          <h3>{{ recipe.name }}</h3>
-          <h4>{{ truncateInstructions(recipe.instructions) }}</h4>
+          <h4>{{ recipe.name }}</h4>
+          <p class="recipe-instructions">{{ truncateInstructions(recipe.instructions) }}</p>
         </div>
         <img [attr.src]="getRecipeSrc(recipe)" width="128" height="128"
              class="right"

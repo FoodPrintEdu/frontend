@@ -11,10 +11,10 @@
         width="24"
         priority
       />
-      <h2>Current Diet</h2>
+      <h3>Current Diet</h3>
     </header>
     <div>
-      <h1>{{ clientDiet?.diet?.name }}</h1>
+      <p class="value-large">{{ clientDiet?.diet?.name }}</p>
       <p>{{ getDietDescription(clientDiet?.diet) }}</p>
     </div>
   </div>
@@ -29,10 +29,10 @@
         width="24"
         priority
       />
-      <h2>Diet Streak</h2>
+      <h3>Diet Streak</h3>
     </header>
     <div>
-      <h1>{{ getStreakNumberString() }}</h1>
+      <p class="value-large">{{ getStreakNumberString() }}</p>
       <p-progressbar
         [value]="(getStreakNumber() / 30) * 100"
         [showValue]="false"
@@ -51,10 +51,10 @@
         width="24"
         priority
       />
-      <h2>Today's Calories</h2>
+      <h3>Today's Calories</h3>
     </header>
     <div>
-      <h1>{{ getTodaysCalories() }}</h1>
+      <p class="value-large">{{ getTodaysCalories() }}</p>
       <p-progressbar
         [value]="(getTodaysCalories() / clientDiet.dailyKcalTarget) * 100"
         [showValue]="false"
@@ -75,10 +75,10 @@
         width="24"
         priority
       />
-      <h2>Meals Today</h2>
+      <h3>Meals Today</h3>
     </header>
     <div>
-      <h1>{{ getTodaysMealNumber() }}</h1>
+      <p class="value-large">{{ getTodaysMealNumber() }}</p>
       <p-progressbar
         [value]="(getTodaysMealNumber() / 5) * 100"
         [showValue]="false"
