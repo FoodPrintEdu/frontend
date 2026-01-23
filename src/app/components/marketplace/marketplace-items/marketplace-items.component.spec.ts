@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MessageService } from 'primeng/api';
 
 import { MarketplaceItemsComponent } from './marketplace-items.component';
 
@@ -8,7 +9,8 @@ describe('MarketplaceItemsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MarketplaceItemsComponent]
+      imports: [MarketplaceItemsComponent],
+      providers: [MessageService]
     })
     .compileComponents();
 

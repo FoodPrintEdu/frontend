@@ -3,20 +3,42 @@
     <i class="pi pi-bell" style="font-size: 1rem"></i>
     <h2>Notifications</h2>
   </header>
+
+  @if (!isNotificationSupported) {
+    <div class="notification-warning">
+      <i class="pi pi-exclamation-triangle"></i>
+      <p>Notifications are not supported in your browser.</p>
+    </div>
+  }
+
+  @if (isNotificationSupported && permissionDenied) {
+    <div class="notification-warning">
+      <i class="pi pi-ban"></i>
+      <p>Notifications are blocked. Please enable them in your browser settings.</p>
+    </div>
+  }
+
+  @if (isNotificationSupported && notificationPermission === 'default') {
+    <div class="notification-info">
+      <i class="pi pi-info-circle"></i>
+      <p>Enable notifications to receive updates about your progress.</p>
+      <button class="enable-btn" (click)="requestPermission()">
+        <i class="pi pi-bell"></i>
+        Enable Notifications
+      </button>
+    </div>
+  }
+
   <ul>
     <li>
       <div>
         <h2>Day Completion</h2>
         <h3>Get notified when you complete your daily goals</h3>
       </div>
-      <p-toggleswitch [(ngModel)]="checked1" />
-    </li>
-    <li>
-      <div>
-        <h2>Leaderboard Updates</h2>
-        <h3>Ranking change notifications</h3>
-      </div>
-      <p-toggleswitch [(ngModel)]="checked2" />
+      <p-toggleswitch 
+        [(ngModel)]="dayCompletionEnabled" 
+        (onChange)="onDayCompletionToggle($event)"
+        [disabled]="!permissionGranted" />
     </li>
   </ul>
 </div>

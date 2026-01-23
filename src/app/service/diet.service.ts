@@ -8,6 +8,7 @@ import {ClientDiet} from '../types/ClientDiet';
 import {Meal} from '../types/Meal';
 import {DietPlan} from '../types/DietPlan';
 import {Client} from '../types/Client';
+import {NotificationService} from './notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,8 +23,13 @@ export class DietService {
   public clientDiet$ = this.clientDietSubject.asObservable();
 
   private isLoadingClientData = false;
+  private lastNotifiedDate: string | null = null;
 
-  constructor(private apiService: ApiService, private userService: UserService) {
+  constructor(
+    private apiService: ApiService, 
+    private userService: UserService,
+    private notificationService: NotificationService
+  ) {
     const currentUser = this.userService.getCurrentUser();
     this.userId = currentUser?.id;
 
@@ -131,9 +137,34 @@ export class DietService {
     try {
       const dailyDietData = await this.getDailyDietSummary();
       this.currentDailyDietSummarySubject.next(dailyDietData.data);
+      this.checkDailyGoalAchievement(dailyDietData.data);
     } catch (err) {
       console.error('Failed to load daily diet summary', err);
       this.currentDailyDietSummarySubject.next(null);
+    }
+  }
+
+  private checkDailyGoalAchievement(summaryData: DailyClientDietSummaryObject[]): void {
+    if (!summaryData || summaryData.length === 0) {
+      return;
+    }
+
+    const todayData = summaryData[summaryData.length - 1];
+    const today = new Date().toISOString().split('T')[0];
+
+    if (
+      todayData.date === today &&
+      todayData.dailyKcalGoalAchieved &&
+      this.lastNotifiedDate !== today
+    ) {
+      const clientDiet = this.clientDietSubject.value;
+      if (clientDiet) {
+        this.notificationService.notifyDayCompletion(
+          Math.round(todayData.totalKcal),
+          Math.round(clientDiet.dailyKcalTarget)
+        );
+        this.lastNotifiedDate = today;
+      }
     }
   }
 

@@ -28,8 +28,19 @@
                 "glob": "**/*",
                 "input": "src/assets/",
                 "output": "/assets/"
+              },
+              {
+                "glob": "manifest.webmanifest",
+                "input": "src",
+                "output": "/"
+              },
+              {
+                "glob": "robots.txt",
+                "input": "src",
+                "output": "/"
               }
             ],
+            "serviceWorker": "ngsw-config.json",
             "styles": ["src/styles.css"],
             "scripts": []
           },
@@ -47,7 +58,19 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "optimization": {
+                "scripts": true,
+                "styles": true,
+                "fonts": true
+              },
+              "sourceMap": {
+                "scripts": true,
+                "styles": true,
+                "vendor": true
+              },
+              "namedChunks": false,
+              "extractLicenses": true
             },
             "development": {
               "optimization": false,
@@ -89,6 +112,11 @@
                 "glob": "**/*",
                 "input": "src/assets/",
                 "output": "/assets/"
+              },
+              {
+                "glob": "manifest.webmanifest",
+                "input": "src",
+                "output": "/"
               }
             ],
             "styles": ["src/styles.css"],

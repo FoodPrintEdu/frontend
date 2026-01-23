@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 import { DietGenerationModalComponent } from './diet-generation-modal.component';
 
@@ -8,7 +9,17 @@ describe('DietGenerationModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DietGenerationModalComponent]
+      imports: [DietGenerationModalComponent],
+      providers: [
+        {
+          provide: DynamicDialogRef,
+          useValue: { close: jasmine.createSpy('close') }
+        },
+        {
+          provide: DynamicDialogConfig,
+          useValue: { data: {} }
+        }
+      ]
     })
     .compileComponents();
 

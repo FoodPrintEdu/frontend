@@ -1,12 +1,26 @@
 <div class="recipe-detail-container" *ngIf="!loading && !error && recipe">
   <div class="recipe-header">
-    <p-button
-      icon="pi pi-arrow-left"
-      (click)="goBack()"
-      text="true"
-      label="Back to Recipes"
-    >
-    </p-button>
+    <div class="header-actions">
+      <p-button
+        icon="pi pi-arrow-left"
+        (click)="goBack()"
+        text="true"
+        label="Back to Recipes"
+      >
+      </p-button>
+      
+      <p-button
+        *ngIf="wakeLockSupported"
+        [icon]="wakeLockEnabled ? 'pi pi-sun' : 'pi pi-moon'"
+        (click)="toggleWakeLock()"
+        [outlined]="!wakeLockEnabled"
+        [severity]="wakeLockEnabled ? 'success' : 'secondary'"
+        [label]="wakeLockEnabled ? 'Screen Active' : 'Keep Screen On'"
+        pTooltip="Prevent screen from turning off while cooking"
+        tooltipPosition="bottom"
+      >
+      </p-button>
+    </div>
     <h1>{{ recipe.name }}</h1>
     <p class="cuisine">{{ recipe.cuisineName }} Cuisine</p>
   </div>

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { PrivacyModalComponent } from './privacy-modal.component';
 
@@ -8,7 +9,13 @@ describe('PrivacyModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PrivacyModalComponent]
+      imports: [PrivacyModalComponent],
+      providers: [
+        {
+          provide: DynamicDialogRef,
+          useValue: { close: jasmine.createSpy('close') }
+        }
+      ]
     })
     .compileComponents();
 
