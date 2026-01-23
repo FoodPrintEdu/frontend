@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { HelpModalComponent } from './help-modal.component';
 
@@ -8,7 +9,13 @@ describe('HelpModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HelpModalComponent]
+      imports: [HelpModalComponent],
+      providers: [
+        {
+          provide: DynamicDialogRef,
+          useValue: { close: jasmine.createSpy('close') }
+        }
+      ]
     })
     .compileComponents();
 

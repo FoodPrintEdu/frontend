@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 import { InstallPwaModalComponent } from './install-pwa-modal.component';
 
@@ -8,7 +9,17 @@ describe('InstallPwaModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InstallPwaModalComponent]
+      imports: [InstallPwaModalComponent],
+      providers: [
+        {
+          provide: DynamicDialogRef,
+          useValue: { close: jasmine.createSpy('close') }
+        },
+        {
+          provide: DynamicDialogConfig,
+          useValue: { data: {} }
+        }
+      ]
     })
     .compileComponents();
 
