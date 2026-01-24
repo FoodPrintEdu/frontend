@@ -12,7 +12,7 @@ export class CartService {
   totalItems = computed(() => this.cartItems().reduce((acc, item) => acc + item.quantity, 0));
 
   totalPriceCents = computed(() =>
-    this.cartItems().reduce((acc, item) => acc + (item.quantity * item.offer.priceCents), 0)
+    this.cartItems().reduce((acc, item) => acc + (item.quantity * item.offer.price_cents), 0)
   );
 
   addToCart(offer: Offer) {
@@ -20,7 +20,7 @@ export class CartService {
     const existingItem = currentItems.find(item => item.offer.id === offer.id);
 
     if (existingItem) {
-      if (existingItem.quantity < offer.packCountRemaining) {
+      if (existingItem.quantity < offer.pack_count_remaining) {
         this.updateQuantity(offer.id, existingItem.quantity + 1);
       }
     } else {
@@ -36,7 +36,7 @@ export class CartService {
     this.cartItems.update(items =>
       items.map(item => {
         if (item.offer.id === offerId) {
-          const max = item.offer.packCountRemaining;
+          const max = item.offer.pack_count_remaining;
           return { ...item, quantity: Math.min(Math.max(1, quantity), max) };
         }
         return item;

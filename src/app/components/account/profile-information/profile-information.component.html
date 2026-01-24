@@ -15,7 +15,11 @@
         <p>{{ user.email }}</p>
         <div *ngIf="currentDiet" class="badges">
           <p>{{ getDietLabel() }} Diet</p>
-          <p>Premium Member</p>
+
+          <p class="sub-label" [class.premium]="subscriptionService.hasActiveSubscription()">
+            {{ subLabel() }}
+          </p>
+
         </div>
       </div>
 <!--      <div class="button-wrapper">-->

@@ -21,3 +21,10 @@ export type SubscriptionCheckoutResponse = {
   checkout_url: string;
   session_id: string;
 };
+
+export type SubscriptionCheckoutCompleteResponse = {
+  paid: boolean;
+  activated: boolean;
+  payment_status: string;
+  status: string;
+};

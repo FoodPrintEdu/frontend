@@ -23,7 +23,7 @@
       <i class="pi pi-truck" style="font-size: 3rem; color: #4caf50"></i>
     </div>
 
-    <app-marketplace-items></app-marketplace-items>
+    <app-marketplace-items [offers]="offers"></app-marketplace-items>
   </div>
 </section>
 
@@ -61,15 +61,15 @@
 
         <div class="flex justify-content-between align-items-start mb-2 gap-3 w-full">
           <span class="font-bold text-900 line-height-3 block flex-1">
-            {{ item.offer.dietIngredientName }}
+            {{ item.offer.diet_ingredient_name }}
           </span>
           <span class="font-bold text-green-600 white-space-nowrap text-lg">
-            {{ (item.offer.priceCents * item.quantity) / 100 | currency:item.offer.currency }}
+            {{ (item.offer.price_cents * item.quantity) / 100 | currency:item.offer.currency }}
           </span>
         </div>
 
         <div class="text-xs text-500 mb-3">
-          {{ item.offer.priceCents / 100 | currency:item.offer.currency }} each
+          {{ item.offer.price_cents / 100 | currency:item.offer.currency }} each
         </div>
 
         <div class="flex align-items-center justify-content-between w-full">
@@ -84,7 +84,7 @@
 
             <button class="qty-btn"
                     (click)="cartService.updateQuantity(item.offer.id, item.quantity + 1)"
-                    [disabled]="item.quantity >= item.offer.packCountRemaining">
+                    [disabled]="item.quantity >= item.offer.pack_count_remaining">
               <i class="pi pi-plus text-xs"></i>
             </button>
           </div>

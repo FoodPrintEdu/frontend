@@ -15,6 +15,7 @@ import {currentDietGuard} from './guards/current-diet.guard';
 import {authGuard} from './guards/auth.guard';
 import {YourOffersPageComponent} from './pages/dashboard/your-offers-page/your-offers-page.component';
 import {entrepreneurGuard} from './guards/entrepreneur.guard';
+import {subscriptionGuard} from './guards/subscription.guard';
 
 export const routes: Routes = [
   {
@@ -47,7 +48,7 @@ export const routes: Routes = [
           {
             path: 'nutrition',
             component: NutritionTrackerPageComponent,
-            canActivate: [currentDietGuard]
+            canActivate: [currentDietGuard, subscriptionGuard]
           },
           {
             path: 'recipes',

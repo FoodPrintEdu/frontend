@@ -12,6 +12,8 @@ import { ClientDiet } from '../../types/ClientDiet';
 import { DietService } from '../../service/diet.service';
 import { MenuService } from '../../service/menu.service';
 import { Subscription } from 'rxjs';
+import {SubscriptionPlan} from '../../types/subscriptionTypes';
+import {SubscriptionService} from '../../service/subscription.service';
 
 @Component({
   selector: 'app-side-menu',
@@ -35,6 +37,7 @@ import { Subscription } from 'rxjs';
 export class SideMenuComponent implements OnInit, OnDestroy {
   user!: UserResponse;
   currentDiet: ClientDiet | null = null;
+  subscriptionPlan: SubscriptionPlan = null;
   items: MenuItem[] = [];
   dietSub: Subscription;
   isMenuOpen = false;
@@ -45,8 +48,13 @@ export class SideMenuComponent implements OnInit, OnDestroy {
     protected userService: UserService,
     private router: Router,
     private dietService: DietService,
-    private menuService: MenuService
-  ) {}
+    private menuService: MenuService,
+    private subService: SubscriptionService
+  ) {
+    effect(() => {
+      this.updateMenu();
+    });
+  }
 
   async ngOnInit() {
     this.user = this.userService.getCurrentUser();
@@ -72,6 +80,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
   updateMenu() {
     const dietDisabled = !this.currentDiet;
+    const trackerDisabled = !this.subService.hasActiveSubscription();
 
     this.items = [
       {
@@ -98,7 +107,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
             label: 'Nutrition Tracker',
             icon: 'pi pi-fw pi-chart-line',
             routerLink: '/nutrition',
-            disabled: dietDisabled,
+            disabled: dietDisabled || trackerDisabled,
           },
         ],
       },

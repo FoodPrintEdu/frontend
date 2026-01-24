@@ -9,6 +9,7 @@ import { UserService } from '../../service/user.service';
   imports: [LoginFormComponent, NgOptimizedImage, RouterLink],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
+  standalone: true
 })
 export class LoginPageComponent {
   constructor(private userService: UserService, private router: Router) {}

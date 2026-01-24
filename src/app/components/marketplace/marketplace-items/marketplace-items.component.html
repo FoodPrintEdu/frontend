@@ -1,6 +1,5 @@
-<div class="items-grid">
+<div *ngIf="offers.length > 0; else emptyState" class="items-grid">
   <div *ngFor="let offer of offers" class="item-card-wrapper">
-
     <p-card styleClass="marketplace-card surface-card h-full">
 
       <ng-template pTemplate="header">
@@ -10,42 +9,52 @@
       </ng-template>
 
       <div class="card-content">
-
         <div class="product-header">
-          <h3 class="product-title" [title]="offer.dietIngredientName">
-            {{ offer.dietIngredientName }}
+          <h3 class="product-title" [title]="offer.diet_ingredient_name">
+            {{ offer.diet_ingredient_name }}
           </h3>
           <span class="product-price">
-            {{ offer.priceCents / 100 | currency:offer.currency }}
+            {{ offer.price_cents / 100 | currency:offer.currency }}
           </span>
         </div>
 
         <div class="product-details">
           <p class="pack-info">
             <i class="pi pi-inbox mr-1" style="margin-right: 8px;"></i>
-            Pack size: {{ offer.packSizeG }}g
+            Pack size: {{ offer.pack_size_g }}g
           </p>
         </div>
 
         <div class="product-actions">
           <p-tag
-            [value]="offer.packCountRemaining > 0 ? 'In Stock (' + offer.packCountRemaining + ')' : 'Sold Out'"
-            [severity]="offer.packCountRemaining > 0 ? 'success' : 'danger'"
+            [value]="offer.pack_count_remaining > 0 ? 'In Stock (' + offer.pack_count_remaining + ')' : 'Sold Out'"
+            [severity]="offer.pack_count_remaining > 0 ? 'success' : 'danger'"
             styleClass="text-sm">
           </p-tag>
 
           <p-button
             icon="pi pi-cart-plus"
             label="Add"
-            [disabled]="offer.packCountRemaining === 0"
+            [disabled]="offer.pack_count_remaining === 0"
             (onClick)="addItem(offer)"
             styleClass="p-button-sm p-button-rounded"
             [outlined]="true">
           </p-button>
         </div>
-
       </div>
     </p-card>
   </div>
 </div>
+
+<ng-template #emptyState>
+  <div class="empty-state-container">
+    <div class="empty-state">
+      <i class="pi pi-search" style="font-size: 3rem"></i>
+      <h3>No offers found</h3>
+      <p>Currently, there are no marketplace offers</p>
+      <p>Try again later</p>
+    </div>
+  </div>
+</ng-template>
+
 <p-toast position="bottom-right"></p-toast>

@@ -1,12 +1,11 @@
 export interface Offer {
-  id: string;
-  dietIngredientId: number;
-  dietIngredientName: string;
-  sellerUserId?: string;
-  priceCents: number;
+  id?: string;
+  diet_ingredient_id: number;
+  diet_ingredient_name?: string;
+  price_cents: number;
   currency: string;
-  packSizeG: number;
-  packCountTotal: number;
-  packCountRemaining: number;
-  status: string;
+  pack_size_g: number;
+  pack_count_total: number;
+  pack_count_remaining?: number;
+  status?: string;
 }

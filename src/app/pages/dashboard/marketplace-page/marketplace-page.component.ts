@@ -1,8 +1,5 @@
-import {Component, computed} from '@angular/core';
+import {Component, computed, OnInit} from '@angular/core';
 import {ButtonModule} from 'primeng/button';
-import {
-  MarketplaceCategoriesComponent
-} from '../../../components/marketplace/marketplace-categories/marketplace-categories.component';
 import {MarketplaceItemsComponent} from '../../../components/marketplace/marketplace-items/marketplace-items.component';
 import {CartService} from '../../../service/cart.service';
 import {MessageService} from 'primeng/api';
@@ -12,12 +9,13 @@ import {InputNumber} from 'primeng/inputnumber';
 import {FormsModule} from '@angular/forms';
 import {Divider} from 'primeng/divider';
 import {ProgressBar} from 'primeng/progressbar';
+import {MarketplaceService} from '../../../service/marketplace.service';
+import {Offer} from '../../../types/Offer';
 
 @Component({
   selector: 'app-marketplace-page',
   imports: [
     ButtonModule,
-    MarketplaceCategoriesComponent,
     MarketplaceItemsComponent,
     Sidebar,
     NgIf,
@@ -33,11 +31,13 @@ import {ProgressBar} from 'primeng/progressbar';
   styleUrl: './marketplace-page.component.scss',
   standalone: true
 })
-export class MarketplacePageComponent {
+export class MarketplacePageComponent implements OnInit {
   cartVisible: boolean = false;
+  offers: Offer[];
   readonly freeShippingThresholdCents = 5000;
   constructor(private messageService: MessageService,
-              protected cartService: CartService) {
+              protected cartService: CartService,
+              private marketplaceService: MarketplaceService) {
   }
 
   placeOrder() {
@@ -57,4 +57,15 @@ export class MarketplacePageComponent {
     if (remaining <= 0) return 'You have unlocked Free Shipping!';
     return `Add ${(remaining / 100).toFixed(2)} PLN for Free Shipping`;
   });
+
+  async ngOnInit(): Promise<void> {
+
+    try {
+      this.offers = (await this.marketplaceService.getAvailableOffers()).data;
+    } catch (e) {
+      this.offers = [];
+    }
+
+
+  }
 }
