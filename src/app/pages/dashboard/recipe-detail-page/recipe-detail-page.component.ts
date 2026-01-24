@@ -15,6 +15,7 @@ import {environment} from '../../../../environments/environment';
 import {DietService} from '../../../service/diet.service';
 import {Popover} from 'primeng/popover';
 import {Tooltip} from 'primeng/tooltip';
+import {SyncService} from '../../../service/sync.service';
 
 @Component({
   selector: 'app-recipe-detail-page',
@@ -55,6 +56,7 @@ export class RecipeDetailPageComponent implements OnInit, OnDestroy {
     private recipeService: RecipeService,
     private messageService: MessageService,
     private dietService: DietService,
+    private syncService: SyncService,
   ) {}
 
   ngOnInit() {
@@ -212,7 +214,7 @@ export class RecipeDetailPageComponent implements OnInit, OnDestroy {
     popover.toggle(event);
   }
 
-  onMealPrepared() {
+  async onMealPrepared() {
     if (!this.recipe) {
       this.messageService.add({
         severity: 'error',
@@ -232,6 +234,50 @@ export class RecipeDetailPageComponent implements OnInit, OnDestroy {
     }
 
     this.cookingInProgress = true;
+
+    if (!this.syncService.isOnline()) {
+      try {
+        const mealData = {
+          recipeId: this.recipe.id,
+          servings: this.selectedServings,
+          recipeName: this.recipe.name,
+          timestamp: Date.now(),
+        };
+
+        await this.syncService.saveOfflineData(
+          `meal_${Date.now()}`,
+          'meal',
+          mealData
+        );
+
+        await this.syncService.addToSyncQueue({
+          type: 'recipe',
+          action: 'create',
+          data: {
+            recipeId: this.recipe.id,
+            servings: this.selectedServings,
+          },
+        });
+
+        this.cookingInProgress = false;
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Saved Offline',
+          detail: `Meal saved locally. Will sync when online.`,
+        });
+
+        console.log('Meal saved offline:', mealData);
+      } catch (error) {
+        this.cookingInProgress = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to save meal offline',
+        });
+        console.error('Error saving meal offline:', error);
+      }
+      return;
+    }
 
     this.recipeService
       .cookRecipe(this.recipe.id, this.selectedServings)

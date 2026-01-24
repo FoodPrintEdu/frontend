@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface SyncQueueItem {
@@ -24,7 +24,7 @@ export class SyncService {
   private isOnlineSubject = new BehaviorSubject<boolean>(navigator.onLine);
   public isOnline$: Observable<boolean> = this.isOnlineSubject.asObservable();
 
-  constructor() {
+  constructor(private injector: Injector) {
     this.initDB();
     this.setupOnlineListener();
   }
@@ -246,8 +246,34 @@ export class SyncService {
 
   private async syncItem(item: SyncQueueItem): Promise<void> {
     console.log('Synchronizing item:', item);
+    
+    if (item.type === 'recipe' && item.action === 'create') {
+      await this.syncMealPreparation(item.data);
+      return;
+    }
+    
+    throw new Error(`Sync handler not implemented for type: ${item.type}, action: ${item.action}`);
   }
-
+  
+  private async syncMealPreparation(data: { recipeId: number; servings: number }): Promise<void> {
+    // Lazy load RecipeService to avoid circular dependency
+    const { RecipeService } = await import('./recipe.service');
+    const recipeService = this.injector.get(RecipeService);
+    
+    return new Promise((resolve, reject) => {
+      recipeService.cookRecipe(data.recipeId, data.servings).subscribe({
+        next: (response) => {
+          console.log('Meal synced successfully:', response);
+          resolve();
+        },
+        error: (error) => {
+          console.error('Failed to sync meal:', error);
+          reject(error);
+        }
+      });
+    });
+  }
+  
   private async removeFromSyncQueue(id: string): Promise<void> {
     try {
       const db = await this.ensureDatabase();
