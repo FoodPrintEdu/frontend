@@ -8,6 +8,8 @@ import Aura from '@primeng/themes/aura';
 import { definePreset } from '@primeng/themes';
 import { provideHttpClient } from '@angular/common/http';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { DialogService } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
 
 const MyPreset = definePreset(Aura, {
   semantic: {
@@ -37,7 +39,10 @@ export const appConfig: ApplicationConfig = {
         preset: MyPreset,
       },
     }),
-    provideHttpClient(), provideCharts(withDefaultRegisterables()),
+    provideHttpClient(), 
+    provideCharts(withDefaultRegisterables()),
+    DialogService,
+    MessageService,
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',

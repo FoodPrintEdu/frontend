@@ -4,16 +4,17 @@ import {UserService} from './service/user.service';
 import { PwaUpdateService } from './service/pwa-update.service';
 import { SyncService } from './service/sync.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { InstallPwaModalComponent } from './components/install-pwa-modal/install-pwa-modal.component';
 import { NotificationService } from './service/notification.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ToastModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  standalone: true,
-  providers: [DialogService]
+  standalone: true
 })
 export class AppComponent implements OnInit {
   private deferredPrompt: any = null;

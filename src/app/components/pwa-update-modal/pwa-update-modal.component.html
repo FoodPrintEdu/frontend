@@ -1,0 +1,69 @@
+<div class="update-modal">
+  <div class="update-icon">
+    <i class="pi pi-download" style="font-size: 3rem; color: var(--primary-color)"></i>
+  </div>
+
+  <div class="update-content">
+    <h2 class="update-title">A new version is available!</h2>
+    
+    <div class="version-info">
+      <div class="version-item">
+        <span class="version-label">Current version:</span>
+        <span class="version-value">{{ currentVersion }}</span>
+      </div>
+      <div class="version-arrow">
+        <i class="pi pi-arrow-right"></i>
+      </div>
+      <div class="version-item">
+        <span class="version-label">New version:</span>
+        <span class="version-value highlight">{{ newVersion }}</span>
+      </div>
+    </div>
+
+    <div class="changelog" *ngIf="changelog && changelog.length > 0">
+      <h3>What's new:</h3>
+      <ul>
+        <li *ngFor="let change of changelog">
+          <i class="pi pi-check-circle"></i>
+          <span>{{ change }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="auto-update-info">
+      <p>
+        <i class="pi pi-info-circle"></i>
+        Automatic update in <strong>{{ remainingSeconds }}</strong> seconds
+      </p>
+      <p-progressBar 
+        [value]="progressValue" 
+        [showValue]="false"
+        styleClass="update-progress">
+      </p-progressBar>
+    </div>
+
+    <div class="update-actions">
+      <p-button 
+        label="Update now" 
+        icon="pi pi-refresh" 
+        (onClick)="updateNow()"
+        styleClass="p-button-primary"
+        [style]="{'width': '100%', 'margin-bottom': '0.5rem'}">
+      </p-button>
+      <p-button 
+        label="Later" 
+        icon="pi pi-clock" 
+        (onClick)="updateLater()"
+        styleClass="p-button-secondary p-button-outlined"
+        [style]="{'width': '100%'}">
+      </p-button>
+    </div>
+
+    <div class="update-note">
+      <small>
+        <i class="pi pi-exclamation-triangle"></i>
+        Update requires reloading the application. Your data will be saved automatically.
+      </small>
+    </div>
+  </div>
+</div>
