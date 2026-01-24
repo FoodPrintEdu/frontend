@@ -126,6 +126,10 @@ img {
       .ingredient-info {
         flex: 1;
 
+        .marketplace-link {
+          margin-left: 0.25rem;
+        }
+
         h4 {
           margin: 0 0 5px 0;
           font-size: 1.1rem;
@@ -170,6 +174,20 @@ img {
       }
     }
   }
+}
+
+:host ::ng-deep .marketplace-link .p-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+:host ::ng-deep .marketplace-link .p-button:hover,
+:host ::ng-deep .marketplace-link .p-button:focus {
+  background: transparent;
 }
 
 .recipe-sidebar {

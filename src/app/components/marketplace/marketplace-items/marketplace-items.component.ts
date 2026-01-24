@@ -16,7 +16,7 @@ import {Toast} from 'primeng/toast';
   standalone: true
 })
 export class MarketplaceItemsComponent {
-  @Input() offers!: Offer[];
+  @Input() offers: Offer[] = [];
 
   constructor(private cartService: CartService, private messageService: MessageService) {}
 

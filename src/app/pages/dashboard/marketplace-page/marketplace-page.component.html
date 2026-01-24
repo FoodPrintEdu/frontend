@@ -23,6 +23,79 @@
       <i class="pi pi-truck" style="font-size: 3rem; color: #4caf50"></i>
     </div>
 
+    <div class="orders-card">
+      <button class="orders-toggle" (click)="toggleOrders()">
+        <span>My Orders</span>
+        <i class="pi" [ngClass]="ordersVisible ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+      </button>
+      <div class="orders-content" *ngIf="ordersVisible">
+        <div class="orders-loading" *ngIf="ordersLoading">Loading your orders...</div>
+        <div class="orders-empty" *ngIf="!ordersLoading && orders.length === 0">
+          No past orders yet.
+        </div>
+        <div class="order-card" *ngFor="let order of orders">
+          <div class="order-header">
+            <div>
+              <h3>{{ order.inserted_at | date: 'mediumDate' }}</h3>
+              <p class="muted">Status: {{ order.status }}</p>
+            </div>
+            <div class="order-total" *ngIf="order.items?.length > 1">
+              Total: {{ order.total_price_cents / 100 | currency:order.currency }}
+            </div>
+          </div>
+          <div class="order-items">
+            <div class="order-item" *ngFor="let item of order.items">
+              <div>
+                <p class="item-name">{{ item.offer?.diet_ingredient_name }}</p>
+                <p class="muted">
+                  {{ item.offer?.pack_size_g }} g · Qty {{ item.quantity }}
+                </p>
+                <p class="muted" *ngIf="item.offer?.seller_name">
+                  Seller: {{ item.offer?.seller_name }}
+                </p>
+              </div>
+              <div class="item-price">
+                {{ (item.unit_price_cents * item.quantity) / 100 | currency:order.currency }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="offers-search">
+      <div class="search-header">
+        <div>
+          <h3>Find ingredients</h3>
+          <p>Search by ingredient name to filter offers.</p>
+        </div>
+        <button class="clear-filter" *ngIf="ingredientQuery || selectedIngredient" (click)="clearIngredientFilter()">
+          Clear filter
+        </button>
+      </div>
+      <div class="search-input">
+        <input
+          pInputText
+          type="text"
+          placeholder="Start typing an ingredient..."
+          [(ngModel)]="ingredientQuery"
+          (ngModelChange)="onIngredientQueryChange($event)"
+        />
+      </div>
+      <div class="search-results" *ngIf="filteredIngredients.length > 0">
+        <button
+          class="result-item"
+          *ngFor="let ingredient of filteredIngredients"
+          (click)="selectIngredient(ingredient)"
+        >
+          {{ ingredient.name }}
+        </button>
+      </div>
+      <div class="search-empty" *ngIf="ingredientQuery && filteredIngredients.length === 0 && !selectedIngredient">
+        No matching ingredients.
+      </div>
+    </div>
+
     <app-marketplace-items [offers]="offers"></app-marketplace-items>
   </div>
 </section>
@@ -138,9 +211,12 @@
         label="Checkout"
         icon="pi pi-check"
         styleClass="w-full p-button-primary p-button-lg shadow-2"
-        (onClick)="placeOrder()">
+        [loading]="isCheckoutLoading"
+        (onClick)="startCheckout()">
       </p-button>
     </div>
 
   </div>
 </p-sidebar>
+
+<p-toast position="bottom-right"></p-toast>
