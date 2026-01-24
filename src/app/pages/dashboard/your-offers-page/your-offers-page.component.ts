@@ -5,7 +5,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
@@ -26,7 +26,7 @@ import {IngredientService} from '../../../service/ingredient.service';
     ButtonModule,
     InputTextModule,
     InputNumberModule,
-    DropdownModule,
+    SelectModule,
     DialogModule,
     CardModule,
     TagModule,
