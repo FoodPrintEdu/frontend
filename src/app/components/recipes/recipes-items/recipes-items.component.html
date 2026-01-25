@@ -1,16 +1,14 @@
 <div class="items-wrapper">
   <h2>Featured Recipes</h2>
 
-  <!-- No recipes state -->
   <div *ngIf="recipes.length === 0" class="no-recipes-state">
     <p>{{ noRecipesMessage || "No recipes found for your profile." }}</p>
   </div>
 
-  <!-- Recipes list -->
   <div *ngIf="recipes.length > 0" class="items">
     <div
       class="item"
-      *ngFor="let recipe of recipes"
+      *ngFor="let recipe of visibleRecipes"
       (click)="onRecipeClick(recipe.id)"
       style="cursor: pointer"
     >
@@ -21,7 +19,7 @@
         </div>
         <img [attr.src]="getRecipeSrc(recipe)" width="128" height="128"
              class="right"
-         alt="Recipe image">
+             alt="Recipe image">
       </div>
       <div class="mid">
         <div class="left">
@@ -49,4 +47,14 @@
       </div>
     </div>
   </div>
+
+  <p-paginator
+    *ngIf="recipes.length > recipesPerPage"
+    [rows]="recipesPerPage"
+    [totalRecords]="recipes.length"
+    [first]="firstRecipeIndex"
+    [rowsPerPageOptions]="[12, 24, 36]"
+    (onPageChange)="onPageChange($event)">
+  </p-paginator>
+
 </div>

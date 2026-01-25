@@ -9,7 +9,7 @@ import {DividerModule} from 'primeng/divider';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {ToastModule} from 'primeng/toast';
 import {MessageService} from 'primeng/api';
-import {Recipe} from '../../../types/recipeTypes';
+import {Ingredient, Recipe} from '../../../types/recipeTypes';
 import {RecipeService} from '../../../service/recipe.service';
 import {environment} from '../../../../environments/environment';
 import {DietService} from '../../../service/diet.service';
@@ -210,6 +210,15 @@ export class RecipeDetailPageComponent implements OnInit, OnDestroy {
   showNutritionInfo(event: Event, info: string[], popover: Popover) {
     this.currentNutritionInfo = info;
     popover.toggle(event);
+  }
+
+  goToMarketplace(ingredient: Ingredient) {
+    this.router.navigate(['/marketplace'], {
+      queryParams: {
+        ingredient_id: ingredient.id,
+        ingredient_name: ingredient.name
+      }
+    });
   }
 
   onMealPrepared() {

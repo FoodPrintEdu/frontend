@@ -1,5 +1,5 @@
-<div *ngIf="offers.length > 0; else emptyState" class="items-grid">
-  <div *ngFor="let offer of offers" class="item-card-wrapper">
+<div *ngIf="displayedOffers?.length > 0; else emptyState" class="items-grid">
+  <div *ngFor="let offer of displayedOffers" class="item-card-wrapper">
     <p-card styleClass="marketplace-card surface-card h-full">
 
       <ng-template pTemplate="header">
@@ -19,6 +19,10 @@
         </div>
 
         <div class="product-details">
+          <p class="seller-info" *ngIf="offer.seller_name">
+            <i class="pi pi-user mr-1" style="margin-right: 8px;"></i>
+            Seller: {{ offer.seller_name }}
+          </p>
           <p class="pack-info">
             <i class="pi pi-inbox mr-1" style="margin-right: 8px;"></i>
             Pack size: {{ offer.pack_size_g }}g

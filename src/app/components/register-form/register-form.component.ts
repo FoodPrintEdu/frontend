@@ -11,6 +11,10 @@ import {InvalidFieldDirective} from '../../directives/invalid-field.directive';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {Checkbox} from 'primeng/checkbox';
+import {tap, throwError} from 'rxjs';
+import {LoginResponse} from '../../types/authTypes';
+import {UserService} from '../../service/user.service';
+import {catchError, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-register-form',
@@ -38,7 +42,8 @@ export class RegisterFormComponent {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
@@ -65,6 +70,7 @@ export class RegisterFormComponent {
       this.clearErrorMessage();
     }
   }
+
   onSubmit() {
     const userRequest = {
       name: this.registerForm.value.name,
@@ -73,22 +79,52 @@ export class RegisterFormComponent {
       role: this.registerForm.value.marketplaceAccess ? 'entrepreneur' : 'user',
     };
 
-    this.http
-      .post(`${this.apiUrl}/user/api/v1/auth/register`, userRequest, {
-        headers: { 'Content-Type': 'application/json' },
-        responseType: 'json',
-      })
-      .subscribe({
-        next: (response) => {
-          console.log('Registration successful', response);
-          this.clearErrorMessage();
+    const loginRequest = {
+      email: userRequest.email,
+      password: userRequest.password
+    };
 
-          this.router.navigate(['/login']);
+    this.http.post(`${this.apiUrl}/user/api/v1/auth/register`, userRequest)
+      .pipe(
+        tap(() => console.log('Registration successful, attempting auto-login...')),
+        switchMap(() => {
+          return this.http.post<LoginResponse>(
+            `${this.apiUrl}/user/api/v1/auth/login`,
+            loginRequest
+          );
+        }),
+        tap((response) => {
+          console.log('Auto-login successful');
+          this.userService.setTokens(
+            response.access_token,
+            response.refresh_token,
+            response.token_type
+          );
+        }),
+        switchMap(() => {
+          return this.userService.setUser();
+        }),
+        catchError((error) => {
+          console.error('Error during registration flow:', error);
+          if (error.url?.includes('register')) {
+            return throwError(() => new Error('Registration failed: Email might be taken.'));
+          } else if (error.url?.includes('login')) {
+            this.router.navigate(['/login']);
+            return throwError(() => new Error('Registration successful, but auto-login failed. Please log in manually.'));
+          }
+          return throwError(() => error);
+        })
+      )
+      .subscribe({
+        next: (user) => {
+          this.clearErrorMessage();
+          console.log('Flow complete, user loaded:', user);
+          this.router.navigate(['/']);
         },
         error: (err) => {
-          console.error('Registration failed', err);
-          this.errorMessage.set('Registration failed. Please try again.');
-        },
+          const message = err.message || 'Something went wrong. Please try again.';
+          this.errorMessage.set(message);
+        }
       });
   }
 }

@@ -24,19 +24,16 @@
 
   <ng-template pTemplate="end">
     <button pRipple class="user-button">
-      <p-avatar
-        image="assets/img/user.png"
-        class="user-avatar"
-        shape="circle"
-      />
+      <div class="profile-picture">
+        <p>{{ user?.name.charAt(0).toUpperCase() }}</p>
+      </div>
       <div
         class="user-info"
         *ngIf="userService.getCurrentUser() as user; else loading"
       >
-        <p class="user-name">{{ user.name }}</p>
-        <p class="user-role">{{ user.role }}</p>
+        <p class="user-name">{{ user?.name }}</p>
+        <p class="user-role">{{ user?.role }}</p>
       </div>
-      <!-- Loading template -->
       <ng-template #loading>
         <p-progress-spinner
           ariaLabel="loading"

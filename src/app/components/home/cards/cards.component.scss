@@ -49,3 +49,10 @@
     font-weight: 300;
   }
 }
+:host ::ng-deep {
+  .progress-danger {
+    .p-progressbar-value {
+      background: #ff4444 !important;
+    }
+  }
+}

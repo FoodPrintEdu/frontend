@@ -1,19 +1,19 @@
-import {Component, OnInit, OnDestroy, HostListener, effect} from '@angular/core';
-import { MenuModule } from 'primeng/menu';
-import { AvatarModule } from 'primeng/avatar';
-import { BadgeModule } from 'primeng/badge';
-import { MenuItem } from 'primeng/api';
-import { NgIf, NgOptimizedImage, CommonModule } from '@angular/common';
-import { UserService } from '../../service/user.service';
-import { UserResponse } from '../../types/userTypes';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { Router } from '@angular/router';
-import { ClientDiet } from '../../types/ClientDiet';
-import { DietService } from '../../service/diet.service';
-import { MenuService } from '../../service/menu.service';
-import { Subscription } from 'rxjs';
-import {SubscriptionPlan} from '../../types/subscriptionTypes';
+import {Component, effect, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {MenuModule} from 'primeng/menu';
+import {AvatarModule} from 'primeng/avatar';
+import {BadgeModule} from 'primeng/badge';
+import {MenuItem} from 'primeng/api';
+import {CommonModule, NgIf, NgOptimizedImage} from '@angular/common';
+import {UserService} from '../../service/user.service';
+import {UserResponse} from '../../types/userTypes';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import {Router, RouterLink} from '@angular/router';
+import {ClientDiet} from '../../types/ClientDiet';
+import {DietService} from '../../service/diet.service';
+import {MenuService} from '../../service/menu.service';
+import {Subscription} from 'rxjs';
 import {SubscriptionService} from '../../service/subscription.service';
+import {Ripple} from 'primeng/ripple';
 
 @Component({
   selector: 'app-side-menu',
@@ -25,6 +25,8 @@ import {SubscriptionService} from '../../service/subscription.service';
     ProgressSpinnerModule,
     NgIf,
     CommonModule,
+    Ripple,
+    RouterLink,
   ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.scss',
@@ -37,7 +39,6 @@ import {SubscriptionService} from '../../service/subscription.service';
 export class SideMenuComponent implements OnInit, OnDestroy {
   user!: UserResponse;
   currentDiet: ClientDiet | null = null;
-  subscriptionPlan: SubscriptionPlan = null;
   items: MenuItem[] = [];
   dietSub: Subscription;
   isMenuOpen = false;
@@ -46,12 +47,16 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
   constructor(
     protected userService: UserService,
-    private router: Router,
     private dietService: DietService,
     private menuService: MenuService,
-    private subService: SubscriptionService
+    private subService: SubscriptionService,
+    private router: Router
   ) {
     effect(() => {
+      const user = this.userService.getCurrentUser();
+      if (user) {
+        this.user = user;
+      }
       this.updateMenu();
     });
   }
@@ -125,11 +130,11 @@ export class SideMenuComponent implements OnInit, OnDestroy {
             routerLink: '/your-offers',
             visible: this.user.role === 'entrepreneur'
           },
-          {
-            label: 'Leaderboard',
-            icon: 'pi pi-fw pi-star',
-            routerLink: '/leaderboard',
-          },
+          // {
+          //   label: 'Leaderboard',
+          //   icon: 'pi pi-fw pi-star',
+          //   routerLink: '/leaderboard',
+          // },
 
         ],
       },

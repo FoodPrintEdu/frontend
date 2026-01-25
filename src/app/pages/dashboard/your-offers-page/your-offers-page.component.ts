@@ -1,22 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component, effect, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { DropdownModule } from 'primeng/dropdown';
-import { DialogModule } from 'primeng/dialog';
-import { CardModule } from 'primeng/card';
-import { TagModule } from 'primeng/tag';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ToastModule } from 'primeng/toast';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import {ButtonModule} from 'primeng/button';
+import {InputTextModule} from 'primeng/inputtext';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {DropdownModule} from 'primeng/dropdown';
+import {DialogModule} from 'primeng/dialog';
+import {CardModule} from 'primeng/card';
+import {TagModule} from 'primeng/tag';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ToastModule} from 'primeng/toast';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {Offer} from '../../../types/Offer';
 import {Tooltip} from 'primeng/tooltip';
 import {Ingredient} from '../../../types/recipeTypes';
 import {IngredientService} from '../../../service/ingredient.service';
 import {MarketplaceService} from '../../../service/marketplace.service';
+import {UserService} from '../../../service/user.service';
 
 @Component({
   selector: 'app-your-offers-page',
@@ -41,7 +42,7 @@ import {MarketplaceService} from '../../../service/marketplace.service';
   styleUrl: './your-offers-page.component.scss'
 })
 export class YourOffersPageComponent implements OnInit {
-  // Dane
+
   offers: Offer[] = [];
   filteredOffers: Offer[] = [];
 
@@ -57,14 +58,22 @@ export class YourOffersPageComponent implements OnInit {
   offerForm: FormGroup;
   isEditMode: boolean = false;
   currentOfferId: string | null = null;
+  private userId: string;
+
   constructor(
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private ingredientService: IngredientService,
-    private marketplaceService: MarketplaceService
-
+    private marketplaceService: MarketplaceService,
+    private userService: UserService,
   ) {
+    effect(async () => {
+      const user = this.userService.getCurrentUser();
+      if (user && user.id) {
+        this.userId = user.id;
+      }
+    });
     this.initForm();
   }
 
@@ -75,7 +84,7 @@ export class YourOffersPageComponent implements OnInit {
       this.availableIngredients = [];
     }
     try {
-      this.offers = (await this.marketplaceService.getAvailableOffers()).data;
+      this.offers = (await this.marketplaceService.getAvailableOffers({sellerId: this.userId})).data;
       console.log("AVAILABLE OFFERS: ", this.offers);
     } catch (error) {
       this.offers = [];
@@ -105,7 +114,7 @@ export class YourOffersPageComponent implements OnInit {
     this.isEditMode = true;
     this.currentOfferId = offer.id!;
     this.offerForm.patchValue({
-      dietIngredient: { id: offer.diet_ingredient_id, name: offer.diet_ingredient_name },
+      dietIngredient: {id: offer.diet_ingredient_id, name: offer.diet_ingredient_name},
       price: offer.price_cents / 100,
       packSizeG: offer.pack_size_g,
       packTotalCount: offer.pack_count_total
@@ -139,7 +148,7 @@ export class YourOffersPageComponent implements OnInit {
       return;
     }
     const ingredient = this.offerForm.get('dietIngredient').value as Ingredient
-    const priceCents: number = (this.offerForm.get('price').value as number) * 100
+    const priceCents: number = Math.round((this.offerForm.get('price').value as number) * 100)
     const offerToSave: Offer = {
       diet_ingredient_id: ingredient.id,
       price_cents: priceCents,
@@ -153,7 +162,7 @@ export class YourOffersPageComponent implements OnInit {
         console.log("OFFER TO EDIT", offerToSave);
         offerToSave.id = this.currentOfferId;
         const editedOffer = (await this.marketplaceService.editOffer(offerToSave)).data;
-        this.offers = (await this.marketplaceService.getAvailableOffers()).data;
+        this.offers = (await this.marketplaceService.getAvailableOffers({sellerId: this.userId})).data;
         console.log("AVAILABLE OFFERS: ", this.offers);
         this.messageService.add({severity: 'success', summary: 'Success', detail: 'Offer edited successfully'});
       } catch (e) {
@@ -163,7 +172,7 @@ export class YourOffersPageComponent implements OnInit {
       try {
         console.log("NEW OFFER", offerToSave);
         const createdOffer = (await this.marketplaceService.createOffer(offerToSave)).data;
-        this.offers = (await this.marketplaceService.getAvailableOffers()).data;
+        this.offers = (await this.marketplaceService.getAvailableOffers({sellerId: this.userId})).data;
         console.log("AVAILABLE OFFERS: ", this.offers);
         this.messageService.add({severity: 'success', summary: 'Success', detail: 'New offer created successfully'});
       } catch (e) {

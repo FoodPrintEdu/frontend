@@ -9,6 +9,7 @@ import {Meal} from '../types/Meal';
 import {DietPlan} from '../types/DietPlan';
 import {Client} from '../types/Client';
 import {NotificationService} from './notification.service';
+import {formatDate} from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +25,9 @@ export class DietService {
 
   private isLoadingClientData = false;
   private lastNotifiedDate: string | null = null;
-
+  private today = new Date();
   constructor(
-    private apiService: ApiService, 
+    private apiService: ApiService,
     private userService: UserService,
     private notificationService: NotificationService
   ) {
@@ -149,21 +150,27 @@ export class DietService {
       return;
     }
 
-    const todayData = summaryData[summaryData.length - 1];
-    const today = new Date().toISOString().split('T')[0];
+    const todaysDateString = formatDate(this.today, 'yyyy-MM-dd', 'en-US');
+    const todaysStats = summaryData?.find(
+      (item) => item.date === todaysDateString
+    );
+    console.log("TODAY!", todaysStats);
+    console.log("lastNotifiedDate", this.lastNotifiedDate);
+    console.log("Achieved", todaysStats.dailyKcalGoalAchieved);
 
     if (
-      todayData.date === today &&
-      todayData.dailyKcalGoalAchieved &&
-      this.lastNotifiedDate !== today
+      todaysStats.date === todaysDateString &&
+      todaysStats.dailyKcalGoalAchieved &&
+      this.lastNotifiedDate !== todaysDateString
     ) {
       const clientDiet = this.clientDietSubject.value;
       if (clientDiet) {
+        console.log("SENDING NOTIF")
         this.notificationService.notifyDayCompletion(
-          Math.round(todayData.totalKcal),
+          Math.round(todaysStats.totalKcal),
           Math.round(clientDiet.dailyKcalTarget)
         );
-        this.lastNotifiedDate = today;
+        this.lastNotifiedDate = todaysDateString;
       }
     }
   }
