@@ -148,7 +148,7 @@
 
       <div class="field">
         <label for="ingredient" class="block mb-2">Product</label>
-        <p-dropdown
+        <p-select
           id="ingredient"
           [options]="availableIngredients"
           formControlName="dietIngredient"
@@ -157,7 +157,7 @@
           [filter]="true"
           filterBy="name"
           appendTo="body">
-        </p-dropdown>
+        </p-select>
         <small class="p-error" *ngIf="offerForm.get('dietIngredient')?.invalid && offerForm.get('dietIngredient')?.dirty">
           Product is required.
         </small>

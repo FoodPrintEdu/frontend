@@ -2,16 +2,16 @@ import {Component, effect, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 
-import {ButtonModule} from 'primeng/button';
-import {InputTextModule} from 'primeng/inputtext';
-import {InputNumberModule} from 'primeng/inputnumber';
-import {DropdownModule} from 'primeng/dropdown';
-import {DialogModule} from 'primeng/dialog';
-import {CardModule} from 'primeng/card';
-import {TagModule} from 'primeng/tag';
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
-import {ToastModule} from 'primeng/toast';
-import {ConfirmationService, MessageService} from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
+import { DialogModule } from 'primeng/dialog';
+import { CardModule } from 'primeng/card';
+import { TagModule } from 'primeng/tag';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import {Offer} from '../../../types/Offer';
 import {Tooltip} from 'primeng/tooltip';
 import {Ingredient} from '../../../types/recipeTypes';
@@ -28,7 +28,7 @@ import {UserService} from '../../../service/user.service';
     ButtonModule,
     InputTextModule,
     InputNumberModule,
-    DropdownModule,
+    SelectModule,
     DialogModule,
     CardModule,
     TagModule,

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CardModule } from 'primeng/card';
 import { DietPlan} from '../../../types/DietPlan';
@@ -16,7 +16,7 @@ import {ClientDiet} from '../../../types/ClientDiet';
     CommonModule,
     ReactiveFormsModule,
     ButtonModule,
-    DropdownModule,
+    SelectModule,
     InputNumberModule,
     CardModule
   ],

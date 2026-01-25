@@ -42,7 +42,7 @@
 
         <div class="field">
           <label for="sex">Sex</label>
-          <p-dropdown
+          <p-select
             id="sex"
             [options]="sexes"
             formControlName="sex"
@@ -50,7 +50,7 @@
             optionValue="value"
             placeholder="Select Sex"
             [style]="{'width':'100%'}">
-          </p-dropdown>
+          </p-select>
         </div>
 
         <div class="field">
@@ -90,7 +90,7 @@
 
         <div class="field full-width">
           <label for="activity">Activity Level</label>
-          <p-dropdown
+          <p-select
             id="activity"
             [options]="activityLevels"
             formControlName="activityLevel"
@@ -98,12 +98,12 @@
             optionValue="value"
             placeholder="Select Activity Level"
             [style]="{'width':'100%'}">
-          </p-dropdown>
+          </p-select>
         </div>
 
         <div class="field full-width">
           <label for="goal">Goal</label>
-          <p-dropdown
+          <p-select
             id="goal"
             [options]="goals"
             formControlName="goal"
@@ -111,12 +111,12 @@
             optionValue="value"
             placeholder="Select Goal"
             [style]="{'width':'100%'}">
-          </p-dropdown>
+          </p-select>
         </div>
 
         <div class="field full-width">
           <label for="diet">Preferred Diet Type</label>
-          <p-dropdown
+          <p-select
             id="diet"
             [options]="diets"
             formControlName="preferredDietType"
@@ -124,7 +124,7 @@
             optionValue="value"
             placeholder="Select Diet Type"
             [style]="{'width':'100%'}">
-          </p-dropdown>
+          </p-select>
         </div>
       </div>
 
