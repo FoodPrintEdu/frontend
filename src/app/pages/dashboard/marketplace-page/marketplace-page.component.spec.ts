@@ -3,6 +3,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MarketplacePageComponent} from './marketplace-page.component';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {provideHttpClient} from '@angular/common/http';
+import {provideRouter} from '@angular/router';
 
 describe('MarketplacePageComponent', () => {
   let component: MarketplacePageComponent;
@@ -14,6 +15,7 @@ describe('MarketplacePageComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
+        provideRouter([])
       ]
     })
     .compileComponents();

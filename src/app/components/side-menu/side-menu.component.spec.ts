@@ -5,7 +5,8 @@ import {UserService} from '../../service/user.service';
 import {of} from 'rxjs';
 import {SubscriptionService} from '../../service/subscription.service';
 import {DietService} from '../../service/diet.service';
-import {RouterModule} from '@angular/router';
+import {provideRouter, RouterModule} from '@angular/router';
+import {provideNoopAnimations} from '@angular/platform-browser/animations';
 
 describe('SideMenuComponent', () => {
   let component: SideMenuComponent;
@@ -38,6 +39,8 @@ describe('SideMenuComponent', () => {
         { provide: UserService, useValue: mockUserService },
         { provide: SubscriptionService, useValue: mockSubService },
         { provide: DietService, useValue: mockDietService },
+        provideNoopAnimations(),
+        provideRouter([])
       ]
     })
       .compileComponents();
