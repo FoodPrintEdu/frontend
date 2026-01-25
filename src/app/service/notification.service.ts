@@ -13,17 +13,17 @@ export interface NotificationSettings {
 export class NotificationService {
   private readonly NOTIFICATION_SETTINGS_KEY = 'notification-settings';
   private readonly PERMISSION_REQUESTED_KEY = 'notification-permission-requested';
-  
+
   private notificationSettingsSubject = new BehaviorSubject<NotificationSettings>(
     this.loadSettings()
   );
-  public notificationSettings$: Observable<NotificationSettings> = 
+  public notificationSettings$: Observable<NotificationSettings> =
     this.notificationSettingsSubject.asObservable();
 
   private permissionStateSubject = new BehaviorSubject<NotificationPermission>(
     this.getCurrentPermissionState()
   );
-  public permissionState$: Observable<NotificationPermission> = 
+  public permissionState$: Observable<NotificationPermission> =
     this.permissionStateSubject.asObservable();
 
   constructor() {
@@ -96,12 +96,12 @@ export class NotificationService {
       const permission = await Notification.requestPermission();
       this.permissionStateSubject.next(permission);
       localStorage.setItem(this.PERMISSION_REQUESTED_KEY, 'true');
-      
+
       if (permission === 'granted') {
         console.log('Notification permission granted');
         await this.subscribeToPushNotifications();
       }
-      
+
       return permission;
     } catch (error) {
       console.error('Error requesting notification permission:', error);
@@ -151,7 +151,7 @@ export class NotificationService {
       });
 
       console.log('Push subscription:', subscription);
-      
+
     } catch (error) {
       console.error('Failed to subscribe to push notifications:', error);
     }
@@ -183,18 +183,21 @@ export class NotificationService {
       return;
     }
 
+    const iconPath = '/assets/icons/android/android-launchericon-192-192.png';
+    const badgePath = '/assets/icons/android/android-launchericon-72-72.png';
+
     try {
       if ('serviceWorker' in navigator) {
         const registration = await navigator.serviceWorker.ready;
         const notificationOptions: NotificationOptions = {
-          icon: '/assets/icons/icon-192x192.png',
-          badge: '/assets/icons/icon-72x72.png',
+          icon: iconPath,
+          badge: badgePath,
           ...options
         };
         await registration.showNotification(title, notificationOptions);
       } else {
         new Notification(title, {
-          icon: '/assets/icons/icon-192x192.png',
+          icon: iconPath,
           ...options
         });
       }
@@ -210,7 +213,7 @@ export class NotificationService {
     }
 
     const percentage = Math.round((caloriesConsumed / caloriesGoal) * 100);
-    
+
     await this.showLocalNotification(
       'Daily Goal Achieved!',
       {
