@@ -24,6 +24,7 @@ export class DietService {
   public clientDiet$ = this.clientDietSubject.asObservable();
 
   private isLoadingClientData = false;
+  private readonly LAST_NOTIFIED_DATE_KEY = 'last-goal-notification-date';
   private lastNotifiedDate: string | null = null;
   private today = new Date();
   constructor(
@@ -33,6 +34,7 @@ export class DietService {
   ) {
     const currentUser = this.userService.getCurrentUser();
     this.userId = currentUser?.id;
+    this.lastNotifiedDate = localStorage.getItem(this.LAST_NOTIFIED_DATE_KEY);
 
     effect(async () => {
       const user = this.userService.getCurrentUser();
@@ -130,7 +132,6 @@ export class DietService {
     );
   }
 
-
   async loadDailyDietSummary(): Promise<void> {
     if (!this.userId) {
       return;
@@ -156,6 +157,11 @@ export class DietService {
     );
     console.log("TODAY!", todaysStats);
     console.log("lastNotifiedDate", this.lastNotifiedDate);
+
+    if (!todaysStats) {
+      return;
+    }
+
     console.log("Achieved", todaysStats.dailyKcalGoalAchieved);
 
     if (
@@ -165,12 +171,12 @@ export class DietService {
     ) {
       const clientDiet = this.clientDietSubject.value;
       if (clientDiet) {
-        console.log("SENDING NOTIF")
         this.notificationService.notifyDayCompletion(
           Math.round(todaysStats.totalKcal),
           Math.round(clientDiet.dailyKcalTarget)
         );
         this.lastNotifiedDate = todaysDateString;
+        localStorage.setItem(this.LAST_NOTIFIED_DATE_KEY, todaysDateString);
       }
     }
   }
