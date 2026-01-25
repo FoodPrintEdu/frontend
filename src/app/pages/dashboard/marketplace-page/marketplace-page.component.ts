@@ -1,4 +1,4 @@
-import {Component, computed, OnInit} from '@angular/core';
+import {Component, computed, effect, OnInit} from '@angular/core';
 import {ButtonModule} from 'primeng/button';
 import {MarketplaceItemsComponent} from '../../../components/marketplace/marketplace-items/marketplace-items.component';
 import {CartService} from '../../../service/cart.service';
@@ -18,6 +18,7 @@ import {MarketplaceOrder} from '../../../types/marketplaceOrderTypes';
 import {InputTextModule} from 'primeng/inputtext';
 import {Ingredient} from '../../../types/recipeTypes';
 import {IngredientService} from '../../../service/ingredient.service';
+import {UserService} from '../../../service/user.service';
 
 @Component({
   selector: 'app-marketplace-page',
@@ -55,13 +56,21 @@ export class MarketplacePageComponent implements OnInit {
   filteredIngredients: Ingredient[] = [];
   ingredientQuery = '';
   selectedIngredient: Ingredient | null = null;
+  userId: string;
 
   constructor(private messageService: MessageService,
               protected cartService: CartService,
               private marketplaceService: MarketplaceService,
               private ingredientService: IngredientService,
+              private userService: UserService,
               private router: Router,
               private route: ActivatedRoute) {
+    effect(() => {
+      const user = this.userService.getCurrentUser();
+      if (user) {
+        this.userId = user.id;
+      }
+    });
   }
 
   async startCheckout() {
@@ -140,9 +149,17 @@ export class MarketplacePageComponent implements OnInit {
       return;
     }
 
+    this.router.navigate([], {
+      queryParams: { market_checkout: null },
+      queryParamsHandling: 'merge'
+    });
+
     if (status === 'success') {
       const orderId = localStorage.getItem('marketCheckoutOrderId');
       const sessionId = localStorage.getItem('marketCheckoutSessionId');
+
+      localStorage.removeItem('marketCheckoutOrderId');
+      localStorage.removeItem('marketCheckoutSessionId');
 
       if (!orderId || !sessionId) {
         this.messageService.add({
@@ -154,6 +171,8 @@ export class MarketplacePageComponent implements OnInit {
         try {
           await this.marketplaceService.completeCheckout(orderId, sessionId);
           this.cartService.clearCart();
+
+
           try {
             await this.refreshOffers();
           } catch (e) {
@@ -165,6 +184,7 @@ export class MarketplacePageComponent implements OnInit {
             summary: 'Payment confirmed',
             detail: 'Your order has been placed.'
           });
+
         } catch (error) {
           console.error('Checkout completion failed', error);
           this.messageService.add({
@@ -175,20 +195,16 @@ export class MarketplacePageComponent implements OnInit {
         }
       }
     } else if (status === 'cancel') {
+
+      localStorage.removeItem('marketCheckoutOrderId');
+      localStorage.removeItem('marketCheckoutSessionId');
+
       this.messageService.add({
         severity: 'info',
         summary: 'Checkout cancelled',
         detail: 'You can try again anytime.'
       });
     }
-
-    localStorage.removeItem('marketCheckoutOrderId');
-    localStorage.removeItem('marketCheckoutSessionId');
-
-    this.router.navigate([], {
-      queryParams: {market_checkout: null},
-      queryParamsHandling: 'merge'
-    });
   }
 
   private buildRedirectUrls() {

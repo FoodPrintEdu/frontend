@@ -1,7 +1,4 @@
-<!-- {/* Profile Stats Grid */} -->
-
 <div *ngIf="clientDiet" class="grid">
-  <!-- {/* Selected Diet */} -->
   <div class="card">
     <header>
       <img
@@ -18,8 +15,6 @@
       <p>{{ getDietDescription(clientDiet?.diet) }}</p>
     </div>
   </div>
-  <!--
-  {/* Diet Streak */} -->
   <div class="card">
     <header>
       <img
@@ -41,7 +36,6 @@
     </div>
   </div>
 
-  <!-- {/* Today's Calories */} -->
   <div class="card">
     <header>
       <img
@@ -54,18 +48,28 @@
       <h2>Today's Calories</h2>
     </header>
     <div>
-      <h1>{{ getTodaysCalories() }}</h1>
-      <p-progressbar
-        [value]="(getTodaysCalories() / clientDiet.dailyKcalTarget) * 100"
-        [showValue]="false"
-        [style]="{ height: '8px', 'border-radius': '5px' }"></p-progressbar>
-      <p *ngIf="clientDiet.dailyKcalTarget > getTodaysCalories()">{{ Math.round(clientDiet.dailyKcalTarget - getTodaysCalories())  }} kcal left to reach goal</p>
-      <p *ngIf="clientDiet.dailyKcalTarget < getTodaysCalories()">Goal achieved!</p>
+      <h1>{{ currentKcal }}</h1>
 
+      <p-progressbar
+        [value]="progressValue"
+        [showValue]="false"
+        [style]="{ height: '8px', 'border-radius': '5px' }"
+        [class.progress-danger]="isOverconsumption">
+      </p-progressbar>
+
+      <p *ngIf="!areCaloriesExceeded">
+        {{ Math.round(targetKcal - currentKcal) }} kcal left to reach goal
+      </p>
+
+      <p *ngIf="areCaloriesExceeded && isGoalAchieved">
+        Goal achieved!
+      </p>
+      <p *ngIf="isOverconsumption" style="color: red;">
+        Too many kcals consumed!
+      </p>
     </div>
   </div>
 
-  <!-- {/* Meals Today */} -->
   <div class="card">
     <header>
       <img

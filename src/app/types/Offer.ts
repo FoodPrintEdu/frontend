@@ -3,6 +3,7 @@ export interface Offer {
   diet_ingredient_id: number;
   diet_ingredient_name?: string;
   seller_name?: string;
+  seller_user_id?: string;
   price_cents: number;
   currency: string;
   pack_size_g: number;

@@ -1,5 +1,5 @@
-<div *ngIf="offers?.length > 0; else emptyState" class="items-grid">
-  <div *ngFor="let offer of offers" class="item-card-wrapper">
+<div *ngIf="displayedOffers?.length > 0; else emptyState" class="items-grid">
+  <div *ngFor="let offer of displayedOffers" class="item-card-wrapper">
     <p-card styleClass="marketplace-card surface-card h-full">
 
       <ng-template pTemplate="header">

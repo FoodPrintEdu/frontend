@@ -5,6 +5,7 @@ import {ApiResponse} from '../types/ApiResponse';
 import {Offer} from '../types/Offer';
 import {MarketplaceCheckoutItem, MarketplaceCheckoutResponseData} from '../types/marketplaceCheckoutTypes';
 import {MarketplaceOrder} from '../types/marketplaceOrderTypes';
+import {HttpParams} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -25,21 +26,23 @@ export class MarketplaceService {
     });
   }
 
-  getAvailableOffers(filter?: { dietIngredientId?: number; dietIngredientName?: string }): Promise<ApiResponse<Offer[]>> {
+  getAvailableOffers(filter?: { dietIngredientId?: number; dietIngredientName?: string; sellerId?: string }): Promise<ApiResponse<Offer[]>> {
     if (!this.userId) {
-      throw new Error(
-        'User ID not available. Please ensure user is logged in.'
-      );
+      throw new Error('User ID not available. Please ensure user is logged in.');
     }
 
-    const queryParts = ['status=active'];
+    let params = new HttpParams().set('status', 'active');
+
     if (filter?.dietIngredientId) {
-      queryParts.push(`diet_ingredient_id=${filter.dietIngredientId}`);
+      params = params.set('diet_ingredient_id', filter.dietIngredientId);
     } else if (filter?.dietIngredientName) {
-      queryParts.push(`diet_ingredient_name=${encodeURIComponent(filter.dietIngredientName)}`);
+      params = params.set('diet_ingredient_name', filter.dietIngredientName);
+    }
+    if (filter?.sellerId) {
+      params = params.set('seller_id', filter.sellerId);
     }
 
-    return this.apiService.get<ApiResponse<Offer[]>>(`/market/api/v1/offers?${queryParts.join('&')}`);
+    return this.apiService.get<ApiResponse<Offer[]>>('/market/api/v1/offers', { params });
   }
 
   createOffer(newOffer: Offer): Promise<ApiResponse<Offer>> {

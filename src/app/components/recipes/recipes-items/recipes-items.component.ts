@@ -1,21 +1,50 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Recipe } from '../../../types/recipeTypes';
 import {environment} from '../../../../environments/environment';
+import {Paginator} from 'primeng/paginator';
 
 @Component({
   selector: 'app-recipes-items',
-  imports: [CommonModule],
+  imports: [CommonModule, Paginator],
   templateUrl: './recipes-items.component.html',
   styleUrl: './recipes-items.component.scss',
   standalone: true
 })
-export class RecipesItemsComponent {
+export class RecipesItemsComponent implements OnInit, OnChanges {
   @Input() recipes: Recipe[] = [];
   @Input() noRecipesMessage: string = '';
+  visibleRecipes: Recipe[] = [];
+  firstRecipeIndex: number = 0;
+  recipesPerPage: number = 12;
 
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.updateVisibleRecipes();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['recipes']) {
+      this.firstRecipeIndex = 0;
+      this.updateVisibleRecipes();
+    }
+  }
+
+  private updateVisibleRecipes() {
+    if (!this.recipes) return;
+
+    const start = this.firstRecipeIndex;
+    const end = this.firstRecipeIndex + this.recipesPerPage;
+    this.visibleRecipes = this.recipes.slice(start, end);
+  }
+
+  onPageChange(event: any) {
+    this.firstRecipeIndex = event.first;
+    this.recipesPerPage = event.rows;
+    this.updateVisibleRecipes();
+  }
 
   onRecipeClick(recipeId: number) {
     this.router.navigate(['/recipe', recipeId]);
@@ -51,4 +80,5 @@ export class RecipesItemsComponent {
   getRecipeSrc(recipe: Recipe) {
     return `${environment.API_URL}/diet/api/v1/recipes/${recipe.id}/image`;
   }
+
 }
