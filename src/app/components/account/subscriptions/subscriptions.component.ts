@@ -1,207 +1,150 @@
+import {Component, OnInit, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DialogModule} from 'primeng/dialog';
-import {ApiService} from '../../../service/api.service';
+import {SubscriptionService} from '../../../service/subscription.service';
 import {UserService} from '../../../service/user.service';
-import {
-  SubscriptionCheckoutResponse,
-  SubscriptionPlan,
-  UserSubscription
-} from '../../../types/subscriptionTypes';
+import {SubscriptionPlan} from '../../../types/subscriptionTypes';
+import {ButtonDirective} from 'primeng/button';
 
 @Component({
   selector: 'app-subscriptions',
-  imports: [CommonModule, DialogModule],
+  standalone: true,
+  imports: [CommonModule, DialogModule, ButtonDirective],
   templateUrl: './subscriptions.component.html',
-  styleUrl: './subscriptions.component.scss',
-  standalone: true
+  styleUrl: './subscriptions.component.scss'
 })
 export class SubscriptionsComponent implements OnInit {
-  plans: SubscriptionPlan[] = [];
-  activeSubscription: UserSubscription | null = null;
-  isLoading = true;
+
   isCheckoutLoading = false;
   isCancelLoading = false;
-  errorMessage: string | null = null;
+  isVerifyingPayment = false;
+  errorMessage = signal<string | null>(null);
   showResultDialog = false;
   resultMessage = '';
 
   constructor(
-    private apiService: ApiService,
+    public subscriptionService: SubscriptionService,
     private userService: UserService,
     private router: Router,
     private route: ActivatedRoute
-  ) {
-  }
+  ) {}
 
   async ngOnInit(): Promise<void> {
-    this.checkCheckoutResult();
-    await this.loadData();
+
+    this.route.queryParams.subscribe(async (params) => {
+      const sessionId = params['session_id'];
+
+      if (sessionId && !this.isVerifyingPayment) {
+        await this.handleCheckoutComplete(sessionId);
+      }
+    });
   }
 
-  getPlanName(planId: number) {
-    const match = this.plans.find((plan) => plan.id === planId);
+  getPlanName(planId: number): string {
+    const plans = this.subscriptionService.plans();
+    const match = plans.find((plan) => plan.id === planId);
     return match ? match.name : `Plan #${planId}`;
   }
 
-  formatPrice(price: number, interval: string) {
-    const currency = new Intl.NumberFormat('pl-PL', {
+  formatPrice(price: number, interval: string): string {
+    return new Intl.NumberFormat('pl-PL', {
       style: 'currency',
       currency: 'PLN'
-    }).format(price);
-    return `${currency} / ${interval}`;
+    }).format(price) + ` / ${interval}`;
   }
 
   async startCheckout(plan: SubscriptionPlan) {
-    if (!plan.active) {
-      return;
-    }
+    if (!plan.active) return;
 
     const userId = this.getUserId();
     if (!userId) {
-      this.errorMessage = 'Unable to start checkout. Please sign in again.';
+      this.errorMessage.set('Unable to start checkout. Please sign in again.');
       return;
     }
 
     this.isCheckoutLoading = true;
-    this.errorMessage = null;
+    this.errorMessage.set(null);
 
     try {
-      const {successUrl, cancelUrl} = this.buildRedirectUrls();
-      const response = await this.apiService.post<SubscriptionCheckoutResponse>(
-        '/subscription/api/v1/checkout/create',
-        {
-          plan_id: String(plan.id),
-          user_id: userId,
-          success_url: successUrl,
-          cancel_url: cancelUrl
-        }
+      const { successUrl, cancelUrl } = this.buildRedirectUrls();
+
+      const checkoutUrl = await this.subscriptionService.startCheckout(
+        String(plan.id),
+        userId,
+        successUrl,
+        cancelUrl
       );
 
-      if (response?.checkout_url) {
-        window.location.href = response.checkout_url;
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
       } else {
-        this.errorMessage = 'Checkout could not be started. Please try again.';
+        throw new Error('No checkout URL returned');
       }
     } catch (error) {
       console.error('Checkout error', error);
-      this.errorMessage = 'Checkout could not be started. Please try again.';
-    } finally {
+      this.errorMessage.set('Checkout could not be started. Please try again.');
       this.isCheckoutLoading = false;
+    }
+  }
+
+  private async handleCheckoutComplete(sessionId: string) {
+    this.isVerifyingPayment = true;
+    this.errorMessage.set(null);
+
+    try {
+      await this.subscriptionService.completeCheckout(sessionId);
+
+      this.resultMessage = 'Payment successful! Your subscription is now active.';
+      this.showResultDialog = true;
+
+      this.clearUrlParams();
+    } catch (error) {
+      console.error('Payment verification failed', error);
+      this.errorMessage.set('We could not verify your payment. Please contact support.');
+    } finally {
+      this.isVerifyingPayment = false;
     }
   }
 
   async cancelSubscription() {
     const userId = this.getUserId();
-    if (!userId) {
-      this.errorMessage = 'Unable to cancel subscription. Please sign in again.';
-      return;
-    }
+    if (!userId) return;
 
     this.isCancelLoading = true;
-    this.errorMessage = null;
+    this.errorMessage.set(null);
 
     try {
-      await this.apiService.post('/subscription/api/v1/me/cancel', {
-        user_id: userId
-      });
+      await this.subscriptionService.cancelSubscription(userId);
       this.resultMessage = 'Your subscription has been cancelled.';
       this.showResultDialog = true;
-      await this.loadData();
     } catch (error) {
       console.error('Cancel subscription error', error);
-      this.errorMessage = 'Unable to cancel the subscription right now.';
+      this.errorMessage.set('Unable to cancel the subscription right now.');
     } finally {
       this.isCancelLoading = false;
     }
   }
 
-  private async loadData() {
-    this.isLoading = true;
-    this.errorMessage = null;
-
-    const plansPromise = this.apiService.get<SubscriptionPlan[]>(
-      '/subscription/api/v1/plans'
-    );
-    const subscriptionPromise = this.apiService.get<UserSubscription>(
-      '/subscription/api/v1/me/plan'
-    );
-
-    try {
-      this.plans = await plansPromise;
-    } catch (error) {
-      console.error('Failed to load subscription plans', error);
-      this.errorMessage = 'Subscription plans are unavailable right now.';
-    }
-
-    try {
-      const subscription = await subscriptionPromise;
-      this.activeSubscription = subscription?.active ? subscription : null;
-    } catch (error) {
-      this.activeSubscription = null;
-    } finally {
-      this.isLoading = false;
-    }
-  }
-
-  private checkCheckoutResult() {
-    const status = this.route.snapshot.queryParamMap.get('subscription');
-    if (!status) {
-      return;
-    }
-
-    if (status === 'success') {
-      this.resultMessage = 'Your subscription has been activated.';
-    } else if (status === 'cancel') {
-      this.resultMessage = 'Checkout was cancelled. You can try again anytime.';
-    } else {
-      return;
-    }
-
-    this.showResultDialog = true;
-    this.router.navigate([], {
-      queryParams: {
-        subscription: null
-      },
-      queryParamsHandling: 'merge'
-    });
-  }
 
   private buildRedirectUrls() {
-    const successPath = this.router.serializeUrl(
-      this.router.createUrlTree(['/account'], {
-        queryParams: {subscription: 'success'}
-      })
-    );
-    const cancelPath = this.router.serializeUrl(
-      this.router.createUrlTree(['/account'], {
-        queryParams: {subscription: 'cancel'}
-      })
-    );
 
+    const baseUrl = window.location.origin + this.router.createUrlTree(['.'], { relativeTo: this.route }).toString();
     return {
-      successUrl: `${window.location.origin}${successPath}`,
-      cancelUrl: `${window.location.origin}${cancelPath}`
+      successUrl: `${baseUrl}?subscription=success&session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${baseUrl}?subscription=cancel`
     };
   }
 
+  private clearUrlParams() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {},
+      replaceUrl: true
+    });
+  }
+
   private getUserId(): string | null {
-    const currentUser = this.userService.getCurrentUser();
-    if (currentUser?.id) {
-      return currentUser.id;
-    }
-
-    const storedUser = localStorage.getItem('user');
-    if (!storedUser) {
-      return null;
-    }
-
-    try {
-      const parsedUser = JSON.parse(storedUser);
-      return parsedUser?.id ?? null;
-    } catch (error) {
-      return null;
-    }
+    return this.userService.getCurrentUser()?.id ?? null;
   }
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component, effect, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -16,6 +16,8 @@ import {Offer} from '../../../types/Offer';
 import {Tooltip} from 'primeng/tooltip';
 import {Ingredient} from '../../../types/recipeTypes';
 import {IngredientService} from '../../../service/ingredient.service';
+import {MarketplaceService} from '../../../service/marketplace.service';
+import {UserService} from '../../../service/user.service';
 
 @Component({
   selector: 'app-your-offers-page',
@@ -40,7 +42,7 @@ import {IngredientService} from '../../../service/ingredient.service';
   styleUrl: './your-offers-page.component.scss'
 })
 export class YourOffersPageComponent implements OnInit {
-  // Dane
+
   offers: Offer[] = [];
   filteredOffers: Offer[] = [];
 
@@ -56,13 +58,22 @@ export class YourOffersPageComponent implements OnInit {
   offerForm: FormGroup;
   isEditMode: boolean = false;
   currentOfferId: string | null = null;
+  private userId: string;
 
   constructor(
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private ingredientService: IngredientService
+    private ingredientService: IngredientService,
+    private marketplaceService: MarketplaceService,
+    private userService: UserService,
   ) {
+    effect(async () => {
+      const user = this.userService.getCurrentUser();
+      if (user && user.id) {
+        this.userId = user.id;
+      }
+    });
     this.initForm();
   }
 
@@ -72,7 +83,12 @@ export class YourOffersPageComponent implements OnInit {
     } catch (error) {
       this.availableIngredients = [];
     }
-    this.loadMockData();
+    try {
+      this.offers = (await this.marketplaceService.getAvailableOffers({sellerId: this.userId})).data;
+      console.log("AVAILABLE OFFERS: ", this.offers);
+    } catch (error) {
+      this.offers = [];
+    }
     this.applyFilters();
   }
 
@@ -98,10 +114,10 @@ export class YourOffersPageComponent implements OnInit {
     this.isEditMode = true;
     this.currentOfferId = offer.id!;
     this.offerForm.patchValue({
-      dietIngredient: { id: offer.dietIngredientId, name: offer.dietIngredientName },
-      price: offer.priceCents / 100,
-      packSizeG: offer.packSizeG,
-      packCountTotal: offer.packCountTotal
+      dietIngredient: {id: offer.diet_ingredient_id, name: offer.diet_ingredient_name},
+      price: offer.price_cents / 100,
+      packSizeG: offer.pack_size_g,
+      packTotalCount: offer.pack_count_total
     });
 
     this.offerForm.get('dietIngredient')?.disable();
@@ -110,24 +126,60 @@ export class YourOffersPageComponent implements OnInit {
 
   deleteOffer(offer: Offer) {
     this.confirmationService.confirm({
-      message: 'Do you want to delete the offer for: ' + offer.dietIngredientName + '?',
+      message: 'Do you want to delete the offer for: ' + offer.diet_ingredient_name + '?',
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.offers = this.offers.filter(val => val.id !== offer.id);
+      accept: async () => {
+        try {
+          await this.marketplaceService.archiveOffer(offer);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Offer deleted successfully'});
+          this.offers = this.offers.filter(o => o.id !== offer.id);
+        } catch (e) {
+          this.messageService.add({severity: 'danger', summary: 'Error', detail: 'Failed to delete the offer'});
+        }
         this.applyFilters();
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Offer deleted successfully' });
       }
     });
   }
 
-  saveOffer() {
+  async saveOffer() {
     if (this.offerForm.invalid) {
       this.offerForm.markAllAsTouched();
       return;
     }
-    // todo make backend request
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'New offer created successfully' });
+    const ingredient = this.offerForm.get('dietIngredient').value as Ingredient
+    const priceCents: number = Math.round((this.offerForm.get('price').value as number) * 100)
+    const offerToSave: Offer = {
+      diet_ingredient_id: ingredient.id,
+      price_cents: priceCents,
+      currency: 'PLN',
+      pack_size_g: this.offerForm.get('packSizeG').value as number,
+      pack_count_total: this.offerForm.get('packTotalCount').value as number,
+      pack_count_remaining: this.offerForm.get('packTotalCount').value as number
+    }
+    if (this.isEditMode) {
+      try {
+        console.log("OFFER TO EDIT", offerToSave);
+        offerToSave.id = this.currentOfferId;
+        const editedOffer = (await this.marketplaceService.editOffer(offerToSave)).data;
+        this.offers = (await this.marketplaceService.getAvailableOffers({sellerId: this.userId})).data;
+        console.log("AVAILABLE OFFERS: ", this.offers);
+        this.messageService.add({severity: 'success', summary: 'Success', detail: 'Offer edited successfully'});
+      } catch (e) {
+        this.messageService.add({severity: 'danger', summary: 'Error', detail: 'Failed to edit offer'});
+      }
+    } else {
+      try {
+        console.log("NEW OFFER", offerToSave);
+        const createdOffer = (await this.marketplaceService.createOffer(offerToSave)).data;
+        this.offers = (await this.marketplaceService.getAvailableOffers({sellerId: this.userId})).data;
+        console.log("AVAILABLE OFFERS: ", this.offers);
+        this.messageService.add({severity: 'success', summary: 'Success', detail: 'New offer created successfully'});
+      } catch (e) {
+        this.messageService.add({severity: 'danger', summary: 'Error', detail: 'Failed to create offer'});
+      }
+    }
+
     this.offerDialog = false;
     this.applyFilters();
   }
@@ -136,25 +188,15 @@ export class YourOffersPageComponent implements OnInit {
   applyFilters() {
     this.filteredOffers = this.offers.filter(offer => {
       const matchesName = !this.filterName ||
-        offer.dietIngredientName.toLowerCase().includes(this.filterName.toLowerCase());
+        offer.diet_ingredient_name.toLowerCase().includes(this.filterName.toLowerCase());
 
-      const pricePln = offer.priceCents / 100;
+      const pricePln = offer.price_cents / 100;
       const matchesMinPrice = this.filterMinPrice === null || pricePln >= this.filterMinPrice;
       const matchesMaxPrice = this.filterMaxPrice === null || pricePln <= this.filterMaxPrice;
 
-      const matchesStock = this.filterMinStock === null || offer.packCountRemaining >= this.filterMinStock;
+      const matchesStock = this.filterMinStock === null || offer.pack_count_remaining >= this.filterMinStock;
 
       return matchesName && matchesMinPrice && matchesMaxPrice && matchesStock;
     });
-  }
-
-
-  // todo demock
-  loadMockData() {
-    this.offers = [
-      { id: '1', dietIngredientId: 1, dietIngredientName: 'Carrots', priceCents: 450, currency: 'PLN', packSizeG: 1000, packCountTotal: 50, packCountRemaining: 12, status: 'active' },
-      { id: '2', dietIngredientId: 3, dietIngredientName: 'AP Flour', priceCents: 320, currency: 'PLN', packSizeG: 1000, packCountTotal: 100, packCountRemaining: 85, status: 'active' },
-      { id: '3', dietIngredientId: 4, dietIngredientName: 'Cherry Tomatoes', priceCents: 1299, currency: 'PLN', packSizeG: 500, packCountTotal: 20, packCountRemaining: 0, status: 'active' },
-    ];
   }
 }

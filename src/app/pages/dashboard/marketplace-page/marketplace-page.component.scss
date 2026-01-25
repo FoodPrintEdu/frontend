@@ -59,6 +59,173 @@
   }
 }
 
+.orders-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.orders-toggle {
+  width: 100%;
+  background: #f6f9f6;
+  border: none;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2e7d32;
+  cursor: pointer;
+}
+
+.orders-content {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.orders-loading,
+.orders-empty {
+  color: #666;
+}
+
+.order-card {
+  border: 1px solid #e4e4e4;
+  border-radius: 12px;
+  padding: 16px;
+  background-color: #f7f8ff;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #1f1f1f;
+  }
+}
+
+.order-total {
+  font-weight: 600;
+  color: #1f6b37;
+}
+
+.order-items {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  border: 1px solid #e6e6e6;
+}
+
+.item-name {
+  margin: 0;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+
+.item-price {
+  font-weight: 600;
+  color: #1f6b37;
+}
+
+.muted {
+  margin: 4px 0 0;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.offers-search {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background-color: #ffffff;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h3 {
+    margin: 0 0 4px;
+    color: #2e7d32;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+}
+
+.search-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  input {
+    width: 100%;
+  }
+}
+
+.search-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.result-item {
+  border: 1px solid #e2e2e2;
+  background-color: #f6f6ff;
+  color: #1f1f1f;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.result-item:hover {
+  background-color: #ececff;
+}
+
+.search-empty,
+.search-active {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.clear-filter {
+  border: none;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
 ::ng-deep .cart-sidebar {
   .p-sidebar-content {
     display: flex !important;

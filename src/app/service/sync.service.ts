@@ -45,7 +45,7 @@ export class SyncService {
         this.dbInitPromise = null;
         reject(request.error);
       };
-      
+
       request.onsuccess = () => {
         this.db = request.result;
 
@@ -54,14 +54,14 @@ export class SyncService {
           this.db = null;
           this.dbInitPromise = null;
         };
-        
+
         this.db.onversionchange = () => {
           console.warn('IndexedDB version change detected');
           this.db?.close();
           this.db = null;
           this.dbInitPromise = null;
         };
-        
+
         this.dbInitPromise = null;
         resolve();
       };
@@ -97,11 +97,11 @@ export class SyncService {
     if (!this.db || this.isDatabaseClosed(this.db)) {
       await this.initDB();
     }
-    
+
     if (!this.db) {
       throw new Error('Failed to initialize database');
     }
-    
+
     return this.db;
   }
 
@@ -246,24 +246,26 @@ export class SyncService {
 
   private async syncItem(item: SyncQueueItem): Promise<void> {
     console.log('Synchronizing item:', item);
-    
+
     if (item.type === 'recipe' && item.action === 'create') {
       await this.syncMealPreparation(item.data);
       return;
     }
-    
+
     throw new Error(`Sync handler not implemented for type: ${item.type}, action: ${item.action}`);
   }
-  
+
   private async syncMealPreparation(data: { recipeId: number; servings: number }): Promise<void> {
-    // Lazy load RecipeService to avoid circular dependency
     const { RecipeService } = await import('./recipe.service');
+    const { DietService } = await import('./diet.service');
     const recipeService = this.injector.get(RecipeService);
-    
+    const dietService = this.injector.get(DietService);
+
     return new Promise((resolve, reject) => {
       recipeService.cookRecipe(data.recipeId, data.servings).subscribe({
         next: (response) => {
           console.log('Meal synced successfully:', response);
+          dietService.loadDailyDietSummary()
           resolve();
         },
         error: (error) => {
@@ -273,7 +275,7 @@ export class SyncService {
       });
     });
   }
-  
+
   private async removeFromSyncQueue(id: string): Promise<void> {
     try {
       const db = await this.ensureDatabase();

@@ -8,5 +8,6 @@ import { NgOptimizedImage } from '@angular/common';
   imports: [RegisterFormComponent, RouterLink, NgOptimizedImage],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss',
+  standalone: true
 })
 export class RegisterPageComponent {}

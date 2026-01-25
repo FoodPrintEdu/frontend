@@ -84,6 +84,14 @@
 }
 
 .product-details {
+  .seller-info {
+    margin: 0 0 0.25rem;
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+  }
+
   .pack-info {
     margin: 0;
     color: var(--text-color-secondary);
@@ -100,4 +108,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  background: var(--surface-card);
+  border-radius: 12px;
+  border: 2px dashed var(--surface-border);
+  color: var(--surface-500);
+
+  h3 {
+    margin: 1rem 0 0.5rem;
+    color: var(--surface-900);
+  }
 }

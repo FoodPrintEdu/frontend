@@ -81,26 +81,26 @@
 
         <div class="offer-details">
           <div class="offer-header">
-            <h3>{{ offer.dietIngredientName }}</h3>
+            <h3>{{ offer.diet_ingredient_name }}</h3>
             <p-tag
-              [value]="offer.packCountRemaining > 0 ? 'In Stock' : 'Sold Out'"
-              [severity]="offer.packCountRemaining > 0 ? 'success' : 'danger'">
+              [value]="offer.pack_count_remaining > 0 ? 'In Stock' : 'Sold Out'"
+              [severity]="offer.pack_count_remaining > 0 ? 'success' : 'danger'">
             </p-tag>
           </div>
 
           <div class="offer-stats">
             <div class="stat-row">
               <span class="label">Price:</span>
-              <span class="value price">{{ offer.priceCents / 100 | currency:'PLN':'symbol':'1.2-2' }}</span>
+              <span class="value price">{{ offer.price_cents / 100 | currency:'PLN':'symbol':'1.2-2' }}</span>
             </div>
             <div class="stat-row">
               <span class="label">Pack Size:</span>
-              <span class="value">{{ offer.packSizeG }}g</span>
+              <span class="value">{{ offer.pack_size_g }}g</span>
             </div>
             <div class="stat-row">
               <span class="label">Stock:</span>
-              <span class="value" [class.low-stock]="offer.packCountRemaining < 5">
-                {{ offer.packCountRemaining }} / {{ offer.packCountTotal }} pcs.
+              <span class="value" [class.low-stock]="offer.pack_count_remaining < 5">
+                {{ offer.pack_count_remaining }} / {{ offer.pack_count_total }} pcs.
               </span>
             </div>
           </div>
@@ -151,7 +151,7 @@
         <p-select
           id="ingredient"
           [options]="availableIngredients"
-          formControlName="DietIngredient"
+          formControlName="dietIngredient"
           optionLabel="name"
           placeholder="Select product"
           [filter]="true"
@@ -190,7 +190,7 @@
           <label for="pack_count" class="block mb-2">Total Units</label>
           <p-inputNumber
             id="pack_count"
-            formControlName="packCountTotal"
+            formControlName="packTotalCount"
             [showButtons]="true"
             buttonLayout="horizontal"
             inputId="horizontal"

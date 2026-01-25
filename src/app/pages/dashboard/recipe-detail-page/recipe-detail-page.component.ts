@@ -9,7 +9,7 @@ import {DividerModule} from 'primeng/divider';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {ToastModule} from 'primeng/toast';
 import {MessageService} from 'primeng/api';
-import {Recipe} from '../../../types/recipeTypes';
+import {Ingredient, Recipe} from '../../../types/recipeTypes';
 import {RecipeService} from '../../../service/recipe.service';
 import {environment} from '../../../../environments/environment';
 import {DietService} from '../../../service/diet.service';
@@ -45,7 +45,7 @@ export class RecipeDetailPageComponent implements OnInit, OnDestroy {
   // Meal preparation properties
   selectedServings: number = 1;
   cookingInProgress: boolean = false;
-  
+
   wakeLock: any = null;
   wakeLockEnabled: boolean = false;
   wakeLockSupported: boolean = false;
@@ -64,15 +64,15 @@ export class RecipeDetailPageComponent implements OnInit, OnDestroy {
       this.recipeId = +params['id'];
       this.loadRecipeDetails();
     });
-    
+
     this.checkWakeLockSupport();
-    
+
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
   }
 
   ngOnDestroy() {
     this.releaseWakeLock();
-    
+
     document.removeEventListener('visibilitychange', this.handleVisibilityChange);
   }
 
@@ -120,7 +120,7 @@ export class RecipeDetailPageComponent implements OnInit, OnDestroy {
     } catch (err: any) {
       console.error('Failed to activate Screen Wake Lock:', err);
       this.wakeLockEnabled = false;
-      
+
       this.messageService.add({
         severity: 'error',
         summary: 'Wake Lock Failed',
@@ -212,6 +212,15 @@ export class RecipeDetailPageComponent implements OnInit, OnDestroy {
   showNutritionInfo(event: Event, info: string[], popover: Popover) {
     this.currentNutritionInfo = info;
     popover.toggle(event);
+  }
+
+  goToMarketplace(ingredient: Ingredient) {
+    this.router.navigate(['/marketplace'], {
+      queryParams: {
+        ingredient_id: ingredient.id,
+        ingredient_name: ingredient.name
+      }
+    });
   }
 
   async onMealPrepared() {

@@ -4,44 +4,54 @@
     <h2>Subscriptions</h2>
   </header>
 
-  <div class="content" *ngIf="!isLoading; else loading">
-    <ng-container *ngIf="activeSubscription; else choosePlan">
+  <div *ngIf="isVerifyingPayment" class="p-3 text-center surface-ground border-round mb-3">
+    <i class="pi pi-spin pi-spinner text-primary" style="font-size: 2rem"></i>
+    <p class="mt-2 m-0 font-medium">Verifying your payment...</p>
+  </div>
+
+  <div class="content" *ngIf="!subscriptionService.isLoading(); else loading">
+
+    <ng-container *ngIf="subscriptionService.userSubscription() as activeSub; else choosePlan">
       <div class="summary">
         <div>
-          <h3>{{ getPlanName(activeSubscription.plan_id) }}</h3>
+          <h3>{{ getPlanName(activeSub.plan_id) }}</h3>
           <p class="muted">Current subscription</p>
         </div>
-        <span class="status" [class.active]="activeSubscription.active">
-          {{ activeSubscription.active ? 'Active' : 'Inactive' }}
+        <span class="status" [class.active]="activeSub.active">
+          {{ activeSub.active ? 'Active' : 'Inactive' }}
         </span>
       </div>
+
       <div class="details">
         <div>
           <p class="label">Start date</p>
-          <p>{{ activeSubscription.start_date | date: 'mediumDate' }}</p>
+          <p>{{ activeSub.start_date | date: 'mediumDate' }}</p>
         </div>
         <div>
           <p class="label">End date</p>
-          <p>{{ activeSubscription.end_date | date: 'mediumDate' }}</p>
+          <p>{{ activeSub.end_date | date: 'mediumDate' }}</p>
         </div>
         <div>
           <p class="label">Auto-renew</p>
-          <p>{{ activeSubscription.auto_renew ? 'Yes' : 'No' }}</p>
+          <p>{{ activeSub.auto_renew ? 'Yes' : 'No' }}</p>
         </div>
       </div>
+
       <button
         class="cancel-button"
         [disabled]="isCancelLoading"
         (click)="cancelSubscription()"
       >
+        <i *ngIf="isCancelLoading" class="pi pi-spin pi-spinner mr-2"></i>
         {{ isCancelLoading ? 'Cancelling...' : 'Cancel subscription' }}
       </button>
     </ng-container>
 
     <ng-template #choosePlan>
-      <p class="muted">No active subscription. Choose a plan to continue.</p>
-      <div class="plan-list" *ngIf="plans.length > 0; else noPlans">
-        <div class="plan-card" *ngFor="let plan of plans">
+      <p class="muted mb-4">No active subscription. Choose a plan to continue.</p>
+
+      <div class="plan-list" *ngIf="subscriptionService.plans().length > 0; else noPlans">
+        <div class="plan-card" *ngFor="let plan of subscriptionService.plans()">
           <div class="plan-info">
             <h3>{{ plan.name }}</h3>
             <p class="muted">{{ plan.description }}</p>
@@ -52,28 +62,50 @@
             [disabled]="!plan.active || isCheckoutLoading"
             (click)="startCheckout(plan)"
           >
+            <i *ngIf="isCheckoutLoading" class="pi pi-spin pi-spinner mr-2"></i>
             {{ plan.active ? 'Choose plan' : 'Unavailable' }}
           </button>
         </div>
       </div>
+
       <ng-template #noPlans>
         <p class="muted">No subscription plans are available right now.</p>
       </ng-template>
-      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <p class="error mt-3" *ngIf="errorMessage()">
+        <i class="pi pi-exclamation-circle mr-1"></i>
+        {{ errorMessage() }}
+      </p>
     </ng-template>
   </div>
 
   <ng-template #loading>
-    <p>Loading subscription details...</p>
+    <div class="flex flex-column align-items-center justify-content-center p-5">
+      <i class="pi pi-spin pi-spinner text-primary text-3xl mb-3"></i>
+      <p class="m-0 text-600">Loading subscription details...</p>
+    </div>
   </ng-template>
 </div>
 
 <p-dialog
-  header="Subscription"
+  header="Subscription Update"
   [(visible)]="showResultDialog"
   [modal]="true"
   [dismissableMask]="true"
-  [style]="{ width: '320px' }"
+  [style]="{ width: '400px' }"
+  [draggable]="false"
+  [resizable]="false"
 >
-  <p>{{ resultMessage }}</p>
+  <div class="flex align-items-center gap-3">
+    <i style="margin-top: 8px;" class="pi pi-info-circle text-2xl text-primary"></i>
+    <p class="m-0 line-height-3">{{ resultMessage }}</p>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      label="OK"
+      class="p-button-text"
+      (click)="showResultDialog = false"
+    ></button>
+  </ng-template>
 </p-dialog>
